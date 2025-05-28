@@ -14,10 +14,7 @@ import { IoMenuOutline } from "react-icons/io5";
 import { FaCross } from "react-icons/fa";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
