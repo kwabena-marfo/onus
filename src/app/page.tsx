@@ -27,14 +27,14 @@ export default function Home() {
   return (
     <div className="h-[100dvh] grid  grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-1 flex flex-col relative  h-full">
-        <div className="absolute  h-full w-full bg-gradient-to-br from-[#0F3187] via-[#0F3187]/95 to-[#01CFFE]/10  md:bg-[#0F3187]/90 rounded-br-[500px] md:rounded-br-[500px]  " />
+        <div className="absolute  h-full w-full bg-gradient-to-br from-white via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Header Area */}
-          <div className="flex justify-between items-center w-full p-3 z-100">
+          <div className="flex justify-between items-center w-full p-3 px-8 z-100 md:border-b-0 border-b-2">
             <div className="flex items-center gap-4">
               <Sheet>
                 <SheetTrigger asChild>
-                  <IoMenuOutline className="w-10 h-10 text-white flex md:hidden" />
+                  <IoMenuOutline className="w-10 h-10 text-blue-950 flex md:hidden" />
                 </SheetTrigger>
                 <SheetContent className="z-100 text-gray-900">
                   <SheetHeader>
@@ -58,17 +58,20 @@ export default function Home() {
                 <Image
                   fill
                   priority
-                  src="/imgs/logos/onusLogoWhite.png"
+                  src="/imgs/logos/onusLogoChosen.png"
                   alt="logo"
                 />
               </div>
             </div>
 
             <div className="flex gap-2 justify-center items-center">
-              <Button size="lg" className="bg-[#FFAB5B] rounded-full">
+              <Button
+                size="lg"
+                className="bg-[#FFAB5B] rounded-full text-lg font-bold"
+              >
                 Login
               </Button>
-              <Link className="text-white" href="/">
+              <Link className="text-blue-950 text-lg font-bold" href="/">
                 Sign Up
               </Link>
             </div>
@@ -76,33 +79,42 @@ export default function Home() {
 
           {/* How we help Session */}
 
-          <div className="flex items-start flex-col w-full p-3 z-10">
+          <div className="flex items-center flex-col w-full p-3 px-8 z-10 gap-6">
             <p
-              className={`${myFont.className} italic capitalize text-center text-5xl font-medium text-white  `}
+              className={`${myFont.className} italic capitalize text-center text-5xl font-medium text-blue-950  `}
             >
               We Help You
             </p>
-            <div className="flex  gap-3  w-full ">
-              <div className="bg-white  w-full  p-4 flex flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
-                <BsEyeglasses />
-                Observe
+            <div className="flex flex-col items-center  gap-3  w-full text-white">
+              <div className="flex  divide-x-1 ">
+                <div className="text-[#0F3187]   pr-2 w-full  flex flex-col justify-center items-center font-bold text-lg md:text-2xl rounded-bl-2xl ">
+                  <div className="flex justify-center items-center rounded-full w-12 h-12 bg-black p-2">
+                    <BsEyeglasses className="w-full h-full text-white" />
+                  </div>
+                  Observe
+                </div>
+                <div className="text-[#FFAB5B] px-2  w-full flex  flex-col justify-center items-center font-bold text-lg md:text-2xl  rounded-bl-2xl">
+                  <div className="flex justify-center items-center rounded-full w-12 h-12 bg-black p-2">
+                    <BsCompass />
+                  </div>
+                  Navigate
+                </div>
+                <div className="text-[#01CFFE] pl-2    w-full flex flex-col justify-center items-center font-bold text-lg md:text-2xl  rounded-bl-2xl">
+                  <div className="flex justify-center items-center rounded-full w-12 h-12 bg-black p-2">
+                    <BsJournalCheck />
+                  </div>
+                  Understand
+                </div>
               </div>
-              <div className="bg-[#FFAB5B] p-4  w-full flex  flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
-                <BsCompass />
-                Navigate
-              </div>
-              <div className="bg-[#01CFFE] p-4  w-full flex flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
-                <BsJournalCheck />
-                Understand
-              </div>
+              <p className="bg-gradient-to-r from-[#0F3187] via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-6xl md:text-8xl uppercase font-extrabold text-transparent flex items-center gap-0">
+                Scrip{" "}
+                <FaCross className="w-12 h-12 md:w-20 md:h-20 text-[#0F3187]" />{" "}
+                ure
+              </p>
             </div>
-            <p className="bg-gradient-to-r from-white via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-6xl md:text-8xl uppercase font-extrabold text-transparent flex items-center gap-0">
-              Scrip <FaCross className="w-12 h-12 md:w-20 md:h-20 text-white" />{" "}
-              ure
-            </p>
 
             {/* DownApp Mobile Bottons */}
-            <div className="flex gap-2 justify-end items-end mt-6 top-0  z-30 md:hidden">
+            <div className="flex gap-2 justify-end items-end  top-0  z-30 md:hidden">
               <div className="flex rounded-md p-3 justify-start items-center bg-white gap-2 cursor-pointer">
                 <BsApple className="w-6 h-6" />
                 <div className="flex flex-col">
