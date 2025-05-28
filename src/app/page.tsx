@@ -25,8 +25,8 @@ const myFont = localFont({
 });
 export default function Home() {
   return (
-    <div className="h-[100dvh] grid md:grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
-      <div className="col-span-1 flex flex-col relative ">
+    <div className="h-[100dvh] grid  grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
+      <div className="col-span-3 md:col-span-1 flex flex-col relative ">
         <div className="flex justify-between items-center bg-[#0F3187]  p-6 ">
           <div className="flex items-center gap-4">
             <Sheet>
@@ -77,34 +77,36 @@ export default function Home() {
           >
             We Help You
           </p>
-          <div className="flex gap-2 h-24 w-full ">
-            <div className="bg-white h-full w-full  p-2 flex flex-col justify-center items-center font-bold text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
+          <div className="flex  gap-2  w-full ">
+            <div className="bg-white  w-full  p-4 flex flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
               <BsEyeglasses />
               Observe
             </div>
-            <div className="bg-[#FFAB5B] h-full  w-full flex  flex-col justify-center items-center font-bold text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
+            <div className="bg-[#FFAB5B] p-4  w-full flex  flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
               <BsCompass />
               Navigate
             </div>
-            <div className="bg-[#01CFFE] h-full w-full flex flex-col justify-center items-center font-bold text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
+            <div className="bg-[#01CFFE] p-4  w-full flex flex-col justify-center items-center font-bold text-lg md:text-2xl shadow-2xl rounded-tr-2xl rounded-bl-2xl">
               <BsJournalCheck />
               Understand
             </div>
           </div>
-          <p className="bg-gradient-to-r from-white via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-8xl uppercase font-extrabold text-transparent flex items-center gap-0">
-            Scrip <FaCross className="w-20 h-20 text-white" /> ure
+          <p className="bg-gradient-to-r from-white via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-6xl md:text-8xl uppercase font-extrabold text-transparent flex items-center gap-0">
+            Scrip <FaCross className="w-12 h-12 md:w-20 md:h-20 text-white" />{" "}
+            ure
           </p>
 
+          {/* DownApp Mobile Bottons */}
           <div className="flex gap-2 justify-end items-end mt-6 top-0  z-100 md:hidden">
             <div className="flex rounded-md p-3 justify-start items-center bg-white gap-2 cursor-pointer">
-              <BsApple className="w-8 h-8" />
+              <BsApple className="w-6 h-6" />
               <div className="flex flex-col">
                 <p className="-my-2">Download On The</p>
                 <p className="text-md font-bold">App Store</p>
               </div>
             </div>
             <div className="flex rounded-md p-3 justify-start items-center bg-white gap-2 cursor-pointer">
-              <BsGooglePlay className="w-7 h-7 " />
+              <BsGooglePlay className="w-6 h-6 " />
               <div className="flex flex-col justify-start items-start">
                 <p className="-my-2">Get It On</p>
                 <p className="text-md font-bold">Google Play</p>
@@ -112,7 +114,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="md:h-[500px] h-[50dvh]  w-4/5 flex absolute bottom-0 z-90">
+        <div className="h-[60dvh] w-2/3  md:w-4/5 flex absolute bottom-0 z-90">
           <Image
             fill
             alt="Service Photo"
@@ -123,7 +125,8 @@ export default function Home() {
           />
         </div>
 
-        <div className="h-[50dvh] w-4/5 flex absolute bottom-0 right-0 z-0 md:hidden">
+        {/* Mobile Mockup */}
+        <div className="h-[50dvh] w-full flex absolute bottom-0 right-0 z-0 md:hidden">
           <Image
             fill
             alt="Service Photo"
