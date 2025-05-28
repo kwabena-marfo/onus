@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="h-[100dvh] grid  grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-1 flex flex-col relative  h-full">
-        <div className="absolute  h-full w-full bg-gradient-to-br from-[#0F3187] via-[#0F3187] to-[#01CFFE]/10  md:bg-[#0F3187]/90 rounded-br-[500px] md:rounded-br-[500px]  " />
+        <div className="absolute  h-full w-full bg-gradient-to-br from-[#0F3187] via-[#0F3187]/95 to-[#01CFFE]/10  md:bg-[#0F3187]/90 rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Header Area */}
           <div className="flex justify-between items-center w-full p-3 z-100">
@@ -102,7 +102,7 @@ export default function Home() {
             </p>
 
             {/* DownApp Mobile Bottons */}
-            <div className="flex gap-2 justify-end items-end mt-6 top-0  z-100 md:hidden">
+            <div className="flex gap-2 justify-end items-end mt-6 top-0  z-30 md:hidden">
               <div className="flex rounded-md p-3 justify-start items-center bg-white gap-2 cursor-pointer">
                 <BsApple className="w-6 h-6" />
                 <div className="flex flex-col">
@@ -121,7 +121,7 @@ export default function Home() {
           </div>
 
           {/* Bottom Seesions for Mockup and Knot */}
-          <div className="h-1/2 w-1/2 z-10   md:w-4/5 flex absolute bottom-0   justify-center items-center">
+          <div className="h-1/2 w-4/5 z-10   md:w-4/5 flex absolute bottom-0   justify-center items-center">
             <Image
               fill
               alt="Service Photo"
