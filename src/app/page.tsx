@@ -108,7 +108,7 @@ export default function Home() {
               </div>
               <p className="bg-gradient-to-r from-[#0F3187] via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-6xl md:text-8xl uppercase font-extrabold text-transparent flex items-center gap-0">
                 Scrip{" "}
-                <FaCross className="w-12 h-12 md:w-20 md:h-20 text-[#0F3187]" />{" "}
+                <FaCross className="w-12 h-12 md:w-20 md:h-20 text-[#FFAB5B] " />{" "}
                 ure
               </p>
             </div>
