@@ -1,7 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
+
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import {
   BsApple,
   BsCheck,
@@ -12,17 +21,12 @@ import {
 } from "react-icons/bs";
 import { IoMenuOutline } from "react-icons/io5";
 import { FaCross } from "react-icons/fa";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import SignupComp from "@/components/signup";
 
 const myFont = localFont({
   src: [{ path: "../fonts/Austrian.otf", weight: "400" }],
 });
+
 export default function Home() {
   return (
     <div className="h-[100dvh] grid  grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
@@ -30,7 +34,7 @@ export default function Home() {
         <div className="absolute  h-full w-full bg-gradient-to-br from-white via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Header Area */}
-          <div className="flex justify-between items-center w-full p-3 px-8 z-100 md:border-b-0 border-b-2">
+          <div className="flex justify-between items-center w-full p-3 px-8 z-100 md:border-b-0 border-b-">
             <div className="flex items-center gap-4">
               <Sheet>
                 <SheetTrigger asChild>
@@ -65,15 +69,10 @@ export default function Home() {
             </div>
 
             <div className="flex gap-2 justify-center items-center">
-              <Button
-                size="lg"
-                className="bg-[#FFAB5B] rounded-full text-lg font-bold"
-              >
+              <Button className="bg-[#FFAB5B] rounded-full text-lg font-bold">
                 Login
               </Button>
-              <Link className="text-blue-950 text-lg font-bold" href="/">
-                Sign Up
-              </Link>
+              <SignupComp />
             </div>
           </div>
 
