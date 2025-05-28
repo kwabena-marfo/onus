@@ -121,7 +121,7 @@ export default function Home() {
           </div>
 
           {/* Bottom Seesions for Mockup and Knot */}
-          <div className="h-1/2 w-4/5 z-10   md:w-4/5 flex absolute bottom-0   justify-center items-center">
+          <div className="h-2/5 md:h-1/2 w-4/5 z-5   md:w-4/5 flex absolute bottom-0   justify-center items-center">
             <Image
               fill
               alt="Service Photo"
@@ -133,7 +133,7 @@ export default function Home() {
           </div>
 
           {/* Mobile Mockup */}
-          <div className="h-1/2 w-full flex absolute bottom-0 right-0 md:hidden -z-20">
+          <div className="h-1/2 w-full flex absolute bottom-0 md:hidden -z-20">
             <Image
               fill
               alt="Service Photo"
