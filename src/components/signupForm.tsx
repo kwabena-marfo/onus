@@ -11,7 +11,7 @@ export default function SignupForm({
   return (
     <form
       className={cn(
-        "grid justify-self-center md:max-w-2/3 max-w-7/8 w-full  items-center bg-white/90  gap-4 shadow-lg rounded-md p-5 z-50",
+        "grid justify-self-center items-center bg-white/90  gap-4 shadow-lg rounded-md p-5 z-50",
         className
       )}
     >

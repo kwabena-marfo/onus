@@ -49,7 +49,7 @@ export default function LayoutComp({
                 </SheetContent>
               </Sheet>
 
-              <div className="relative h-15 w-12">
+              <div className="relative h-15 w-12 ">
                 <Image
                   fill
                   priority
@@ -59,11 +59,11 @@ export default function LayoutComp({
               </div>
             </div>
 
-            <div className="flex gap-3 justify-center items-center">
-              <Link href="/">Login</Link>
+            <div className="flex gap-3 justify-center items-center ">
+              <Link href="/login">Login</Link>
               <Link
                 href="/signup"
-                className="bg-[#FFAB5B] text-white p-1 px-2 font-semibold md:text-lg rounded-full"
+                className="bg-[#FFAB5B] text-white p-1 px-2 font-semibold md:text-lg rounded-full z-10"
               >
                 Get Started
               </Link>
@@ -103,7 +103,7 @@ export default function LayoutComp({
 
       {/* Second right hallf hidden on mobile */}
       <div className="col-span-2 md:flex flex-col relative bg-transparent bg-contain hidden  bg-no-repeat">
-        <div className="md:flex gap-2 justify-end items-end p-6 absolute top-0 w-full z-100 hidden">
+        <div className="md:flex gap-2 justify-end items-end p-6 absolute top-0 w-full z-50 hidden">
           <div className="flex rounded-md p-3 justify-center items-center bg-white gap-2 cursor-pointer">
             <BsApple className="w-10 h-10" />
             <div className="flex flex-col">
@@ -122,13 +122,13 @@ export default function LayoutComp({
 
         <div className="grid grid-cols-5 h-full w-full relative">
           <div className="flex col-span-2 relative">
-            <div className="flex w-50 rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute top-3/12 left-4/12 gap-2 z-100">
+            <div className="flex w-50 rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute top-3/12 left-4/12 gap-2 z-50">
               <div className="rounded-full bg-white">
                 <BsCheck className="h-10 w-10" />
               </div>
               <p className="text-2xl font-bold">Easy to use</p>
             </div>
-            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute bottom-2/12 right-10 gap-2 z-100">
+            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute bottom-2/12 right-10 gap-2 z-50">
               <div className="rounded-full bg-white">
                 <BsCheck className="h-10 w-10" />
               </div>
@@ -136,14 +136,14 @@ export default function LayoutComp({
             </div>
           </div>
           <div className="flex flex-col justify-center items-center col-span-3 relative  ">
-            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 pr-3 absolute top-1/12 left-0 gap-2 z-100">
+            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 pr-3 absolute top-1/12 left-0 gap-2 z-50">
               <div className="rounded-full bg-white">
                 <BsCheck className="h-10 w-10" />
               </div>
               <p className="text-2xl font-bold">Exciting Quizzes</p>
             </div>
 
-            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute bottom-4/12 left-2/12 gap-2 z-100">
+            <div className="flex rounded-full justify-center items-center bg-[#01CFFE] p-2 absolute bottom-4/12 left-2/12 gap-2 z-50">
               <div className="rounded-full bg-white">
                 <BsCheck className="h-10 w-10" />
               </div>
