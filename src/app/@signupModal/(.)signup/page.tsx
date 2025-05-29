@@ -29,7 +29,7 @@ export default function SignupModal() {
             }
           }}
         >
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[500px]  ">
             <SignupForm />
           </DialogContent>
         </Dialog>

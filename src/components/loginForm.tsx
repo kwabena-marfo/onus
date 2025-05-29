@@ -7,12 +7,7 @@ import { FaGoogle } from "react-icons/fa";
 
 export default function LoginForm({ className }: React.ComponentProps<"form">) {
   return (
-    <form
-      className={cn(
-        "grid justify-self-center items-center bg-white/90  gap-4 shadow-lg rounded-md p-5 z-50",
-        className
-      )}
-    >
+    <form className={cn("grid w-full  gap-3 z-50", className)}>
       <div className="flex flex-col gap-0 justify-center items-center">
         <p className="text-3xl font-bold">Login</p>
         <p className="text-center">Continue Your Journey to Spritual Growth.</p>
