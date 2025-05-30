@@ -6,7 +6,13 @@ import Link from "next/link";
 import Content from "@/components/loggedIn/content";
 import StatCard from "@/components/loggedIn/statCard";
 
-import { BsPeople, BsEmojiSmile } from "react-icons/bs";
+import {
+  BsEmojiSmile,
+  BsBook,
+  BsBookmark,
+  BsBookHalf,
+  BsLightbulb,
+} from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 
@@ -22,48 +28,48 @@ export default function Dashboard() {
                 label: "Memorised",
                 link: "/app/onusbible",
                 value: 66,
-                borderColor: "border-t-[#655df0]",
-                icon: BsPeople,
+                color: "#519A10",
+                icon: BsBook,
                 isLoading: false,
                 isError: false,
               },
               {
-                label: "Memorised",
+                label: "Saved",
                 link: "/app/onusbible",
                 value: 66,
-                borderColor: "border-t-[#655df0]",
-                icon: BsPeople,
+                color: "#8C15E8",
+                icon: BsBookmark,
                 isLoading: false,
                 isError: false,
               },
               {
-                label: "Memorised",
+                label: "Books",
                 link: "/app/onusbible",
                 value: 66,
-                borderColor: "border-t-[#655df0]",
-                icon: BsPeople,
+                color: "#9A6A10",
+                icon: BsBookHalf,
                 isLoading: false,
                 isError: false,
               },
               {
-                label: "Memorised",
+                label: "Quizzes",
                 link: "/app/onusbible",
                 value: 66,
-                borderColor: "border-t-[#655df0]",
-                icon: BsPeople,
+                color: "#760606",
+                icon: BsLightbulb,
                 isLoading: false,
                 isError: false,
               },
             ].map(
               (
-                { label, link, value, borderColor, icon, isLoading, isError },
+                { label, link, value, color, icon, isLoading, isError },
                 index
               ) => (
                 <Link href={link} key={index}>
                   <StatCard
                     label={label}
                     value={value}
-                    borderColor={borderColor}
+                    color={color}
                     Icon={icon}
                     isLoading={isLoading}
                     isError={isError}
@@ -80,10 +86,10 @@ export default function Dashboard() {
             <Card className="grid gap-6 p-4 bg-gray-100 h-full">
               {[
                 { book: "Matthew", progress: 33 },
-                { book: "Matthew", progress: 33 },
-                { book: "Matthew", progress: 33 },
-                { book: "Matthew", progress: 33 },
-                { book: "Matthew", progress: 33 },
+                { book: "Matthew", progress: 50 },
+                { book: "Matthew", progress: 90 },
+                { book: "Matthew", progress: 80 },
+                { book: "Matthew", progress: 20 },
               ].map(({ book, progress }: any) => (
                 <div key={book} className="grid">
                   <p>{book}</p>

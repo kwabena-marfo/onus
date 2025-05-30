@@ -1,8 +1,8 @@
 import {
   BsBook,
+  BsBookmark,
   BsGear,
   BsHouse,
-  BsJournalCheck,
   BsLightbulb,
 } from "react-icons/bs";
 
@@ -19,7 +19,7 @@ export default [
   },
   {
     label: "Saved Verses",
-    icon: <BsJournalCheck />,
+    icon: <BsBookmark />,
     key: "/app",
   },
   {
