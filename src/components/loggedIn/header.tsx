@@ -22,13 +22,14 @@ import {
 
 import { BsList, BsPersonFill } from "react-icons/bs";
 import { LuLogOut } from "react-icons/lu";
+import Link from "next/link";
 
 export default function Header({ admin }: any) {
   const [openSheet, setOpenSheet] = useState(false);
 
   return (
     <>
-      <nav className="md:left-1/6  fixed top-0 z-50 w-full bg-white border-b-2">
+      <nav className="md:left-1/6  fixed top-0 z-50 md:w-5/6 w-full bg-white border-b-2">
         <div className="px-4 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 justify-start">
@@ -47,7 +48,7 @@ export default function Header({ admin }: any) {
                   </SheetContent>
                 </Sheet>
               </div>
-              <a href="#" className="flex items-center space-x-1">
+              <Link href="/app" className="flex items-center space-x-1">
                 <Image
                   priority
                   width={36}
@@ -55,12 +56,12 @@ export default function Header({ admin }: any) {
                   src="/imgs/logos/onusLogoChosen.png"
                   alt="logo"
                 />
-              </a>
+              </Link>
             </div>
             <div className="flex items-center justify-end">
               <div className="flex justify-center items-center space-x-3">
                 <div className="flex items-center space-x-1">
-                  <Avatar className="w-8 h-8">
+                  <Avatar className="w-10 h-10">
                     <AvatarImage src={admin?.dp} alt="admin" />
                     <AvatarFallback>
                       <BsPersonFill />
