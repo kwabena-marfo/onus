@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
-import Content from "@/components/loggedIn/content";
-import StatCard from "@/components/loggedIn/statCard";
+import Content from "@/components/loggedIn/global/content";
+import StatCard from "@/components/loggedIn/global/statCard";
 
 import {
   BsEmojiSmile,
@@ -14,13 +15,18 @@ import {
   BsLightbulb,
 } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import DasboardTable from "@/components/loggedIn/dashboard/table";
 
 export default function Dashboard() {
+  const [searchQuery, setSearchQuery] = useState<any>();
+  const [queryMembersResults, setQueryMembersResults] = useState();
+  const [deepFilterFunction, setDeepFilterFunction] = useState<any>([]);
+  console.log(queryMembersResults);
   return (
     <Content tittle="Hello Frank!" Icon={BsEmojiSmile}>
-      <div className="grid  md:grid-cols-5 gap-4">
-        <div className="grid col-span-2 gap-8">
+      <div className="grid md:grid-cols-5 gap-4">
+        <div className="grid col-span-5 md:col-span-2 gap-8">
           {/* StatCard Area */}
           <div className="grid grid-cols-2  gap-4">
             {[
@@ -79,11 +85,11 @@ export default function Dashboard() {
             )}
           </div>
           {/* Progress Area */}
-          <div className="grid gap-3">
+          <div className="grid gap-1">
             <h4 className="text-md md:text-3xl font-bold text-gray-700  ">
               Your Progress
             </h4>{" "}
-            <Card className="grid gap-6 p-4 bg-gray-100 h-full">
+            <Card className="grid gap-6 p-4 bg-gray-50 h-full">
               {[
                 { book: "Matthew", progress: 33 },
                 { book: "Matthew", progress: 50 },
@@ -99,6 +105,24 @@ export default function Dashboard() {
             </Card>
           </div>
         </div>
+
+        <Card className=" md:col-span-3 col-span-5 ">
+          <CardContent className="p-3">
+            <h4 className="text-md md:text-3xl font-bold text-gray-700  ">
+              Your Progress
+            </h4>{" "}
+            <DasboardTable
+              data={{
+                setQueryMembersResults,
+                setSearchQuery,
+                setDeepFilterFunction,
+                deepFilterFunction,
+                queryMembersResults: new Array(10).fill(""),
+                searchQuery,
+              }}
+            />
+          </CardContent>
+        </Card>
       </div>
     </Content>
   );

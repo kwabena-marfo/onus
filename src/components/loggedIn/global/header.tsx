@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import Menu from "@/components/loggedIn/menu";
+import Menu from "@/components/loggedIn/global/menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

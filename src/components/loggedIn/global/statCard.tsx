@@ -23,7 +23,7 @@ export default function StatCard({
     <Skeleton className="w-full h-[60px] rounded-md" />
   ) : (
     <Card
-      className={`w-full h-full border-t-4 border-t-[${color}] bg-gray-100 cursor-pointer`}
+      className={`w-full h-full border-t-4 border-t-[${color}] bg-gray-50 cursor-pointer`}
     >
       <CardContent className="p-3 space-y-1">
         {isError ? (
@@ -52,7 +52,7 @@ export default function StatCard({
                     {label}
                   </p>
                 </div>
-                <div>
+                <div className="line-clamp-2">
                   <p className="text-4xl md:text-6xl font-extrabold text-gray-800 line-clamp-1">
                     {value}
                   </p>

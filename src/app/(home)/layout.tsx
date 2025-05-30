@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 
 import LayoutComp from "@/components/home/layoutComp";
 
-import "@/styles/globals.css";
-
 export const metadata: Metadata = {
   title: "Onus",
   description: "Observing, Navigating and Understanding Scripture",
