@@ -18,9 +18,11 @@ export default function HomeLayout({
 }>) {
   return (
     <>
-      <LayoutComp>{children}</LayoutComp>
-      {signupModal}
-      {loginModal}
+      <LayoutComp>
+        {children}
+        {signupModal}
+        {loginModal}
+      </LayoutComp>
     </>
   );
 }
