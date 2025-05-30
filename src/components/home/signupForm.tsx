@@ -9,9 +9,14 @@ export default function SignupForm({
   className,
 }: React.ComponentProps<"form">) {
   return (
-    <form className={cn("grid w-full  gap-3 z-50", className)}>
-      <div className="flex flex-col gap-0 justify-center items-center">
-        <p className="text-3xl font-bold">Get Started</p>
+    <form
+      className={cn(
+        "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
+        className
+      )}
+    >
+      <div className="flex flex-col gap-0 justify-center items-center ">
+        <p className="text-3xl md:text-6xl font-bold">Get Started</p>
         <p className="text-center">
           Your Journey to Spritual Growth Begins here
         </p>
@@ -33,11 +38,11 @@ export default function SignupForm({
         <Input id="password" />
       </div>{" "}
       <div className="flex flex-col">
-        <Button type="submit" className="rounded-md">
+        <Button type="submit" className="rounded-md bg-[#fa9a40]">
           Submit
         </Button>
         <p className="text-center ">Or</p>
-        <Button type="submit" className="rounded-md">
+        <Button type="submit" variant="outline" className="rounded-md ">
           <FaGoogle /> Sign Up With Google
         </Button>
       </div>

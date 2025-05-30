@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
 import {
   Sheet,
   SheetContent,
@@ -22,7 +21,7 @@ export default function LayoutComp({
   return (
     <div className="h-[100dvh] grid  grid-cols-3 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-1 flex flex-col relative  h-full">
-        <div className="absolute  h-full w-full bg-gradient-to-br from-white/95 via-white/90 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
+        <div className="absolute  h-full w-full bg-gradient-to-br from-white/95 via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Header Area */}
           <div className="flex justify-between items-center w-full p-3 z-100">
@@ -49,14 +48,14 @@ export default function LayoutComp({
                 </SheetContent>
               </Sheet>
 
-              <div className="relative h-15 w-12 ">
+              <Link href="/" className="relative h-15 w-12 ">
                 <Image
                   fill
                   priority
                   src="/imgs/logos/onusLogoChosen.png"
                   alt="logo"
                 />
-              </div>
+              </Link>
             </div>
 
             <div className="flex gap-3 justify-center items-center ">
@@ -100,7 +99,6 @@ export default function LayoutComp({
           </div>
         </div>
       </div>
-
       {/* Second right hallf hidden on mobile */}
       <div className="col-span-2 md:flex flex-col relative bg-transparent bg-contain hidden  bg-no-repeat">
         <div className="md:flex gap-2 justify-end items-end p-6 absolute top-0 w-full z-50 hidden">

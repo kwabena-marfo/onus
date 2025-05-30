@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import "@/styles/globals.css";
-import LayoutComp from "@/components/layoutComp";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -15,8 +15,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  signupModal,
-  loginModal,
 }: Readonly<{
   children: React.ReactNode;
   signupModal: React.ReactNode;
@@ -25,9 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` ${montserrat.variable} antialiased`}>
-        <LayoutComp>{children}</LayoutComp>
-        {signupModal}
-        {loginModal}
+        <NextTopLoader />
+        {children}
       </body>
     </html>
   );

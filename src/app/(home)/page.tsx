@@ -4,7 +4,7 @@ import { BsCompass, BsEyeglasses, BsJournalCheck } from "react-icons/bs";
 import { FaCross } from "react-icons/fa";
 
 const myFont = localFont({
-  src: [{ path: "../fonts/Austrian.otf", weight: "400" }],
+  src: [{ path: "../../fonts/Austrian.otf", weight: "400" }],
 });
 
 export default function Home() {

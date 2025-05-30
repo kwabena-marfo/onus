@@ -2,7 +2,7 @@
 import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/navigation";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -10,9 +10,9 @@ import {
   DrawerFooter,
 } from "@/components/ui/drawer";
 
-import SignupForm from "@/components/signupForm";
+import LoginForm from "@/components/home/loginForm";
 
-export default function SignupModal() {
+export default function LoginModal() {
   const router = useRouter();
   const isDesktop = useMediaQuery({
     query: "(min-width: 1224px)",
@@ -29,8 +29,9 @@ export default function SignupModal() {
             }
           }}
         >
-          <DialogContent className="sm:max-w-[500px]  ">
-            <SignupForm />
+          <DialogTitle></DialogTitle>
+          <DialogContent className="sm:max-w-[425px]">
+            <LoginForm />
           </DialogContent>
         </Dialog>
       ) : (
@@ -43,7 +44,7 @@ export default function SignupModal() {
           }}
         >
           <DrawerContent>
-            <SignupForm />
+            <LoginForm />
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>
