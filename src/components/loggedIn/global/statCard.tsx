@@ -14,7 +14,6 @@ export default function StatCard({
   Icon,
   isLoading,
   isError,
-  children,
   link,
   clickFunction,
 }: any) {
@@ -38,27 +37,23 @@ export default function StatCard({
           </>
         ) : (
           <>
-            {children ?? (
-              <>
-                <div
-                  onClick={() => {
-                    if (link) return router.push(link);
-                    if (clickFunction) return clickFunction();
-                  }}
-                  className="grid items-center space-x-1 text-gray-700"
-                >
-                  <Icon className="w-8 h-8 text-gray-700" />
-                  <p className={`md:text-2xl text-sm font-medium line-clamp-1`}>
-                    {label}
-                  </p>
-                </div>
-                <div className="line-clamp-2">
-                  <p className="text-4xl md:text-6xl font-extrabold text-gray-800 line-clamp-1">
-                    {value}
-                  </p>
-                </div>
-              </>
-            )}
+            <>
+              <div
+                onClick={() => {
+                  if (link) return router.push(link);
+                  if (clickFunction) return clickFunction();
+                }}
+                className="grid items-center space-x-1 text-gray-700"
+              >
+                <Icon className="w-8 h-8 text-gray-700" />
+                <p className={`md:text-2xl text-sm font-medium line-clamp-1`}>
+                  {label}
+                </p>
+              </div>
+              <p className="text-4xl md:text-6xl font-extrabold text-gray-800 line-clamp-1">
+                {value}
+              </p>
+            </>
           </>
         )}
       </CardContent>

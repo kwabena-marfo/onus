@@ -25,10 +25,10 @@ export default function Dashboard() {
   console.log(queryMembersResults);
   return (
     <Content tittle="Hello Frank!" Icon={BsEmojiSmile}>
-      <div className="grid md:grid-cols-5 gap-4">
-        <div className="grid col-span-5 md:col-span-2 gap-8">
+      <div className="grid justify-start items-start md:grid-cols-5 gap-4">
+        <div className="flex flex-col justify-start items-start col-span-5 md:col-span-2 gap-8 ">
           {/* StatCard Area */}
-          <div className="grid grid-cols-2  gap-4">
+          <div className="grid grid-cols-2  gap-4 w-full">
             {[
               {
                 label: "Memorised",
@@ -85,8 +85,8 @@ export default function Dashboard() {
             )}
           </div>
           {/* Progress Area */}
-          <div className="grid gap-1">
-            <h4 className="text-md md:text-3xl font-bold text-gray-700  ">
+          <div className="flex flex-col w-full gap-1">
+            <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
               Your Progress
             </h4>{" "}
             <Card className="grid gap-6 p-4 bg-gray-50 h-full">
@@ -95,6 +95,8 @@ export default function Dashboard() {
                 { book: "Matthew", progress: 50 },
                 { book: "Matthew", progress: 90 },
                 { book: "Matthew", progress: 80 },
+                { book: "Matthew", progress: 20 },
+                { book: "Matthew", progress: 20 },
                 { book: "Matthew", progress: 20 },
               ].map(({ book, progress }: any) => (
                 <div key={book} className="grid">
@@ -108,8 +110,8 @@ export default function Dashboard() {
 
         <Card className=" md:col-span-3 col-span-5 ">
           <CardContent className="p-3">
-            <h4 className="text-md md:text-3xl font-bold text-gray-700  ">
-              Your Progress
+            <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
+              Added Scriptures
             </h4>{" "}
             <DasboardTable
               data={{
