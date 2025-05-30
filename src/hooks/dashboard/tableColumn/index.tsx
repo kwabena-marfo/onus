@@ -11,14 +11,11 @@ import Export from "./export";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
-  BsBook,
-  BsPerson,
   BsSortAlphaDown,
   BsSortAlphaUp,
   BsThreeDots,
