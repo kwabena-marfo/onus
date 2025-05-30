@@ -17,8 +17,6 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-  signupModal: React.ReactNode;
-  loginModal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
