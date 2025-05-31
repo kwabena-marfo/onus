@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table";
 
 // import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 
-// import Delete from "./delete";
 import Reset from "./reset";
 import Export from "./export";
 
@@ -132,16 +131,10 @@ export default function useColumns({
       cell: () => {
         return (
           <div className="flex  justify-between p-2 grid-cols-6 rounded-lg bg-gray-100 shadow my-1 border">
-            {/* <Avatar className="h-12 w-12  bg-amber-200">
-                <AvatarImage src={"memberPhoto?.[0]?.url"} alt="@shadcn" />
-                <AvatarFallback className="bg-amber-200">
-                  <BsBook className="h-6 w-6 bg-amber-200 " />
-                </AvatarFallback>
-              </Avatar> */}
             <div className="grid ">
               <div className="flex gap-2">
                 <p className="text-2xl font-bold">Mathew 7:7</p>
-                <Badge className="rounded-full">Memorized</Badge>
+                <Badge className="rounded-full bg-[#519A10]">Memorized</Badge>
               </div>
               <div className=" line-clamp-2">
                 <p className="text-lg overflow-hidden text-ellipsis">
@@ -153,8 +146,8 @@ export default function useColumns({
                 </p>
               </div>
               <div className="flex gap-1 mt-3">
-                <Badge className="rounded-full">Faith</Badge>
-                <Badge className="rounded-full">Faith</Badge>
+                <Badge className="rounded-full bg-[#9A6A10] ">Faith</Badge>
+                <Badge className="rounded-full bg-[#9A6A10] ">Faith</Badge>
               </div>
             </div>
           </div>

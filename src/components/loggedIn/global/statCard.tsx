@@ -10,9 +10,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function StatCard({
   label,
   value,
-  color,
   Icon,
   isLoading,
+  colorB,
+  colorT,
   isError,
   link,
   clickFunction,
@@ -22,7 +23,7 @@ export default function StatCard({
     <Skeleton className="w-full h-[60px] rounded-md" />
   ) : (
     <Card
-      className={`w-full h-full border-t-4 border-t-[${color}] bg-gray-50 cursor-pointer`}
+      className={`w-full h-full border-t-4 ${colorB} bg-gray-50 cursor-pointer`}
     >
       <CardContent className="p-3 space-y-1">
         {isError ? (
@@ -43,14 +44,16 @@ export default function StatCard({
                   if (link) return router.push(link);
                   if (clickFunction) return clickFunction();
                 }}
-                className="grid items-center space-x-1 text-gray-700"
+                className={`grid items-center space-x-1 ${colorT}`}
               >
-                <Icon className="w-8 h-8 text-gray-700" />
+                <Icon className={`w-8 h-8 ${colorT}`} />
                 <p className={`md:text-2xl text-sm font-medium line-clamp-1`}>
                   {label}
                 </p>
               </div>
-              <p className="text-4xl md:text-6xl font-extrabold text-gray-800 line-clamp-1">
+              <p
+                className={`text-4xl md:text-5xl font-bold line-clamp-1 ${colorT}`}
+              >
                 {value}
               </p>
             </>

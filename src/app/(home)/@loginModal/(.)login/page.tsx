@@ -30,7 +30,7 @@ export default function LoginModal() {
           }}
         >
           <DialogTitle></DialogTitle>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[500px]  ">
             <LoginForm />
           </DialogContent>
         </Dialog>

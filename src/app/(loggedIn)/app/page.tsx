@@ -34,7 +34,8 @@ export default function Dashboard() {
                 label: "Memorised",
                 link: "/app/onusbible",
                 value: 66,
-                color: "#519A10",
+                colorB: "border-t-[#519A10]",
+                colorT: "text-[#519A10]",
                 icon: BsBook,
                 isLoading: false,
                 isError: false,
@@ -43,7 +44,8 @@ export default function Dashboard() {
                 label: "Saved",
                 link: "/app/onusbible",
                 value: 66,
-                color: "#8C15E8",
+                colorB: "border-t-[#8C15E8]",
+                colorT: "text-[#8C15E8]",
                 icon: BsBookmark,
                 isLoading: false,
                 isError: false,
@@ -52,7 +54,8 @@ export default function Dashboard() {
                 label: "Books",
                 link: "/app/onusbible",
                 value: 66,
-                color: "#9A6A10",
+                colorB: "border-t-[#9A6A10]",
+                colorT: "text-[#9A6A10]",
                 icon: BsBookHalf,
                 isLoading: false,
                 isError: false,
@@ -61,21 +64,32 @@ export default function Dashboard() {
                 label: "Quizzes",
                 link: "/app/onusbible",
                 value: 66,
-                color: "#760606",
+                colorB: "border-t-[#760606]",
+                colorT: "text-[#760606]",
                 icon: BsLightbulb,
                 isLoading: false,
                 isError: false,
               },
             ].map(
               (
-                { label, link, value, color, icon, isLoading, isError },
+                {
+                  label,
+                  link,
+                  value,
+                  colorB,
+                  colorT,
+                  icon,
+                  isLoading,
+                  isError,
+                },
                 index
               ) => (
                 <Link href={link} key={index}>
                   <StatCard
                     label={label}
                     value={value}
-                    color={color}
+                    colorB={colorB}
+                    colorT={colorT}
                     Icon={icon}
                     isLoading={isLoading}
                     isError={isError}
