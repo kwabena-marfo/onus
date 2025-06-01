@@ -124,9 +124,9 @@ export default function Dashboard() {
 
         <Card className=" md:col-span-3 col-span-5 ">
           <CardContent className="p-3">
-            <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
-              Added Scriptures
-            </h4>{" "}
+            {/* <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
+              Your Scriptures
+            </h4>{" "} */}
             <DasboardTable
               data={{
                 setQueryMembersResults,

@@ -13,7 +13,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
 
 import { BiSelectMultiple } from "react-icons/bi";
-import { BsArchive, BsSortAlphaDown, BsSortAlphaUp } from "react-icons/bs";
+import {
+  BsArchive,
+  BsCircleFill,
+  BsSortAlphaDown,
+  BsSortAlphaUp,
+} from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 
 type Member = {
@@ -130,24 +135,22 @@ export default function useColumns({
       ),
       cell: () => {
         return (
-          <div className="flex  justify-between p-2 grid-cols-6 rounded-lg bg-gray-50 shadow my-1 border">
-            <div className="grid ">
-              <div className="flex gap-2">
-                <p className="md:text-2xl font-bold">Mathew 7:7</p>
-                <Badge className="rounded-full bg-[#519A10]">Memorized</Badge>
-              </div>
-              <div className=" line-clamp-2">
-                <p className="text-lg overflow-hidden text-ellipsis">
-                  Ask, and it will be given to you; seek, and you will find;
-                  knock, and the door will be opened to you.Ask, and it will be
-                  given to you; seek, and you will find; knock, and the door
-                  will be opened to you.Ask, and it will be given to you; seek,
-                  and you will find; knock, and the door will be opened to you.
-                </p>
-              </div>
-              <div className="flex gap-1 mt-3">
-                <Badge className="rounded-full   ">Faith</Badge>
-                <Badge className="rounded-full   ">Faith</Badge>
+          <div className="grid">
+            <div className="flex gap-2 items-center">
+              <BsCircleFill className="w-5 h-5 text-green-700" />
+              <p className="md:text-2xl font-bold">Mathew 7:7</p>
+            </div>
+            <div className=" line-clamp-2">
+              <p className="text-lg overflow-hidden text-ellipsis">
+                Ask, and it will be given to you; seek, and you will find;
+                knock, and the door will be opened to you.Ask, and it will be
+                given to you; seek, and you will find; knock, and the door will
+                be opened to you.Ask, and it will be given to you; seek, and you
+                will find; knock, and the door will be opened to you.
+              </p>
+              <div className="flex gap-1 mt-3 justify-end">
+                <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
+                <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
               </div>
             </div>
           </div>

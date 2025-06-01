@@ -78,7 +78,7 @@ any) {
               setSearchQuery(e.target.value);
             }}
             placeholder="Search here..."
-            className="pr-44 rounded-full h-12"
+            className="pr-44 rounded-full h-12 bg-gray-50 "
             value={searchQuery || ""}
           />
         </div>
@@ -114,7 +114,10 @@ any) {
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                className="flex items-center justify-start hover:bg-white"
+                key={headerGroup.id}
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -134,6 +137,7 @@ any) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="flex  justify-between gap-2 grid-cols-6 rounded-lg bg-gray-50   border cursor-pointer my-2"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
