@@ -146,8 +146,8 @@ export default function useColumns({
                 </p>
               </div>
               <div className="flex gap-1 mt-3">
-                <Badge className="rounded-full bg-[#FFAB5B] ">Faith</Badge>
-                <Badge className="rounded-full bg-[#FFAB5B] ">Faith</Badge>
+                <Badge className="rounded-full   ">Faith</Badge>
+                <Badge className="rounded-full   ">Faith</Badge>
               </div>
             </div>
           </div>
