@@ -130,10 +130,10 @@ export default function useColumns({
       ),
       cell: () => {
         return (
-          <div className="flex  justify-between p-2 grid-cols-6 rounded-lg bg-gray-100 shadow my-1 border">
+          <div className="flex  justify-between p-2 grid-cols-6 rounded-lg bg-gray-50 shadow my-1 border">
             <div className="grid ">
               <div className="flex gap-2">
-                <p className="text-2xl font-bold">Mathew 7:7</p>
+                <p className="md:text-2xl font-bold">Mathew 7:7</p>
                 <Badge className="rounded-full bg-[#519A10]">Memorized</Badge>
               </div>
               <div className=" line-clamp-2">
@@ -146,8 +146,8 @@ export default function useColumns({
                 </p>
               </div>
               <div className="flex gap-1 mt-3">
-                <Badge className="rounded-full bg-[#9A6A10] ">Faith</Badge>
-                <Badge className="rounded-full bg-[#9A6A10] ">Faith</Badge>
+                <Badge className="rounded-full bg-[#FFAB5B] ">Faith</Badge>
+                <Badge className="rounded-full bg-[#FFAB5B] ">Faith</Badge>
               </div>
             </div>
           </div>

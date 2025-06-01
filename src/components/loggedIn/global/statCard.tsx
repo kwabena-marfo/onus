@@ -44,7 +44,7 @@ export default function StatCard({
                   if (link) return router.push(link);
                   if (clickFunction) return clickFunction();
                 }}
-                className={`grid items-center space-x-1 ${colorT}`}
+                className={`grid items-center space-x-1 text-gray-700`}
               >
                 <Icon className={`w-8 h-8 ${colorT}`} />
                 <p className={`md:text-2xl text-sm font-medium line-clamp-1`}>
@@ -52,7 +52,7 @@ export default function StatCard({
                 </p>
               </div>
               <p
-                className={`text-4xl md:text-5xl font-bold line-clamp-1 ${colorT}`}
+                className={`text-4xl md:text-5xl font-bold line-clamp-1 text-gray-700`}
               >
                 {value}
               </p>

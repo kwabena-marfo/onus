@@ -9,10 +9,10 @@ import StatCard from "@/components/loggedIn/global/statCard";
 
 import {
   BsEmojiSmile,
-  BsBook,
-  BsBookmark,
   BsBookHalf,
-  BsLightbulb,
+  BsBookFill,
+  BsBookmarkFill,
+  BsLightbulbFill,
 } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,7 +36,7 @@ export default function Dashboard() {
                 value: 66,
                 colorB: "border-t-[#519A10]",
                 colorT: "text-[#519A10]",
-                icon: BsBook,
+                icon: BsBookFill,
                 isLoading: false,
                 isError: false,
               },
@@ -46,7 +46,7 @@ export default function Dashboard() {
                 value: 66,
                 colorB: "border-t-[#8C15E8]",
                 colorT: "text-[#8C15E8]",
-                icon: BsBookmark,
+                icon: BsBookmarkFill,
                 isLoading: false,
                 isError: false,
               },
@@ -66,7 +66,7 @@ export default function Dashboard() {
                 value: 66,
                 colorB: "border-t-[#760606]",
                 colorT: "text-[#760606]",
-                icon: BsLightbulb,
+                icon: BsLightbulbFill,
                 isLoading: false,
                 isError: false,
               },
