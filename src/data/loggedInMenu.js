@@ -10,27 +10,27 @@ export default [
   {
     label: "Dashboard",
     icon: <BsHouse />,
-    key: "/app",
+    key: "/dashboard",
   },
   {
     label: "My ONUS Bible",
     icon: <BsBook />,
-    key: "/app",
+    key: "/myonusbible",
   },
   {
     label: "Saved Verses",
     icon: <BsBookmark />,
-    key: "/app",
+    key: "/saved",
   },
   {
     label: "Quizzes",
     icon: <BsLightbulb />,
-    key: "/app",
+    key: "/quize",
   },
 
   {
     label: "Settings",
     icon: <BsGear />,
-    key: "/app",
+    key: "/settings",
   },
 ];

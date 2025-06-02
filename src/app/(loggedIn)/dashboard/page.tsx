@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 import Content from "@/components/loggedIn/global/content";
 import StatCard from "@/components/loggedIn/global/statCard";
@@ -10,13 +9,12 @@ import StatCard from "@/components/loggedIn/global/statCard";
 import {
   BsEmojiSmile,
   BsBookHalf,
-  BsBookFill,
   BsBookmarkFill,
   BsLightbulbFill,
 } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent } from "@/components/ui/card";
 import DasboardTable from "@/components/loggedIn/dashboard/table";
+import Image from "next/image";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<any>();
@@ -32,18 +30,26 @@ export default function Dashboard() {
             {[
               {
                 label: "Memorised",
-                link: "/app/onusbible",
+                link: "/myonusbible",
                 value: 66,
-                colorB: "border-t-[#519A10]",
-                colorT: "text-[#519A10]",
-                icon: BsBookFill,
+                colorB: "border-t-[#0F3187]",
+                colorT: "text-[#0F3187]",
+                icon: () => (
+                  <Image
+                    priority
+                    width={30}
+                    height={30}
+                    src="/imgs/logos/onusKnot.png"
+                    alt="logo"
+                  />
+                ),
                 isLoading: false,
                 isError: false,
                 add: true,
               },
               {
                 label: "Saved",
-                link: "/app/onusbible",
+                link: "/saved",
                 value: 66,
                 colorB: "border-t-[#8C15E8]",
                 colorT: "text-[#8C15E8]",
@@ -54,7 +60,6 @@ export default function Dashboard() {
               },
               {
                 label: "Books",
-                link: "/app/onusbible",
                 value: 66,
                 colorB: "border-t-[#9A6A10]",
                 colorT: "text-[#9A6A10]",
@@ -64,7 +69,7 @@ export default function Dashboard() {
               },
               {
                 label: "Quizzes",
-                link: "/app/onusbible",
+                link: "/quize",
                 value: 66,
                 colorB: "border-t-[#760606]",
                 colorT: "text-[#760606]",
@@ -74,31 +79,20 @@ export default function Dashboard() {
               },
             ].map(
               (
-                {
-                  label,
-                  link,
-                  value,
-                  colorB,
-                  colorT,
-                  add,
-                  icon,
-                  isLoading,
-                  isError,
-                },
+                { label, value, colorB, colorT, add, icon, isLoading, isError },
                 index
               ) => (
-                <Link href={link} key={index}>
-                  <StatCard
-                    label={label}
-                    value={value}
-                    colorB={colorB}
-                    colorT={colorT}
-                    add={add}
-                    Icon={icon}
-                    isLoading={isLoading}
-                    isError={isError}
-                  />
-                </Link>
+                <StatCard
+                  key={index}
+                  label={label}
+                  value={value}
+                  colorB={colorB}
+                  colorT={colorT}
+                  add={add}
+                  Icon={icon}
+                  isLoading={isLoading}
+                  isError={isError}
+                />
               )
             )}
           </div>
@@ -107,7 +101,7 @@ export default function Dashboard() {
             <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
               Your Progress
             </h4>{" "}
-            <Card className="grid gap-6 p-4 bg-gray-50 h-full">
+            <div className="grid gap-6 rounded-lg  p-3 bg-gray-50 border h-full">
               {[
                 { book: "Matthew", progress: 33 },
                 { book: "Matthew", progress: 50 },
@@ -122,27 +116,22 @@ export default function Dashboard() {
                   <Progress value={progress} />
                 </div>
               ))}
-            </Card>
+            </div>
           </div>
         </div>
 
-        <Card className=" md:col-span-3 col-span-5 ">
-          <CardContent className="p-3">
-            {/* <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
-              Your Scriptures
-            </h4>{" "} */}
-            <DasboardTable
-              data={{
-                setQueryMembersResults,
-                setSearchQuery,
-                setDeepFilterFunction,
-                deepFilterFunction,
-                queryMembersResults: new Array(10).fill(""),
-                searchQuery,
-              }}
-            />
-          </CardContent>
-        </Card>
+        <div className="rounded-lg  p-3 border md:col-span-3 col-span-5 ">
+          <DasboardTable
+            data={{
+              setQueryMembersResults,
+              setSearchQuery,
+              setDeepFilterFunction,
+              deepFilterFunction,
+              queryMembersResults: new Array(10).fill(""),
+              searchQuery,
+            }}
+          />
+        </div>
       </div>
     </Content>
   );

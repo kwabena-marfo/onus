@@ -8,7 +8,7 @@ export default function Footer() {
       <span className="block text-center text-sm text-gray-500 sm:text-center dark:text-gray-400">
         {/* © {moment().format("YYYY")}{" "} */}
         <Link href="" className="hover:underline">
-          GT-Connect
+          ONUS
         </Link>
         . All Rights Reserved.
       </span>

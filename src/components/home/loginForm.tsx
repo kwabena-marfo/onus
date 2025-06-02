@@ -32,7 +32,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
       </div>
 
       <div className="flex flex-col p-1">
-        <Link href="/app" className="w-full">
+        <Link href="/dashboard" className="w-full">
           <Button type="submit" className="rounded-md bg-[#fa9a40] w-full">
             Login <LuLogIn className="" />
           </Button>
