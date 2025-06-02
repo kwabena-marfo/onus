@@ -39,6 +39,7 @@ export default function Dashboard() {
                 icon: BsBookFill,
                 isLoading: false,
                 isError: false,
+                add: true,
               },
               {
                 label: "Saved",
@@ -49,6 +50,7 @@ export default function Dashboard() {
                 icon: BsBookmarkFill,
                 isLoading: false,
                 isError: false,
+                add: true,
               },
               {
                 label: "Books",
@@ -78,6 +80,7 @@ export default function Dashboard() {
                   value,
                   colorB,
                   colorT,
+                  add,
                   icon,
                   isLoading,
                   isError,
@@ -90,6 +93,7 @@ export default function Dashboard() {
                     value={value}
                     colorB={colorB}
                     colorT={colorT}
+                    add={add}
                     Icon={icon}
                     isLoading={isLoading}
                     isError={isError}
