@@ -11,7 +11,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Input } from "@/components/ui/input";
+import AddVerseForm from "./form";
 
 export default function AddVerseModal({ TriggerComp }: any) {
   const isDesktop = useMediaQuery({
@@ -25,9 +25,9 @@ export default function AddVerseModal({ TriggerComp }: any) {
           <DialogTrigger className="cursor-pointer">
             <TriggerComp />
           </DialogTrigger>
-          <DialogContent className="min-w-4xl">
+          <DialogContent className="min-w-2xl">
             <div className="flex items-center gap-2">
-              <Input />
+              <AddVerseForm />
             </div>
           </DialogContent>
         </Dialog>
@@ -37,7 +37,8 @@ export default function AddVerseModal({ TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <Input />
+            <AddVerseForm />
+
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>

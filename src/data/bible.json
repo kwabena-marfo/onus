@@ -1,0 +1,128 @@
+[
+  { "value": "genesis", "label": "Genesis", "chapters": 50, "verses": 1533 },
+  { "value": "exodus", "label": "Exodus", "chapters": 40, "verses": 1213 },
+  { "value": "leviticus", "label": "Leviticus", "chapters": 27, "verses": 859 },
+  { "value": "numbers", "label": "Numbers", "chapters": 36, "verses": 1288 },
+  {
+    "value": "deuteronomy",
+    "label": "Deuteronomy",
+    "chapters": 34,
+    "verses": 959
+  },
+  { "value": "joshua", "label": "Joshua", "chapters": 24, "verses": 658 },
+  { "value": "judges", "label": "Judges", "chapters": 21, "verses": 618 },
+  { "value": "ruth", "label": "Ruth", "chapters": 4, "verses": 85 },
+  { "value": "1_samuel", "label": "1 Samuel", "chapters": 31, "verses": 810 },
+  { "value": "2_samuel", "label": "2 Samuel", "chapters": 24, "verses": 695 },
+  { "value": "1_kings", "label": "1 Kings", "chapters": 22, "verses": 816 },
+  { "value": "2_kings", "label": "2 Kings", "chapters": 25, "verses": 719 },
+  {
+    "value": "1_chronicles",
+    "label": "1 Chronicles",
+    "chapters": 29,
+    "verses": 942
+  },
+  {
+    "value": "2_chronicles",
+    "label": "2 Chronicles",
+    "chapters": 36,
+    "verses": 822
+  },
+  { "value": "ezra", "label": "Ezra", "chapters": 10, "verses": 280 },
+  { "value": "nehemiah", "label": "Nehemiah", "chapters": 13, "verses": 406 },
+  { "value": "esther", "label": "Esther", "chapters": 10, "verses": 167 },
+  { "value": "job", "label": "Job", "chapters": 42, "verses": 1070 },
+  { "value": "psalms", "label": "Psalms", "chapters": 150, "verses": 2461 },
+  { "value": "proverbs", "label": "Proverbs", "chapters": 31, "verses": 915 },
+  {
+    "value": "ecclesiastes",
+    "label": "Ecclesiastes",
+    "chapters": 12,
+    "verses": 222
+  },
+  {
+    "value": "song_of_solomon",
+    "label": "Song of Solomon",
+    "chapters": 8,
+    "verses": 117
+  },
+  { "value": "isaiah", "label": "Isaiah", "chapters": 66, "verses": 1292 },
+  { "value": "jeremiah", "label": "Jeremiah", "chapters": 52, "verses": 1364 },
+  {
+    "value": "lamentations",
+    "label": "Lamentations",
+    "chapters": 5,
+    "verses": 154
+  },
+  { "value": "ezekiel", "label": "Ezekiel", "chapters": 48, "verses": 1273 },
+  { "value": "daniel", "label": "Daniel", "chapters": 12, "verses": 357 },
+  { "value": "hosea", "label": "Hosea", "chapters": 14, "verses": 197 },
+  { "value": "joel", "label": "Joel", "chapters": 3, "verses": 73 },
+  { "value": "amos", "label": "Amos", "chapters": 9, "verses": 146 },
+  { "value": "obadiah", "label": "Obadiah", "chapters": 1, "verses": 21 },
+  { "value": "jonah", "label": "Jonah", "chapters": 4, "verses": 48 },
+  { "value": "micah", "label": "Micah", "chapters": 7, "verses": 105 },
+  { "value": "nahum", "label": "Nahum", "chapters": 3, "verses": 47 },
+  { "value": "habakkuk", "label": "Habakkuk", "chapters": 3, "verses": 56 },
+  { "value": "zephaniah", "label": "Zephaniah", "chapters": 3, "verses": 53 },
+  { "value": "haggai", "label": "Haggai", "chapters": 2, "verses": 38 },
+  { "value": "zechariah", "label": "Zechariah", "chapters": 14, "verses": 211 },
+  { "value": "malachi", "label": "Malachi", "chapters": 4, "verses": 55 },
+  { "value": "matthew", "label": "Matthew", "chapters": 28, "verses": 1071 },
+  { "value": "mark", "label": "Mark", "chapters": 16, "verses": 678 },
+  { "value": "luke", "label": "Luke", "chapters": 24, "verses": 1151 },
+  { "value": "john", "label": "John", "chapters": 21, "verses": 879 },
+  { "value": "acts", "label": "Acts", "chapters": 28, "verses": 1007 },
+  { "value": "romans", "label": "Romans", "chapters": 16, "verses": 433 },
+  {
+    "value": "1_corinthians",
+    "label": "1 Corinthians",
+    "chapters": 16,
+    "verses": 437
+  },
+  {
+    "value": "2_corinthians",
+    "label": "2 Corinthians",
+    "chapters": 13,
+    "verses": 257
+  },
+  { "value": "galatians", "label": "Galatians", "chapters": 6, "verses": 149 },
+  { "value": "ephesians", "label": "Ephesians", "chapters": 6, "verses": 155 },
+  {
+    "value": "philippians",
+    "label": "Philippians",
+    "chapters": 4,
+    "verses": 104
+  },
+  { "value": "colossians", "label": "Colossians", "chapters": 4, "verses": 95 },
+  {
+    "value": "1_thessalonians",
+    "label": "1 Thessalonians",
+    "chapters": 5,
+    "verses": 89
+  },
+  {
+    "value": "2_thessalonians",
+    "label": "2 Thessalonians",
+    "chapters": 3,
+    "verses": 47
+  },
+  { "value": "1_timothy", "label": "1 Timothy", "chapters": 6, "verses": 113 },
+  { "value": "2_timothy", "label": "2 Timothy", "chapters": 4, "verses": 83 },
+  { "value": "titus", "label": "Titus", "chapters": 3, "verses": 46 },
+  { "value": "philemon", "label": "Philemon", "chapters": 1, "verses": 25 },
+  { "value": "hebrews", "label": "Hebrews", "chapters": 13, "verses": 303 },
+  { "value": "james", "label": "James", "chapters": 5, "verses": 108 },
+  { "value": "1_peter", "label": "1 Peter", "chapters": 5, "verses": 105 },
+  { "value": "2_peter", "label": "2 Peter", "chapters": 3, "verses": 61 },
+  { "value": "1_john", "label": "1 John", "chapters": 5, "verses": 105 },
+  { "value": "2_john", "label": "2 John", "chapters": 1, "verses": 13 },
+  { "value": "3_john", "label": "3 John", "chapters": 1, "verses": 14 },
+  { "value": "jude", "label": "Jude", "chapters": 1, "verses": 25 },
+  {
+    "value": "revelation",
+    "label": "Revelation",
+    "chapters": 22,
+    "verses": 404
+  }
+]
