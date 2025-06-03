@@ -35,10 +35,7 @@ export default function VerseFlashCardModal({ label, TriggerComp }: any) {
       ) : (
         <Drawer>
           <DrawerTrigger>
-            <p className="md:text-xl text-left text-lg text-gray-700 font-bold">
-              {label}
-            </p>
-            <p className="text-left">5 Verses</p>
+            <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
             <VerseFlashcardCarousel label={label} />
