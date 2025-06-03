@@ -20,6 +20,7 @@ import {
   BsSortAlphaUp,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
+import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
 
 type Member = {
   id: string;
@@ -135,25 +136,31 @@ export default function useColumns({
       ),
       cell: () => {
         return (
-          <div className="   grid">
-            <div className="flex gap-2 items-center">
-              <BsCircleFill className="w-5 h-5 text-[#0F3187]" />
-              <p className="md:text-xl font-bold">Mathew 7:7</p>
-            </div>
-            <div className="line-clamp-2">
-              <p className="md:text-lg overflow-hidden text-ellipsis">
-                Ask, and it will be given to you; seek, and you will find;
-                knock, and the door will be opened to you.Ask, and it will be
-                given to you; seek, and you will find; knock, and the door will
-                be opened to you.Ask, and it will be given to you; seek, and you
-                will find; knock, and the door will be opened to you.
-              </p>
-            </div>
-            <div className="flex gap-1 justify-end">
-              <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
-              <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
-            </div>
-          </div>
+          <VerseFlashCardModal
+            label="Mathew"
+            TriggerComp={() => (
+              <div className="grid">
+                <div className="flex gap-2 items-center">
+                  <BsCircleFill className="w-5 h-5 text-[#0F3187]" />
+                  <p className="md:text-xl font-bold">Mathew 7:7</p>
+                </div>
+                <div className="line-clamp-2">
+                  <p className="md:text-lg overflow-hidden text-ellipsis">
+                    Ask, and it will be given to you; seek, and you will find;
+                    knock, and the door will be opened to you.Ask, and it will
+                    be given to you; seek, and you will find; knock, and the
+                    door will be opened to you.Ask, and it will be given to you;
+                    seek, and you will find; knock, and the door will be opened
+                    to you.
+                  </p>
+                </div>
+                <div className="flex gap-1 justify-end">
+                  <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
+                  <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
+                </div>
+              </div>
+            )}
+          />
         );
       },
       enableSorting: true,

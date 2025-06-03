@@ -4,8 +4,6 @@
 import { useRouter } from "next/navigation";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { BsPlusCircleFill } from "react-icons/bs";
-import Link from "next/link";
 
 export default function StatCard({
   label,
@@ -16,7 +14,7 @@ export default function StatCard({
   colorT,
   isError,
   link,
-  add,
+  Add,
   clickFunction,
 }: any) {
   const router = useRouter();
@@ -58,13 +56,7 @@ export default function StatCard({
                 {value}
               </p>
 
-              {add ? (
-                <Link href="#">
-                  <BsPlusCircleFill
-                    className={`md:w-10 md:h-10 h-8 w-8 ${colorT}`}
-                  />
-                </Link>
-              ) : null}
+              {Add ? <Add /> : null}
             </div>
           </>
         </>

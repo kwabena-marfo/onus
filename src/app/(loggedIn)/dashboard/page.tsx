@@ -11,10 +11,12 @@ import {
   BsBookHalf,
   BsBookmarkFill,
   BsLightbulbFill,
+  BsPlusCircleFill,
 } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
 import DasboardTable from "@/components/loggedIn/dashboard/table";
 import Image from "next/image";
+import AddVerseModal from "@/components/loggedIn/global/addVerse";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<any>();
@@ -45,7 +47,15 @@ export default function Dashboard() {
                 ),
                 isLoading: false,
                 isError: false,
-                add: true,
+                Add: () => (
+                  <AddVerseModal
+                    TriggerComp={() => (
+                      <BsPlusCircleFill
+                        className={`md:w-10 md:h-10 h-8 w-8 text-[#0F3187]`}
+                      />
+                    )}
+                  />
+                ),
               },
               {
                 label: "Saved",
@@ -56,7 +66,15 @@ export default function Dashboard() {
                 icon: BsBookmarkFill,
                 isLoading: false,
                 isError: false,
-                add: true,
+                Add: () => (
+                  <AddVerseModal
+                    TriggerComp={() => (
+                      <BsPlusCircleFill
+                        className={`md:w-10 md:h-10 h-8 w-8 text-[#8C15E8]`}
+                      />
+                    )}
+                  />
+                ),
               },
               {
                 label: "Books",
@@ -79,7 +97,7 @@ export default function Dashboard() {
               },
             ].map(
               (
-                { label, value, colorB, colorT, add, icon, isLoading, isError },
+                { label, value, colorB, colorT, Add, icon, isLoading, isError },
                 index
               ) => (
                 <StatCard
@@ -88,7 +106,7 @@ export default function Dashboard() {
                   value={value}
                   colorB={colorB}
                   colorT={colorT}
-                  add={add}
+                  Add={Add}
                   Icon={icon}
                   isLoading={isLoading}
                   isError={isError}
