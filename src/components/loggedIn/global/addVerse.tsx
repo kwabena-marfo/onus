@@ -38,7 +38,6 @@ export default function AddVerseModal({ TriggerComp }: any) {
           </DrawerTrigger>
           <DrawerContent>
             <Input />
-
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>
