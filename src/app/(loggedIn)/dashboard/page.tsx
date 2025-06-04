@@ -11,12 +11,10 @@ import {
   BsBookHalf,
   BsBookmarkFill,
   BsLightbulbFill,
-  BsPlusCircleFill,
 } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
 import DasboardTable from "@/components/loggedIn/dashboard/table";
 import Image from "next/image";
-import AddVerseModal from "@/components/loggedIn/global/addVerse";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<any>();
@@ -31,7 +29,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-2  gap-4 w-full">
             {[
               {
-                label: "Memorised",
+                label: "Memorised Verses",
                 link: "/myonusbible",
                 value: 66,
                 colorB: "border-t-[#0F3187]",
@@ -47,18 +45,9 @@ export default function Dashboard() {
                 ),
                 isLoading: false,
                 isError: false,
-                Add: () => (
-                  <AddVerseModal
-                    TriggerComp={() => (
-                      <BsPlusCircleFill
-                        className={`md:w-10 md:h-10 h-8 w-8 text-[#0F3187]`}
-                      />
-                    )}
-                  />
-                ),
               },
               {
-                label: "Saved",
+                label: "Saved Verses",
                 link: "/saved",
                 value: 66,
                 colorB: "border-t-[#8C15E8]",
@@ -66,18 +55,9 @@ export default function Dashboard() {
                 icon: BsBookmarkFill,
                 isLoading: false,
                 isError: false,
-                Add: () => (
-                  <AddVerseModal
-                    TriggerComp={() => (
-                      <BsPlusCircleFill
-                        className={`md:w-10 md:h-10 h-8 w-8 text-[#8C15E8]`}
-                      />
-                    )}
-                  />
-                ),
               },
               {
-                label: "Books",
+                label: "Completed Books",
                 value: 66,
                 colorB: "border-t-[#9A6A10]",
                 colorT: "text-[#9A6A10]",
@@ -86,7 +66,7 @@ export default function Dashboard() {
                 isError: false,
               },
               {
-                label: "Quizzes",
+                label: "Quizzes So Far",
                 link: "/quize",
                 value: 66,
                 colorB: "border-t-[#760606]",
@@ -97,7 +77,7 @@ export default function Dashboard() {
               },
             ].map(
               (
-                { label, value, colorB, colorT, Add, icon, isLoading, isError },
+                { label, value, colorB, colorT, icon, isLoading, isError },
                 index
               ) => (
                 <StatCard
@@ -106,7 +86,6 @@ export default function Dashboard() {
                   value={value}
                   colorB={colorB}
                   colorT={colorT}
-                  Add={Add}
                   Icon={icon}
                   isLoading={isLoading}
                   isError={isError}

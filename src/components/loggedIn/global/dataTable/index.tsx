@@ -21,18 +21,13 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-import { BsArrowBarLeft, BsArrowBarRight, BsX } from "react-icons/bs";
+import { BsArrowBarLeft, BsArrowBarRight } from "react-icons/bs";
 // import { DeepFilterSheet } from "./deepFilter";
 
 export function DataTable({
   data,
-  deepFilterFunction,
   columns,
-  searchQuery,
-  setSearchQuery,
-  setQueryMembersResults,
 }: // DeepFilterComp,
 any) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -56,60 +51,6 @@ any) {
 
   return (
     <div className="w-full" id="table">
-      <div className="grid grid-cols-6 gap-0 md:gap-x-2 py-2  rounded-md  mb-2 relative justify-between">
-        <div className="relative col-span-6  ">
-          <div className="flex items-center">
-            <span className="absolute inset-y-0 right-0 flex items-center gap-0">
-              {searchQuery ? (
-                <BsX
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setSearchQuery();
-                    setQueryMembersResults();
-                  }}
-                />
-              ) : null}
-
-              {/* <DeepFilterSheet DeepFilterComp={DeepFilterComp} /> */}
-            </span>
-          </div>
-          <Input
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-            placeholder="Search here..."
-            className="pr-44 rounded-full h-12 bg-gray-50 "
-            value={searchQuery || ""}
-          />
-        </div>
-        <div className="flex flex-col gap-1 w-full mt-1 col-span-6">
-          {/* {deepFilterFunction?.length || searchQuery ? (
-            <p className="text-xs text-center">
-              Showing <strong>{data?.length}</strong> results{" "}
-              {searchQuery ? `for "${searchQuery}"` : null} from{" "}
-            </p>
-          ) : (
-            <p className="text-xs text-center">
-              Showing <strong>{data?.length}</strong> for all members
-            </p>
-          )} */}
-          <div className="flex justify-center flex-wrap gap-1">
-            {deepFilterFunction?.map(
-              ({ selectValue, value }: any, index: any) => {
-                return (
-                  <div
-                    key={index}
-                    className="  p-2 py-1 rounded-full bg-yellow-100 text-gray-700 text-xs font-bold"
-                  >
-                    {selectValue === "memberDemo" ? "Members:" : null} {value}
-                  </div>
-                );
-              }
-            )}
-          </div>
-        </div>
-      </div>
-
       <div className=" ">
         <Table>
           <TableHeader>

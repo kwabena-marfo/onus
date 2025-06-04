@@ -3,6 +3,18 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { LuLogOut } from "react-icons/lu";
 
 import menuData from "@/data/loggedInMenu";
 
@@ -40,6 +52,32 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             </li>
           );
         })}
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div className=" flex text-[#01CFFE]/90  items-center gap-3 ml-2 cursor-pointer">
+              <LuLogOut className="w-4 h-4" />
+              <p className="text-sm">Logout</p>
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will log you out of the app
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction className="bg-destructive">
+                <div className="flex items-center space-x-1">
+                  <LuLogOut className="w-4 h-4" />
+                  <p className="hidden md:block">Continue</p>
+                </div>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </ul>
     </div>
   );
