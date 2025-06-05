@@ -35,6 +35,7 @@ export function DataTable({
   setQueryMembersResults,
 }: // DeepFilterComp,
 any) {
+  console.log(deepFilterFunction);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
@@ -56,114 +57,77 @@ any) {
 
   return (
     <div className="w-full" id="table">
-      <div className="grid grid-cols-6 gap-0 md:gap-x-2 py-2  rounded-md  mb-2 relative justify-between">
-        <div className="relative col-span-6  ">
-          <div className="flex items-center">
-            <span className="absolute inset-y-0 right-0 flex items-center gap-0">
-              {searchQuery ? (
-                <BsX
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setSearchQuery();
-                    setQueryMembersResults();
-                  }}
-                />
-              ) : null}
+      <Table>
+        <TableHeader>
+          <div className="relative col-span-6  ">
+            <div className="flex items-center">
+              <span className="absolute inset-y-0 right-0 flex items-center gap-0">
+                {searchQuery ? (
+                  <BsX
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSearchQuery();
+                      setQueryMembersResults();
+                    }}
+                  />
+                ) : null}
 
-              {/* <DeepFilterSheet DeepFilterComp={DeepFilterComp} /> */}
-            </span>
+                {/* <DeepFilterSheet DeepFilterComp={DeepFilterComp} /> */}
+              </span>
+            </div>
+            <Input
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+              placeholder="Search through Added Verses..."
+              className="rounded-full h-12 bg-gray-50 "
+              value={searchQuery || ""}
+            />
           </div>
-          <Input
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-            placeholder="Search through Added Verses..."
-            className="rounded-full h-12 bg-gray-50 "
-            value={searchQuery || ""}
-          />
-        </div>
-        <div className="flex flex-col gap-1 w-full mt-1 col-span-6">
-          {/* {deepFilterFunction?.length || searchQuery ? (
-            <p className="text-xs text-center">
-              Showing <strong>{data?.length}</strong> results{" "}
-              {searchQuery ? `for "${searchQuery}"` : null} from{" "}
-            </p>
-          ) : (
-            <p className="text-xs text-center">
-              Showing <strong>{data?.length}</strong> for all members
-            </p>
-          )} */}
-          <div className="flex justify-center flex-wrap gap-1">
-            {deepFilterFunction?.map(
-              ({ selectValue, value }: any, index: any) => {
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+              className="flex items-center justify-start hover:bg-white"
+              key={headerGroup.id}
+            >
+              {headerGroup.headers.map((header) => {
                 return (
-                  <div
-                    key={index}
-                    className="  p-2 py-1 rounded-full bg-yellow-100 text-gray-700 text-xs font-bold"
-                  >
-                    {selectValue === "memberDemo" ? "Members:" : null} {value}
-                  </div>
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
                 );
-              }
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className=" ">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody className="grid gap-2">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
               <TableRow
-                className="flex items-center justify-start hover:bg-white"
-                key={headerGroup.id}
+                className="border-0"
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
               >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell className="rounded-lg p-0 grid" key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="flex  gap-2  rounded-lg bg-gray-50 border cursor-pointer my-2 w-full"
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
         {table.getFilteredSelectedRowModel().rows.length ? (
           <div className="flex-1  text-sm text-muted-foreground">
