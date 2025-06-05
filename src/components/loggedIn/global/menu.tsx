@@ -22,16 +22,12 @@ import { LuLogOut } from "react-icons/lu";
 import menuData from "@/data/loggedInMenu";
 
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import { BsPerson } from "react-icons/bs";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
   return (
     <div className="grid gap-12 text-white">
-      <div className=" justify-center justify-self-center items-center relative h-25 w-20  flex md:hidden">
-        <Image priority fill src="/imgs/logos/onusLogoWhite.png" alt="logo" />
-      </div>
       <div className="flex flex-col justify-center items-center">
         <div className="flex items-center space-x-1">
           <Avatar className="w-20 h-20">
