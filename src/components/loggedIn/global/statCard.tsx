@@ -22,7 +22,7 @@ export default function StatCard({
     <Skeleton className="w-full h-[60px] rounded-md" />
   ) : (
     <div
-      className={`rounded-lg  p-2 bg-gray-50 border w-full h-full border-t-4 ${colorB} `}
+      className={`rounded-lg  p-2 bg-gray-50 border w-full h-full border-l-3 ${colorB} `}
     >
       {isError ? (
         <>

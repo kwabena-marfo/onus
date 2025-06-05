@@ -15,21 +15,26 @@ import { Toggle } from "@/components/ui/toggle";
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
-  BsCircleFill,
+  BsCheck,
   BsSortAlphaDown,
   BsSortAlphaUp,
+  BsThreeDots,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
 
-type Member = {
-  id: string;
-  memberID: string;
-  fullname: string;
-  membershipType: string;
-  officerRank: string;
+type Tag = {
+  name: string;
+  color: string;
+};
 
-  lastSeen: string;
+type MemoryVerse = {
+  verse: string;
+  notes: string;
+  reference: string;
+  tags: Tag[];
+  memorised: boolean;
+  color: "blue" | "purple";
 };
 
 export default function useColumns({
@@ -45,7 +50,7 @@ export default function useColumns({
   // const { reqFunction: delMember, reqState: delMemberState } =
   //   useTriggerRequest();
 
-  const columns: ColumnDef<Member>[] = [
+  const columns: ColumnDef<MemoryVerse>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -134,29 +139,45 @@ export default function useColumns({
           </div>
         </div>
       ),
-      cell: () => {
+      cell: ({ row }) => {
+        const { verse, tags, memorised, reference, notes } = row.original;
         return (
           <VerseFlashCardModal
-            label="Mathew"
+            verse={verse}
+            tags={tags}
+            memorised={memorised}
+            notes={notes}
+            label={reference}
             TriggerComp={() => (
-              <div className="grid">
+              <div className="grid w-full ">
                 <div className="flex gap-2 items-center">
-                  <BsCircleFill className="w-5 h-5 text-[#0F3187]" />
-                  <p className="md:text-xl font-bold">Mathew 7:7</p>
+                  {memorised ? (
+                    <BsCheck
+                      className={`w- h- ${
+                        memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
+                      }`}
+                    />
+                  ) : (
+                    <BsThreeDots
+                      className={`w- h- ${
+                        memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
+                      }`}
+                    />
+                  )}
+
+                  <p className="md:text-xl font-bold">{reference}</p>
                 </div>
                 <div className="line-clamp-2">
                   <p className="md:text-lg overflow-hidden text-ellipsis">
-                    Ask, and it will be given to you; seek, and you will find;
-                    knock, and the door will be opened to you.Ask, and it will
-                    be given to you; seek, and you will find; knock, and the
-                    door will be opened to you.Ask, and it will be given to you;
-                    seek, and you will find; knock, and the door will be opened
-                    to you.
+                    {verse}
                   </p>
                 </div>
-                <div className="flex gap-1 justify-end">
-                  <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
-                  <Badge className="rounded-full  bg-[#0F3187] ">Faith</Badge>
+                <div className="flex gap-1 justify-start w-full">
+                  {tags.map(({ name, color }, index) => (
+                    <Badge key={index} className={`rounded-full ${color}`}>
+                      {name}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             )}

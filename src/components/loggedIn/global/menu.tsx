@@ -71,9 +71,9 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div className=" flex text-[#01CFFE]/90  items-center gap-3 ml-2 cursor-pointer">
-              <LuLogOut className="w-4 h-4" />
-              <p className="text-sm">Logout</p>
+            <div className=" flex text-red-200  items-center gap-3 ml-2 cursor-pointer">
+              <LuLogOut className="w-5 h-5" />
+              <p className="text-lg">Logout</p>
             </div>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -87,7 +87,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction className="bg-destructive">
                 <div className="flex items-center space-x-1">
-                  <LuLogOut className="w-4 h-4" />
+                  <LuLogOut className="w-8 h-8" />
                   <p className="hidden md:block">Continue</p>
                 </div>
               </AlertDialogAction>

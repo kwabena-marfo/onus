@@ -24,14 +24,12 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
             Your Journey to Spritual Growth Begins here
           </p>
         </div>
-        <div className="grid md:flex gap-3">
-          <div className=" relative w-full">
-            <div className="flex items-center">
-              <span className="absolute inset-y-0 right-2 flex items-center gap-0">
-                <BsX className="cursor-pointer" />
-              </span>
-              <Input className="h-12 rounded-full" />
-            </div>
+        <div className=" relative w-full">
+          <div className="flex items-center">
+            <span className="absolute inset-y-0 right-2 flex items-center gap-0">
+              <BsX className="cursor-pointer" />
+            </span>
+            <Input className="h-12 rounded-full" />
           </div>
         </div>
       </form>

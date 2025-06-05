@@ -1,0 +1,112 @@
+[
+  {
+    "verse": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+    "reference": "Hebrews 11:1",
+    "tags": [
+      { "name": "faith", "color": "bg-yellow-400" },
+      { "name": "hope", "color": "bg-sky-400" }
+    ],
+    "memorised": true,
+    "color": "blue",
+    "notes": "Faith believes before seeing. Trust God's promises even when you can't see the outcome."
+  },
+  {
+    "verse": "Pray without ceasing.",
+    "reference": "1 Thessalonians 5:17",
+    "tags": [
+      { "name": "prayer", "color": "bg-pink-400" },
+      { "name": "discipline", "color": "bg-yellow-900" }
+    ],
+    "memorised": false,
+    "color": "purple",
+    "notes": "Keep a prayerful attitude all day. Prayer isn’t limited to a specific time."
+  },
+  {
+    "verse": "I can do all things through Christ which strengtheneth me.",
+    "reference": "Philippians 4:13",
+    "tags": [
+      { "name": "strength", "color": "bg-green-700" },
+      { "name": "faith", "color": "bg-yellow-400" }
+    ],
+    "memorised": true,
+    "color": "blue",
+    "notes": "Christ is your source of strength for every challenge and victory."
+  },
+  {
+    "verse": "The Lord is my shepherd; I shall not want.",
+    "reference": "Psalm 23:1",
+    "tags": [
+      { "name": "trust", "color": "bg-purple-600" },
+      { "name": "provision", "color": "bg-blue-600" }
+    ],
+    "memorised": false,
+    "color": "purple",
+    "notes": "God cares for you like a shepherd—providing, protecting, and guiding."
+  },
+  {
+    "verse": "But they that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles...",
+    "reference": "Isaiah 40:31",
+    "tags": [
+      { "name": "patience", "color": "bg-yellow-600" },
+      { "name": "strength", "color": "bg-green-700" }
+    ],
+    "memorised": true,
+    "color": "blue",
+    "notes": "Waiting on God brings renewal and spiritual power. Don't rush—trust His timing."
+  },
+  {
+    "verse": "Thy word have I hid in mine heart, that I might not sin against thee.",
+    "reference": "Psalm 119:11",
+    "tags": [
+      { "name": "obedience", "color": "bg-red-600" },
+      { "name": "scripture", "color": "bg-emerald-600" }
+    ],
+    "memorised": false,
+    "color": "purple",
+    "notes": "Memorizing Scripture is a powerful defense against sin and temptation."
+  },
+  {
+    "verse": "For God so loved the world, that he gave his only begotten Son...",
+    "reference": "John 3:16",
+    "tags": [
+      { "name": "salvation", "color": "bg-blue-700" },
+      { "name": "love", "color": "bg-orange-500" }
+    ],
+    "memorised": true,
+    "color": "blue",
+    "notes": "God’s love is sacrificial and universal. This is the heart of the gospel."
+  },
+  {
+    "verse": "Be strong and of a good courage; be not afraid, neither be thou dismayed...",
+    "reference": "Joshua 1:9",
+    "tags": [
+      { "name": "courage", "color": "bg-orange-600" },
+      { "name": "faith", "color": "bg-yellow-400" }
+    ],
+    "memorised": false,
+    "color": "purple",
+    "notes": "God commands courage because He is with you—always and everywhere."
+  },
+  {
+    "verse": "Trust in the Lord with all thine heart; and lean not unto thine own understanding.",
+    "reference": "Proverbs 3:5",
+    "tags": [
+      { "name": "trust", "color": "bg-purple-600" },
+      { "name": "guidance", "color": "bg-teal-600" }
+    ],
+    "memorised": true,
+    "color": "blue",
+    "notes": "God’s wisdom surpasses yours. Full trust brings peace and direction."
+  },
+  {
+    "verse": "In everything give thanks: for this is the will of God in Christ Jesus concerning you.",
+    "reference": "1 Thessalonians 5:18",
+    "tags": [
+      { "name": "gratitude", "color": "bg-lime-500" },
+      { "name": "thankfulness", "color": "bg-indigo-500" }
+    ],
+    "memorised": false,
+    "color": "purple",
+    "notes": "Gratitude is God’s will. Find reasons to thank Him even in difficulty."
+  }
+]

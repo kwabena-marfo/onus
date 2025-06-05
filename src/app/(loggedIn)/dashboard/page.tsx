@@ -3,6 +3,8 @@
 
 import { useState } from "react";
 
+import verses from "@/data/verses.json";
+
 import Content from "@/components/loggedIn/global/content";
 import StatCard from "@/components/loggedIn/global/statCard";
 
@@ -32,7 +34,7 @@ export default function Dashboard() {
                 label: "Memorised Verses",
                 link: "/myonusbible",
                 value: 66,
-                colorB: "border-t-[#0F3187]",
+                colorB: "border-l-[#0F3187]",
                 colorT: "text-[#0F3187]",
                 icon: () => (
                   <Image
@@ -50,7 +52,7 @@ export default function Dashboard() {
                 label: "Saved Verses",
                 link: "/saved",
                 value: 66,
-                colorB: "border-t-[#8C15E8]",
+                colorB: "border-l-[#8C15E8]",
                 colorT: "text-[#8C15E8]",
                 icon: BsBookmarkFill,
                 isLoading: false,
@@ -59,7 +61,7 @@ export default function Dashboard() {
               {
                 label: "Completed Books",
                 value: 66,
-                colorB: "border-t-[#9A6A10]",
+                colorB: "border-l-[#9A6A10]",
                 colorT: "text-[#9A6A10]",
                 icon: BsBookHalf,
                 isLoading: false,
@@ -69,7 +71,7 @@ export default function Dashboard() {
                 label: "Quizzes So Far",
                 link: "/quize",
                 value: 66,
-                colorB: "border-t-[#760606]",
+                colorB: "border-l-[#760606]",
                 colorT: "text-[#760606]",
                 icon: BsLightbulbFill,
                 isLoading: false,
@@ -124,7 +126,7 @@ export default function Dashboard() {
               setSearchQuery,
               setDeepFilterFunction,
               deepFilterFunction,
-              queryMembersResults: new Array(10).fill(""),
+              queryMembersResults: verses,
               searchQuery,
             }}
           />

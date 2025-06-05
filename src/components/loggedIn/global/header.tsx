@@ -27,32 +27,39 @@ export default function Header() {
           className="md:flex hidden"
         />
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
-          <BsHouse className="block md:hidden w-6 h-6" />
+          <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+            <BsHouse className=" w-6 h-6" />
 
-          <BsBook className="block md:hidden w-6 h-6" />
+            <p className="text-xs">Home</p>
+          </div>
+          <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+            <BsBook className="block md:hidden w-6 h-6" />
+            <p className="text-xs">Onus</p>
+          </div>{" "}
           <AddVerseModal
             TriggerComp={() => (
               <div className="flex items-center gap-2 md:rounded-full md:border md:p-2 cursor-pointer">
-                <BsPlusCircleFill className="md:w-6 md:h-6 w-10 h-10" />
+                <BsPlusCircleFill className="md:w-6 md:h-6 w-10 h-10 text-" />
                 <p className="md:flex hidden">Add</p>
               </div>
             )}
           />
-
           <Search
             TriggerComp={() => (
-              <div className="flex items-center gap-2 md:rounded-full md:border md:p-2 cursor-pointer">
+              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
                 <BsSearch className="w-6 h-6" />
-                <p className="md:flex hidden">Search</p>
+                <p className="text-xs">Search</p>
               </div>
             )}
           />
-
           <div className="flex justify-end items-center md:gap-3">
             <div className="block md:hidden">
               <Sheet open={openSheet} onOpenChange={setOpenSheet}>
                 <SheetTrigger asChild>
-                  <IoMenuOutline className="w-6 h-6" />
+                  <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+                    <IoMenuOutline className="w-6 h-6" />
+                    <p className="text-xs">Menu</p>
+                  </div>
                 </SheetTrigger>
                 <SheetContent className="p-4 bg-[#0F3187]" side="left">
                   <Menu setOpenSheet={setOpenSheet} />

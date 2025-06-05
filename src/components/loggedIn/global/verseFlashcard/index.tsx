@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/drawer";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 
-export default function VerseFlashCardModal({ label, TriggerComp }: any) {
+export default function VerseFlashCardModal({
+  label,
+  verse,
+  tags,
+  notes,
+  TriggerComp,
+}: any) {
   const isDesktop = useMediaQuery({
     query: "(min-width: 1224px)",
   });
@@ -27,8 +33,13 @@ export default function VerseFlashCardModal({ label, TriggerComp }: any) {
             <TriggerComp />
           </DialogTrigger>
           <DialogContent className="min-w-4xl">
-            <div className="flex items-center gap-2">
-              <VerseFlashcardCarousel label={label} />
+            <div className="flex items-center gap-2 ">
+              <VerseFlashcardCarousel
+                label={label}
+                verse={verse}
+                tags={tags}
+                notes={notes}
+              />
             </div>
           </DialogContent>
         </Dialog>
@@ -38,7 +49,12 @@ export default function VerseFlashCardModal({ label, TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <VerseFlashcardCarousel label={label} />
+            <VerseFlashcardCarousel
+              label={label}
+              verse={verse}
+              tags={tags}
+              notes={notes}
+            />
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>
