@@ -15,10 +15,10 @@ import { Toggle } from "@/components/ui/toggle";
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
-  BsChevronDown,
-  BsPlus,
   BsSortAlphaDown,
   BsSortAlphaUp,
+  BsChevronDown,
+  BsPlus,
   BsTrash,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
@@ -141,52 +141,52 @@ export default function useColumns({
       cell: ({ row }) => {
         const { verse, tags, memorised, reference, notes } = row.original;
         return (
-          <div className="grid  bg-gray-50 border-2 p-2 rounded-lg">
-            <VerseFlashCardModal
-              verse={verse}
-              tags={tags}
-              memorised={memorised}
-              notes={notes}
-              label={reference}
-              TriggerComp={() => (
-                <>
-                  <div className="  flex-col items-center gap-0 justify-start bg-bermuda">
-                    <p className="md:text-xl font-bold text-left  line-clamp-2">
-                      {reference}
-                    </p>
-                    {/* <p className="text-left md:text-lg">{verse}</p> */}
+          <VerseFlashCardModal
+            verse={verse}
+            tags={tags}
+            memorised={memorised}
+            notes={notes}
+            label={reference}
+            TriggerComp={() => (
+              <div className="grid w-full border-1 rounded-md p-2 bg-gray-50">
+                <div className="flex gap-2 items-center">
+                  <p className="md:text-xl font-bold">{reference}</p>
+                </div>
+                <div className="line-clamp-2">
+                  <p className="md:text-lg overflow-hidden text-ellipsis text-left">
+                    {verse}
+                  </p>
+                </div>
+                <div className="flex gap-1 justify-between w-full">
+                  <div className="flex gap-2">
+                    {tags.map(({ name, color }, index) => (
+                      <Badge key={index} className={`rounded-full ${color}`}>
+                        {name}
+                      </Badge>
+                    ))}
                   </div>
-                  <div className="flex gap-1 justify-between col-span-6">
-                    <div className="flex justify-start items-center gap-1">
-                      {tags.map(({ name, color }, index) => (
-                        <Badge key={index} className={`rounded-full ${color}`}>
-                          {name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex  justify-end items-center gap-2">
-                    <Button variant="outline" size="sm" className="border-0">
-                      <BsChevronDown />
-                    </Button>
-                    <div className="flex items-center ">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-full"
-                      >
-                        <BsPlus />
-                        <p className="hidden md:flex">Add To Memorised</p>
-                      </Button>
-                    </div>
-                    <Button variant="outline" size="sm" className="border-0">
-                      <BsTrash className="text-red-800" />
+                </div>
+                <div className="flex  justify-end items-center gap-2">
+                  <Button variant="outline" size="sm" className="border-0">
+                    <BsChevronDown />
+                  </Button>
+                  <div className="flex items-center ">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full"
+                    >
+                      <BsPlus />
+                      <p className="hidden md:flex">Add To Memorised</p>
                     </Button>
                   </div>
-                </>
-              )}
-            />
-          </div>
+                  <Button variant="outline" size="sm" className="border-0">
+                    <BsTrash className="text-red-800" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          />
         );
       },
       enableSorting: true,

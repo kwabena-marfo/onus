@@ -85,13 +85,13 @@ any) {
             />
           </div>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              className="flex items-center justify-start hover:bg-white"
-              key={headerGroup.id}
-            >
+            <TableRow key={headerGroup.id} className="flex items-center">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    className="border-0 flex  items-center"
+                    key={header.id}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -108,7 +108,7 @@ any) {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="border-0"
+                className="border-0 grid gap-1"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >

@@ -9,7 +9,7 @@ import Content from "@/components/loggedIn/global/content";
 
 import { BsBookmark } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
-import SavedTable from "@/components/loggedIn/saved/table";
+import Table from "@/components/loggedIn/saved/table";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<any>();
@@ -20,7 +20,7 @@ export default function Dashboard() {
     <Content tittle="Saved Verses" Icon={BsBookmark}>
       <div className="grid justify-start items-start md:grid-cols-5 gap-4">
         <div className="rounded-lg  p-3 border md:col-span-3 col-span-5 ">
-          <SavedTable
+          <Table
             data={{
               setQueryMembersResults,
               setSearchQuery,
