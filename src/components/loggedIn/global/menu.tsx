@@ -3,6 +3,9 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,12 +22,25 @@ import { LuLogOut } from "react-icons/lu";
 import menuData from "@/data/loggedInMenu";
 
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import { BsPerson } from "react-icons/bs";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
   return (
     <div className="grid gap-12 text-white">
-      <div className="grid">
+      <div className=" justify-center justify-self-center items-center relative h-25 w-20  flex md:hidden">
+        <Image priority fill src="/imgs/logos/onusLogoWhite.png" alt="logo" />
+      </div>
+      <div className="flex flex-col justify-center items-center">
+        <div className="flex items-center space-x-1">
+          <Avatar className="w-20 h-20">
+            <AvatarImage src="/" alt="admin" />
+            <AvatarFallback>
+              <BsPerson className="text-black w-16 h-16" />
+            </AvatarFallback>
+          </Avatar>
+        </div>
         <h1 className="text-4xl font-bold">Frank Appiah</h1>
         <p className="text-sm p-1">frank@gmail.com</p>
       </div>

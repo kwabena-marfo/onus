@@ -20,11 +20,11 @@ export default function Dashboard() {
         />
       )}
     >
-      <div className="grid md:flex  w-full  md:gap-6 gap-4 mt-6">
-        <div className="grid h-fit w-full md:w-1/2 gap-2 ">
+      <div className="grid  w-full  md:gap-6 gap-4 mt-6">
+        <div className="grid h-fit  gap-2 ">
           <p className="md:text-2xl text-lg  font-bold">Old Testament</p>
 
-          <div className="grid h-fit justify-center items-center md:grid-cols-3 grid-cols-2  gap-3 md:pr-2 pb-2">
+          <div className="grid h-fit justify-center items-center md:grid-cols-6 grid-cols-2  gap-3 md:pr-2 pb-2">
             {[
               "Genesis",
               "Exodus",
@@ -85,9 +85,9 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-        <div className="grid h-fit md:w-1/2 w-full gap-2 ">
+        <div className="grid h-fit  w-full gap-2 ">
           <p className="md:text-2xl text-lg  font-bold">New Testament</p>
-          <div className="grid justify-center items-center md:grid-cols-3 grid-cols-2 gap-3  h-fit ">
+          <div className="grid justify-center items-center md:grid-cols-6 grid-cols-2 gap-3  h-fit ">
             {[
               "Matthew",
               "Mark",
