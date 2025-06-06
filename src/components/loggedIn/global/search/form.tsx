@@ -17,11 +17,8 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
         )}
       >
         <div className="flex flex-col gap-0 justify-center items-center ">
-          <p className="text-3xl md:text-4xl font-bold">
+          <p className="text-2xl md:text-4xl font-bold text-center">
             Search Through Your Verses
-          </p>
-          <p className="text-center">
-            Your Journey to Spritual Growth Begins here
           </p>
         </div>
         <div className=" relative w-full">

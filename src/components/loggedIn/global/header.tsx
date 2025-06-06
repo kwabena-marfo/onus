@@ -7,10 +7,10 @@ import Menu from "@/components/loggedIn/global/menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import {
+  BsBell,
   BsBook,
   BsBookmark,
   BsHouse,
-  BsLightbulb,
   BsPlusCircleFill,
   BsSearch,
 } from "react-icons/bs";
@@ -43,7 +43,7 @@ export default function Header() {
           src="/imgs/logos/onusLogoChosen.png"
           alt="logo"
         />
-        <div className="flex items-cente  gap-2 p-2  ">
+        <div className="flex items-cente  gap-3 p-2  ">
           <div className="md:flex hidden">
             <AddVerseModal
               TriggerComp={() => (
@@ -56,12 +56,17 @@ export default function Header() {
           </div>
           <SearchModal
             TriggerComp={() => (
-              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
+              <div className="hidden md:flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
                 <BsSearch className="w-6 h-6" />
                 <p className="text-xs">Search</p>
               </div>
             )}
           />
+
+          <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
+            <BsBell className="w-6 h-6" />
+            <p className="text-xs hidden md:flex">Notifications</p>
+          </div>
         </div>
       </nav>
       <nav className=" flex items-center md:justify-end justify-between gap-2 p-2 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2 border-t-2">
@@ -90,10 +95,14 @@ export default function Header() {
             <BsBookmark className="block md:hidden w-6 h-6  " />
             <p className="text-xs">Saved</p>
           </Link>{" "}
-          <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
-            <BsLightbulb className="block md:hidden w-6 h-6" />
-            <p className="text-xs">Quize</p>
-          </div>{" "}
+          <SearchModal
+            TriggerComp={() => (
+              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
+                <BsSearch className="w-6 h-6" />
+                <p className="text-xs">Search</p>
+              </div>
+            )}
+          />
         </div>
       </nav>
     </>

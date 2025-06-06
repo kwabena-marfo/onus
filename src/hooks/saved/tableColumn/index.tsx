@@ -167,18 +167,18 @@ export default function useColumns({
                 notes={notes}
                 label={reference}
                 TriggerComp={() => (
-                  <Button variant="link" size="sm" className="border-0">
+                  <Button variant="outline" size="sm">
                     <BsChevronDown />
                   </Button>
                 )}
               />
               <div className="flex items-center ">
-                <Button variant="outline" size="sm" className="rounded-full">
+                <Button variant="outline" size="sm">
                   <BsPlus />
                   <p className="hidden md:flex">Add To Memorised</p>
                 </Button>
               </div>
-              <Button variant="link" size="sm" className="bg-white">
+              <Button variant="outline" size="sm" className="bg-white">
                 <BsTrash className="text-red-800" />
               </Button>
             </div>
