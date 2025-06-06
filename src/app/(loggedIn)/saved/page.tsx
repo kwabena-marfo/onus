@@ -38,7 +38,7 @@ export default function Dashboard() {
               Your Progress
             </h4>{" "}
             <div className="grid gap-6 rounded-lg  p-3 bg-gray-50 border h-full">
-              {/* {bible.splice(0, 20).map(({ label, verses }: any) => {
+              {bible.splice(0, 20).map(({ label, verses }: any) => {
                 return (
                   <div key={label} className="grid">
                     <p>{label}</p>
@@ -51,7 +51,7 @@ export default function Dashboard() {
                     />
                   </div>
                 );
-              })} */}
+              })}
             </div>
           </div>
         </div>
