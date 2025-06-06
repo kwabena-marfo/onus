@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="flex items-center  justify-between gap-2 p-2 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
+      <nav className="flex items-center  justify-between gap-2 p-2 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
         <div className="flex md:hidden md:gap-3">
           <Sheet open={openSheet} onOpenChange={setOpenSheet}>
             <SheetTrigger asChild>
@@ -63,8 +63,8 @@ export default function Header() {
             )}
           />
         </div>
-      </div>
-      <div className=" flex items-center md:justify-end justify-between gap-2 p-2 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2 border-t-2">
+      </nav>
+      <nav className=" flex items-center md:justify-end justify-between gap-2 p-2 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2 border-t-2">
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
           <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
             <BsHouse className=" w-6 h-6" />
@@ -95,7 +95,7 @@ export default function Header() {
             <p className="text-xs">Quize</p>
           </div>{" "}
         </div>
-      </div>
+      </nav>
     </>
   );
 }
