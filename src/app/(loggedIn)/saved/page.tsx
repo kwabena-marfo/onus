@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 import verses from "@/data/verses.json";
-
+import bible from "@/data/bible.json";
 import Content from "@/components/loggedIn/global/content";
 
 import { BsBookmark } from "react-icons/bs";
@@ -38,20 +38,20 @@ export default function Dashboard() {
               Your Progress
             </h4>{" "}
             <div className="grid gap-6 rounded-lg  p-3 bg-gray-50 border h-full">
-              {[
-                { book: "Matthew", progress: 33 },
-                { book: "Matthew", progress: 50 },
-                { book: "Matthew", progress: 90 },
-                { book: "Matthew", progress: 80 },
-                { book: "Matthew", progress: 20 },
-                { book: "Matthew", progress: 20 },
-                { book: "Matthew", progress: 20 },
-              ].map(({ book, progress }: any) => (
-                <div key={book} className="grid">
-                  <p>{book}</p>
-                  <Progress value={progress} />
-                </div>
-              ))}
+              {bible.splice(0, 20).map(({ label, verses }: any) => {
+                return (
+                  <div key={label} className="grid">
+                    <p>{label}</p>
+                    <Progress
+                      value={Math.min(
+                        (Math.floor(Math.random() * (verses + 1)) / verses) *
+                          100,
+                        100
+                      )}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -146,7 +146,7 @@ export default function useColumns({
               <p className="md:text-xl font-bold">{reference}</p>
             </div>
             <div className="line-clamp-2">
-              <p className="md:text-lg overflow-hidden text-ellipsis text-left">
+              <p className="md:text-xl overflow-hidden text-ellipsis text-left">
                 {verse}
               </p>
             </div>
