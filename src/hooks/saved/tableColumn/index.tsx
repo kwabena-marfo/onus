@@ -22,7 +22,7 @@ import {
   BsTrash,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
-import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
+// import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
 
 type Tag = {
   name: string;
@@ -139,7 +139,7 @@ export default function useColumns({
         </div>
       ),
       cell: ({ row }) => {
-        const { verse, tags, memorised, reference, notes } = row.original;
+        const { verse, tags, reference } = row.original;
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50">
             <div className="flex gap-2 items-center">
@@ -160,7 +160,7 @@ export default function useColumns({
               </div>
             </div>
             <div className="flex  justify-end items-center gap-1">
-              <VerseFlashCardModal
+              {/* <VerseFlashCardModal
                 verse={verse}
                 tags={tags}
                 memorised={memorised}
@@ -171,7 +171,10 @@ export default function useColumns({
                     <BsChevronDown />
                   </Button>
                 )}
-              />
+              /> */}
+              <Button variant="outline" size="sm">
+                <BsChevronDown />
+              </Button>
               <div className="flex items-center ">
                 <Button variant="outline" size="sm">
                   <BsPlus />

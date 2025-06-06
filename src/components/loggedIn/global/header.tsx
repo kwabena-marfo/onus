@@ -18,7 +18,6 @@ import {
   BsBook,
   BsBookmark,
   BsCircleFill,
-  BsGear,
   BsHouse,
   BsPerson,
   BsPlusCircleFill,
