@@ -1,41 +1,107 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
 import Image from "next/image";
 
-import Menu from "@/components/loggedIn/global/menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   BsBell,
   BsBook,
   BsBookmark,
+  BsCircleFill,
+  BsGear,
   BsHouse,
+  BsPerson,
   BsPlusCircleFill,
   BsSearch,
 } from "react-icons/bs";
-
-import { IoMenuOutline } from "react-icons/io5";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AddVerseModal from "./addVerse";
 import SearchModal from "./search";
 import Link from "next/link";
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { LuLogOut } from "react-icons/lu";
+import { Separator } from "@/components/ui/separator";
 export default function Header() {
-  const [openSheet, setOpenSheet] = useState(false);
-
   return (
     <>
-      <nav className="flex items-center  justify-between gap-2 p-2 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
-        <div className="flex md:hidden md:gap-3">
-          <Sheet open={openSheet} onOpenChange={setOpenSheet}>
-            <SheetTrigger asChild>
-              <IoMenuOutline className="w-6 h-6" />
-            </SheetTrigger>
-            <SheetContent className="p-4 bg-[#0F3187] border-0 " side="left">
-              <Menu setOpenSheet={setOpenSheet} />
-            </SheetContent>
-          </Sheet>
+      <nav className="flex items-center  justify-between gap-2 p-1 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
+        <div className="  flex md:hidden">
+          <Popover>
+            <PopoverTrigger>
+              <Avatar className="h-10 w-10   ">
+                <AvatarImage src="" alt="@shadcn" />
+                <AvatarFallback>
+                  <BsPerson className="h-6 w-6  " />
+                </AvatarFallback>
+              </Avatar>{" "}
+            </PopoverTrigger>
+            <PopoverContent className="w-80   ">
+              <div className="grid gap-4">
+                <div className="flex flex-col justify-center items-center">
+                  <div className="flex items-center space-x-1">
+                    <Avatar className="w-16 h-16">
+                      <AvatarImage src="/" alt="admin" />
+                      <AvatarFallback>
+                        <BsPerson className="text-black w-16 h-16" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <h1 className="text-xl font-bold">Frank Appiah</h1>
+                  <p className="text-sm p-1">frank@gmail.com</p>
+                </div>
+                <div className="grid gap-2">
+                  <div className=" flex items-center gap-3 ml-2 cursor-pointer">
+                    <BsPerson className="w-5 h-5" />
+                    <p className="">My Account</p>
+                  </div>
+                  <Separator orientation="horizontal" />
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <div className=" flex text-red-900  items-center gap-3 ml-2 cursor-pointer">
+                        <LuLogOut className="w-5 h-5" />
+                        <p className="">Logout</p>
+                      </div>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will log you out of the app
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction className="bg-red-900">
+                          <div className="flex items-center space-x-1">
+                            <LuLogOut className="w-8 h-8" />
+                            <p className="">Continue</p>
+                          </div>
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
+
         <Image
           priority
           width={36}
@@ -63,13 +129,14 @@ export default function Header() {
             )}
           />
 
-          <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
+          <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
+            <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
             <BsBell className="w-6 h-6" />
             <p className="text-xs hidden md:flex">Notifications</p>
           </div>
         </div>
       </nav>
-      <nav className=" flex items-center md:justify-end justify-between gap-2 p-2 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2 border-t-2">
+      <nav className=" flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full   border-t-1">
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
           <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
             <BsHouse className=" w-6 h-6" />
@@ -78,7 +145,7 @@ export default function Header() {
           </div>
           <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
             <BsBook className="block md:hidden w-6 h-6" />
-            <p className="text-xs">Onus</p>
+            <p className="text-xs">My Onus</p>
           </div>{" "}
           <AddVerseModal
             TriggerComp={() => (

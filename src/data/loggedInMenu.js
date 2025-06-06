@@ -16,15 +16,10 @@ export default [
     icon: <BsBookmark />,
     key: "/saved",
   },
-  // {
-  //   label: "Quizzes",
-  //   icon: <BsLightbulb />,
-  //   key: "/quize",
-  // },
 
   {
-    label: "Settings",
+    label: "My Account",
     icon: <BsGear />,
-    key: "/settings",
+    key: "/account",
   },
 ];
