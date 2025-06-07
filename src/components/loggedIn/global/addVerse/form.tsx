@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BsCheck2Circle } from "react-icons/bs";
 import { useState, ComponentProps } from "react";
-import Link from "next/link";
 
 import bibleData from "@/data/bible.json";
 
@@ -29,32 +28,9 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Textarea } from "@/components/ui/textarea";
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
 
 export default function AddVerseForm({ className }: ComponentProps<"form">) {
   const [open, setOpen] = useState(false);
-  const [openn, setOpenn] = useState(false);
   const [value, setValue] = useState("");
 
   const [signupDone, setSignupDone] = useState(false);
@@ -69,11 +45,6 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
           <p className="text-center text-lg">
             We are excited to have you start your journey to spiritual growth
           </p>
-          <Link href="/login" className="w-full">
-            <Button type="submit" className="rounded-md bg-[#fa9a40] w-full">
-              Login
-            </Button>
-          </Link>
         </div>
       ) : (
         <form
@@ -142,57 +113,9 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
               <Input id="name" />
               <Input id="name" />
             </div>
-            <Popover open={openn} onOpenChange={setOpenn}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="  justify-between"
-                >
-                  {value
-                    ? frameworks.find((framework) => framework.value === value)
-                        ?.label
-                    : "Select Version..."}
-                  <ChevronsUpDown className="opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="md:w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Search Book..." className="h-9" />
-                  <CommandList>
-                    <CommandEmpty>No framework found.</CommandEmpty>
-                    <CommandGroup>
-                      {frameworks.map((framework) => (
-                        <CommandItem
-                          key={framework.value}
-                          value={framework.value}
-                          onSelect={(currentValue) => {
-                            setValue(
-                              currentValue === value ? "" : currentValue
-                            );
-                            setOpen(false);
-                          }}
-                        >
-                          {framework.label}
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              value === framework.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
           </div>
           <div className="grid gap-1">
-            <Label htmlFor="password">Notes</Label>
+            <Label htmlFor="password">Verse</Label>
             <Textarea placeholder="Write Verse" />
           </div>{" "}
           <div className="grid gap-1">
