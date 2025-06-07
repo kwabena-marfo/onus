@@ -3,6 +3,14 @@
 import Image from "next/image";
 
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -22,6 +30,7 @@ import {
   BsPerson,
   BsPlusCircleFill,
   BsSearch,
+  BsX,
 } from "react-icons/bs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AddVerseModal from "./addVerse";
@@ -128,11 +137,41 @@ export default function Header() {
             )}
           />
 
-          <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
-            <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
-            <BsBell className="w-6 h-6" />
-            <p className="text-xs hidden md:flex">Notifications</p>
-          </div>
+          <Sheet>
+            <SheetTrigger>
+              {" "}
+              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
+                <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
+                <BsBell className="w-6 h-6" />
+                <p className="text-xs hidden md:flex">Notifications</p>
+              </div>
+            </SheetTrigger>
+            <SheetContent className="p-2">
+              <SheetHeader>
+                <SheetTitle>
+                  {" "}
+                  <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
+                    <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
+                    <BsBell className="w-6 h-6" />
+                    <p className="text-base">Notifications</p>
+                  </div>
+                </SheetTitle>
+                <SheetDescription className="text-center">
+                  Your Notifications Will appear here
+                </SheetDescription>
+              </SheetHeader>
+              <div className="grid gap-2">
+                <div className="p-2 border rounded-lg flex justify-between bg-gray-50">
+                  Congratulations, You just completed the book of Matthew
+                  <BsX />
+                </div>
+                <div className="p-2 border rounded-lg flex justify-between bg-gray-50">
+                  Your reminder for today, You are growing already!
+                  <BsX />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
       <nav className=" flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full   border-t-1">

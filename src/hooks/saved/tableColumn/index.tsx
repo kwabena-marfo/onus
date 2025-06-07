@@ -16,8 +16,8 @@ import {
   BsSortAlphaDown,
   BsSortAlphaUp,
   BsChevronDown,
-  BsPlus,
   BsTrash,
+  BsChevronUp,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -157,7 +157,7 @@ export default function useColumns({
               {verse}
             </p>
             <div className="flex gap-1 justify-between w-full">
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 {tags.map(({ name, color }, index) => (
                   <Badge key={index} className={`rounded-full ${color}`}>
                     {name}
@@ -165,16 +165,21 @@ export default function useColumns({
                 ))}
               </div>
             </div>
-            <div className="flex  justify-end items-center gap-1">
-              <Label htmlFor={verse} className="rounded-lg p-2 border">
+            <div className="flex  justify-end items-center gap-1 peer-checked:hidden">
+              <Label htmlFor={verse} className="rounded-lg p-2 border  ">
                 <BsChevronDown />
               </Label>
-              <div className="flex items-center ">
-                <Button variant="outline" size="sm">
-                  <BsPlus />
-                  <p className="hidden md:flex">Add To Memorised</p>
-                </Button>
-              </div>
+              <Button variant="outline" size="sm" className="bg-white">
+                <BsTrash className="text-red-800" />
+              </Button>
+            </div>
+            <div className="justify-end items-center gap-1 hidden peer-checked:flex">
+              <Label
+                htmlFor={verse}
+                className="rounded-lg p-2 border bg-gray-200 "
+              >
+                <BsChevronUp />
+              </Label>
               <Button variant="outline" size="sm" className="bg-white">
                 <BsTrash className="text-red-800" />
               </Button>

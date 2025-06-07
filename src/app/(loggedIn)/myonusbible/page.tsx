@@ -5,12 +5,11 @@ import Image from "next/image";
 
 import Content from "@/components/loggedIn/global/content";
 import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
-import bible from "@/data/bible.json";
-import bibleVerses from "@/data/verses.json";
+
 import versesGrouped from "@/data/groupedVerses";
 
 export default function MyOnusBible() {
-  const verses = versesGrouped(bibleVerses as any, bible);
+  const verses = versesGrouped();
 
   return (
     <Content

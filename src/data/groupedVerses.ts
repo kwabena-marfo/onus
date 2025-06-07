@@ -1,22 +1,15 @@
-type MemoryVerse = {
-  book: string; // e.g. "Genesis"
-  reference: string;
-  verse: string;
-  notes: string;
-  tags: [];
-};
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import bible from "@/data/bible.json";
+import bibleVerses from "@/data/verses.json";
 
-export default function groupVersesByBookOrdered(
-  verses: MemoryVerse[],
-  orderedBooks: { label: string }[]
-) {
+export default function groupVersesByBookOrdered() {
   const grouped: Record<
     string,
-    { reference: string; verse: string; notes: string; tags: [] }[]
+    { reference: string; verse: string; notes: string; tags: any }[]
   > = {};
 
   // Group memory verses by book
-  verses.forEach((v) => {
+  bibleVerses.forEach((v) => {
     if (!grouped[v.book]) grouped[v.book] = [];
     grouped[v.book].push({
       reference: v.reference,
@@ -27,7 +20,7 @@ export default function groupVersesByBookOrdered(
   });
 
   // Create ordered result based on bibleBooks
-  return orderedBooks
+  return bible
     .filter((book) => grouped[book.label]) // only include books that exist in verses
     .map((book) => ({
       book: book.label,
