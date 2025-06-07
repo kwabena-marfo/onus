@@ -137,15 +137,19 @@ export default function Header() {
       </nav>
       <nav className=" flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full   border-t-1">
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
-          <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
-            <BsHouse className=" w-6 h-6" />
+          <Link href="/dashboard">
+            <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+              <BsHouse className=" w-6 h-6" />
 
-            <p className="text-xs">Home</p>
-          </div>
-          <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
-            <BsBook className="block md:hidden w-6 h-6" />
-            <p className="text-xs">My Onus</p>
-          </div>{" "}
+              <p className="text-xs">Home</p>
+            </div>
+          </Link>
+          <Link href="/myonusbible">
+            <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+              <BsBook className="block md:hidden w-6 h-6" />
+              <p className="text-xs">My Onus</p>
+            </div>{" "}
+          </Link>
           <AddVerseModal
             TriggerComp={() => (
               <div className="flex items-center gap-2 md:rounded-full md:border md:p-2 cursor-pointer">

@@ -32,7 +32,7 @@ export default function VerseFlashcardCarousel({ verses }: any) {
   return (
     <Carousel setApi={setApi}>
       <CarouselContent className="p-3">
-        {verses.map(({ reference, verse, tags, notes }: any, index: any) => (
+        {verses?.map(({ reference, verse, tags, notes }: any, index: any) => (
           <CarouselItem
             className="flex flex-col rounded-xl gap-3 justify-center items-center bg-gray-100 p-3 "
             key={index}

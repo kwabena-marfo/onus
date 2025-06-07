@@ -14,11 +14,7 @@ import {
 } from "@/components/ui/drawer";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 
-export default function VerseFlashCardModal({
-  verses,
-
-  TriggerComp,
-}: any) {
+export default function VerseFlashCardModal({ verses, TriggerComp }: any) {
   const isDesktop = useMediaQuery({
     query: "(min-width: 1224px)",
   });

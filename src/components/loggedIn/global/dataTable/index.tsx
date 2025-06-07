@@ -104,7 +104,7 @@ any) {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="grid gap-2">
+        <TableBody className="grid">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow

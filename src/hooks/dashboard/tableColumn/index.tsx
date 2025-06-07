@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 
-// import useTriggerRequest from "@/hooks/global/useTriggerRequest";
-
 import Reset from "./reset";
 import Export from "./export";
 
@@ -23,7 +21,7 @@ import {
   BsTrash,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
-// import VerseFlashCardModal from "@/components/loggedIn/global/verseFlashcard";
+import { Label } from "@/components/ui/label";
 
 type Tag = {
   name: string;
@@ -144,7 +142,15 @@ export default function useColumns({
       cell: ({ row }) => {
         const { verse, tags, memorised, reference } = row.original;
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-2">
+            <input
+              type="checkbox"
+              id={verse}
+              value={verse}
+              name="verse"
+              className="peer hidden"
+            />
+
             <div className="flex gap-2 items-center">
               <div className="flex gap-2 items-center">
                 {memorised ? (
@@ -164,11 +170,9 @@ export default function useColumns({
                 <p className="md:text-xl font-bold">{reference}</p>
               </div>
             </div>
-            <div className="line-clamp-2">
-              <p className="md:text-xl overflow-hidden text-ellipsis text-left">
-                {verse}
-              </p>
-            </div>
+            <p className="md:text-xl overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
+              {verse}
+            </p>
             <div className="flex gap-1 justify-between w-full">
               <div className="flex gap-2">
                 {tags.map(({ name, color }, index) => (
@@ -179,21 +183,10 @@ export default function useColumns({
               </div>
             </div>
             <div className="flex  justify-end items-center gap-1">
-              {/* <VerseFlashCardModal
-                verse={verse}
-                tags={tags}
-                memorised={memorised}
-                notes={notes}
-                label={reference}
-                TriggerComp={() => (
-                  <Button variant="outline" size="sm">
-                    <BsChevronDown />
-                  </Button>
-                )}
-              /> */}
-              <Button variant="outline" size="sm">
+              <Label htmlFor={verse} className="rounded-lg p-2 border">
                 <BsChevronDown />
-              </Button>
+              </Label>
+
               <Button variant="outline" size="sm" className="bg-white">
                 <BsTrash className="text-red-800" />
               </Button>
