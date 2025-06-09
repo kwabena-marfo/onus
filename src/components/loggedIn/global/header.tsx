@@ -149,7 +149,6 @@ export default function Header() {
             <SheetContent className="p-2">
               <SheetHeader>
                 <SheetTitle>
-                  {" "}
                   <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
                     <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
                     <BsBell className="w-6 h-6" />
@@ -161,13 +160,22 @@ export default function Header() {
                 </SheetDescription>
               </SheetHeader>
               <div className="grid gap-2">
-                <div className="p-2 border rounded-lg flex justify-between bg-gray-50">
-                  Congratulations, You just completed the book of Matthew
-                  <BsX />
+                <div className="grid p-2 border rounded-lg bg-gray-100">
+                  <div className="flex justify-between font-medium">
+                    Congratulations, You just completed the book of Matthew
+                    <BsX />
+                  </div>
+                  <Separator className="my-2" />
+                  <p className="text-xs">May 20, 5:90pm</p>
                 </div>
-                <div className="p-2 border rounded-lg flex justify-between bg-gray-50">
-                  Your reminder for today, You are growing already!
-                  <BsX />
+
+                <div className="grid p-2 border rounded-lg bg-gray-100">
+                  <div className="flex justify-between font-medium">
+                    Your Reminder for today, you are growing already
+                    <BsX />
+                  </div>
+                  <Separator className="my-2" />
+                  <p className="text-xs">May 20, 5:90pm</p>
                 </div>
               </div>
             </SheetContent>

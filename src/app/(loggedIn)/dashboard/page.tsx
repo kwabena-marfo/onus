@@ -38,13 +38,14 @@ export default function Dashboard() {
                 colorB: "border-l-[#0F3187]",
                 colorT: "text-[#0F3187]",
                 icon: () => (
-                  <Image
-                    priority
-                    width={30}
-                    height={30}
-                    src="/imgs/logos/onusKnot.png"
-                    alt="logo"
-                  />
+                  <div className="relative w-6 h-7 md:w-8 md:h-9">
+                    <Image
+                      priority
+                      fill
+                      src="/imgs/logos/onusKnot.png"
+                      alt="logo"
+                    />
+                  </div>
                 ),
                 isLoading: false,
                 isError: false,

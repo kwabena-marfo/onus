@@ -38,7 +38,7 @@ export default function StatCard({
         <>
           <>
             <div className={`grid items-center space-x-1 text-gray-700`}>
-              <Icon className={`w-8 h-8 ${colorT}`} />
+              <Icon className={`md:w-8 md:h-8 w-6 h-6 ${colorT}`} />
               <p
                 className={`md:text-lg text-sm font-bold line-clamp-1 cursor-pointer`}
               >
