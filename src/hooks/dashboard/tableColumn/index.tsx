@@ -24,26 +24,23 @@ import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
 
 type Tag = {
-  name: string;
+  value: string;
   color: string;
 };
 
 type MemoryVerse = {
+  book: string;
+  chapter: string;
   verse: string;
-  notes: string;
-  reference: string;
+  version: string;
+  onusVerse: string;
+  verseNotes: string;
   tags: Tag[];
-  memorised: boolean;
+  memorised: string;
   color: "blue" | "purple";
 };
 
-export default function useColumns({
-  setQueryBuilder,
-  setQueryMembersResults,
-  // mutateGetMembers,
-  searchQuery,
-}: any) {
-  console.log(searchQuery);
+export default function useColumns() {
   const [showSelectToggle, setshowSelectToggle] = useState<any>();
   const [sortingToggle, setSortingToggle] = useState<any>(false);
 
@@ -132,15 +129,14 @@ export default function useColumns({
                 table,
                 setSortingToggle,
                 setshowSelectToggle,
-                setQueryBuilder,
-                setQueryMembersResults,
               }}
             />
           </div>
         </div>
       ),
       cell: ({ row }) => {
-        const { verse, tags, memorised, reference } = row.original;
+        const { book, chapter, verse, onusVerse, version, tags, memorised } =
+          row.original;
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3">
             <input
@@ -156,21 +152,15 @@ export default function useColumns({
               className="flex justify-between gap-2 items-center"
             >
               <div className="flex gap-2 items-center">
-                {memorised ? (
-                  <BsCheck
-                    className={`${
-                      memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
-                    }`}
-                  />
+                {memorised !== "saved" ? (
+                  <BsCheck className={`${"text-[#0F3187]"}`} />
                 ) : (
-                  <LuLoader
-                    className={`${
-                      memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
-                    }`}
-                  />
+                  <LuLoader className={`${"text-[#8C15E8]"}`} />
                 )}
 
-                <p className="md:text-lg font-bold">{reference}</p>
+                <p className="md:text-lg font-bold">
+                  {book} {chapter}:{verse} {version}
+                </p>
                 <BsChevronDown />
               </div>
 
@@ -178,13 +168,13 @@ export default function useColumns({
             </Label>
 
             <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
-              {verse}
+              {onusVerse}
             </p>
             <div className="flex gap-1 justify-between w-full mt-1">
               <div className="flex gap-1">
-                {tags.map(({ name, color }, index) => (
+                {tags?.map(({ tag, color }: any, index) => (
                   <Badge key={index} className={`rounded-full ${color}`}>
-                    {name}
+                    {tag}
                   </Badge>
                 ))}
               </div>

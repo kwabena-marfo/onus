@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { useSession } from "next-auth/react";
-
-import verses from "@/data/verses.json";
-import bible from "@/data/bible.json";
+import { useGetOnus } from "@/hooks/global/useSWRFetch";
+// import verses from "@/data/verses.json";
+// import bible from "@/data/bible.json";
 
 import Content from "@/components/loggedIn/global/content";
 import StatCard from "@/components/loggedIn/global/statCard";
@@ -16,16 +16,18 @@ import {
   BsBookmarkFill,
   BsLightbulbFill,
 } from "react-icons/bs";
-import { Progress } from "@/components/ui/progress";
-import DasboardTable from "@/components/loggedIn/dashboard/table";
+// import { Progress } from "@/components/ui/progress";
+import DasboardTable from "@/components/loggedIn/tables/dashboard";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
+import { TableSkeleton } from "@/components/loggedIn/tables/skeleton";
 
 export default function Dashboard() {
-  const [searchQuery, setSearchQuery] = useState<any>();
-  const [queryMembersResults, setQueryMembersResults] = useState();
-  const [deepFilterFunction, setDeepFilterFunction] = useState<any>([]);
+  // const [searchQuery, setSearchQuery] = useState<any>();
+
   const { status, data: session } = useSession<any>();
+
+  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
 
   if (status === "loading")
     return (
@@ -35,7 +37,6 @@ export default function Dashboard() {
       </div>
     );
 
-  console.log(queryMembersResults);
   return (
     <Content
       tittle={`Hello ${session?.user?.name?.split(" ")[0]}!`}
@@ -113,7 +114,7 @@ export default function Dashboard() {
             )}
           </div>
           {/* Progress Area */}
-          <div className="flex flex-col w-full gap-1">
+          {/* <div className="flex flex-col w-full gap-1">
             <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
               Your Progress
             </h4>{" "}
@@ -133,20 +134,17 @@ export default function Dashboard() {
                 );
               })}
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="rounded-lg  p-3 border md:col-span-3 col-span-5 ">
-          <DasboardTable
-            data={{
-              setQueryMembersResults,
-              setSearchQuery,
-              setDeepFilterFunction,
-              deepFilterFunction,
-              queryMembersResults: verses,
-              searchQuery,
-            }}
-          />
+          {getOnusIsLoading ? (
+            <TableSkeleton />
+          ) : getOnusIsError ? (
+            <p>Sorry an error occured</p>
+          ) : (
+            <DasboardTable data={onusData} />
+          )}
         </div>
       </div>
     </Content>

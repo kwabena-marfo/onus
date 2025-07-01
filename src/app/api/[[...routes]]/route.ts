@@ -9,8 +9,6 @@ const app = new Hono().basePath("/api");
 
 app.post("/create-onus", async ({ req, json }) => {
   try {
-    console.log(await req.json());
-
     const {
       book,
       chapter,
@@ -48,6 +46,17 @@ app.post("/create-onus", async ({ req, json }) => {
   }
 });
 
+app.get("/get-onus", async ({ json }) => {
+  try {
+    const onuss = await prisma.verses.findMany();
+    console.log(onuss);
+
+    return json(onuss);
+  } catch (error) {
+    console.log(error);
+    json("An Error Occured", 500);
+  }
+});
 export const GET = handle(app);
 export const POST = handle(app);
 export const DELETE = handle(app);

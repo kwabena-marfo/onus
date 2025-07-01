@@ -21,21 +21,18 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 
-import { BsArrowBarLeft, BsArrowBarRight, BsX } from "react-icons/bs";
-// import { DeepFilterSheet } from "./deepFilter";
+import { BsArrowBarLeft, BsArrowBarRight } from "react-icons/bs";
+import { Input } from "@/components/ui/input";
 
 export function DataTable({
   data,
-  deepFilterFunction,
   columns,
-  searchQuery,
-  setSearchQuery,
-  setQueryMembersResults,
-}: // DeepFilterComp,
+}: // searchQuery,
+// setSearchQuery,
+// setQueryMembersResults,
 any) {
-  console.log(deepFilterFunction);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
@@ -62,7 +59,7 @@ any) {
           <div className="relative col-span-6  ">
             <div className="flex items-center">
               <span className="absolute inset-y-0 right-0 flex items-center gap-0">
-                {searchQuery ? (
+                {/* {searchQuery ? (
                   <BsX
                     className="cursor-pointer"
                     onClick={() => {
@@ -70,18 +67,12 @@ any) {
                       setQueryMembersResults();
                     }}
                   />
-                ) : null}
-
-                {/* <DeepFilterSheet DeepFilterComp={DeepFilterComp} /> */}
+                ) : null} */}
               </span>
             </div>
             <Input
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
               placeholder="Search through Added Verses..."
-              className="rounded-full h-12 bg-gray-50 "
-              value={searchQuery || ""}
+              className="rounded-full  h-12 bg-gray-50 "
             />
           </div>
           {table.getHeaderGroups().map((headerGroup) => (
