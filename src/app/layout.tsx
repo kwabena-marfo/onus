@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Roboto } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import Provider from "@/components/provider";
 
 import "@/styles/globals.css";
 
-const montserrat = Montserrat({
+const montserrat = Roboto({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
