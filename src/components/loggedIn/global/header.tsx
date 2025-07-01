@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 import {
   Sheet,
@@ -44,10 +45,12 @@ import {
 import { LuLogOut } from "react-icons/lu";
 import { Separator } from "@/components/ui/separator";
 export default function Header() {
+  const { data: session } = useSession<any>();
+
   return (
     <>
-      <nav className="flex items-center  justify-between gap-2 p-1 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
-        <div className="  flex md:hidden">
+      <nav className="flex items-center  justify-between gap-2 p-1 px-3 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
+        <div className="flex md:hidden">
           <Popover>
             <PopoverTrigger>
               <Avatar className="h-10 w-10   ">
@@ -68,8 +71,8 @@ export default function Header() {
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <h1 className="text-xl font-bold">Frank Appiah</h1>
-                  <p className="text-sm p-1">frank@gmail.com</p>
+                  <h1 className="text-xl font-bold">{session?.user?.name}</h1>
+                  <p className="text-sm p-1">{session?.user?.email}</p>
                 </div>
                 <div className="grid gap-2">
                   <div className=" flex items-center gap-3 ml-2 cursor-pointer">

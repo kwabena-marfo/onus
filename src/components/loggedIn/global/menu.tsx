@@ -3,7 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-
+import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
@@ -21,27 +21,27 @@ import { LuLogOut } from "react-icons/lu";
 
 import menuData from "@/data/loggedInMenu";
 
-import { Separator } from "@/components/ui/separator";
 import { BsPerson } from "react-icons/bs";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
+  const { data: session } = useSession<any>();
+
   return (
-    <div className="grid gap-12 text-white">
-      <div className="flex flex-col justify-center items-center">
-        <div className="flex items-center space-x-1">
-          <Avatar className="w-20 h-20">
-            <AvatarImage src="/" alt="admin" />
-            <AvatarFallback>
-              <BsPerson className="text-black w-16 h-16" />
-            </AvatarFallback>
-          </Avatar>
+    <div className="grid gap-4 text-white">
+      <div className="flex gap-2 justify-start items-center">
+        <Avatar className="w-14 h-14">
+          <AvatarImage src="/" alt="admin" />
+          <AvatarFallback>
+            <BsPerson className="text-black w-10 h-10" />
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col gap-0">
+          <h1 className="text-lg font-bold">{session?.user?.name}</h1>
+          <p className="text-sm p-1">{session?.user?.email}</p>
         </div>
-        <h1 className="text-4xl font-bold">Frank Appiah</h1>
-        <p className="text-sm p-1">frank@gmail.com</p>
       </div>
-      <Separator className="bg-[#01CFFE]/50" />
-      <ul className="space-y-3 text-sm  ">
+      <ul className="space-y-3 text-sm mt-24">
         {menuData.map(({ icon, label, hasBadge, key }: any, index: any) => {
           const isActive = pathname?.startsWith(key);
 

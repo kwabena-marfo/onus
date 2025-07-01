@@ -35,27 +35,43 @@ export default function LayoutComp({
             <div className="flex items-center gap-4">
               <Sheet>
                 <SheetTrigger asChild>
-                  <IoMenuOutline className="w-10 h-10 text-blue-950 flex md:hidden" />
+                  <IoMenuOutline className="w-8 h-8 text-blue-950 flex md:hidden" />
                 </SheetTrigger>
-                <SheetContent className="z-100 text-gray-900">
+                <SheetContent className="z-100 text-gray-900 flex md:hidden">
                   <SheetHeader>
                     <SheetTitle>Menu</SheetTitle>
-                    <div className="md:hidden flex flex-col gap-2  ">
-                      <Link className="text-black" href="/">
+                    <div className="md:hidden flex flex-col gap-2 divide-y-2 ">
+                      <Link className="text-black py-1" href="/">
                         Contact
                       </Link>
-                      <Link className="text-black" href="/">
+                      <Link className="text-black py-1" href="/">
                         Team
                       </Link>{" "}
-                      <Link className="text-black" href="/">
+                      <Link className="text-black py-1" href="/">
                         Address
                       </Link>
+                      <div className=" gap-2 justify-start items-start justify-self-start  top-0 w-full z-50 grid">
+                        <div className="flex rounded-md p-3 justify-start items-center bg-gray-100 gap-2 cursor-pointer">
+                          <BsApple className="w-6 h-6" />
+                          <div className="flex flex-col">
+                            <p className="-my-2">Download On The</p>
+                            <p className="text-lg font-bold">App Store</p>
+                          </div>
+                        </div>
+                        <div className="flex rounded-md p-3 justify-start items-center bg-gray-100 gap-2 cursor-pointer">
+                          <BsGooglePlay className="w-6 h-6 " />
+                          <div className="flex flex-col">
+                            <p className="-my-2">Get It On</p>
+                            <p className="text-lg font-bold">Google Play</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </SheetHeader>
                 </SheetContent>
               </Sheet>
 
-              <Link href="/" className="relative h-15 w-12 ">
+              <Link href="/" className="relative h-12 w-10 ">
                 <Image
                   fill
                   priority

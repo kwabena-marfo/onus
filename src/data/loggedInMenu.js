@@ -4,22 +4,22 @@ export default [
   {
     label: "Dashboard",
     icon: <BsHouse />,
-    key: "/dashboard",
+    key: "/app/dashboard",
   },
   {
     label: "My ONUS Bible",
     icon: <BsBook />,
-    key: "/myonusbible",
+    key: "/app/myonusbible",
   },
   {
     label: "Saved Verses",
     icon: <BsBookmark />,
-    key: "/saved",
+    key: "/app/saved",
   },
 
   {
     label: "My Account",
     icon: <BsGear />,
-    key: "/account",
+    key: "/app/account",
   },
 ];

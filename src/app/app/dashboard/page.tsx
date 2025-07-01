@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 import verses from "@/data/verses.json";
 import bible from "@/data/bible.json";
@@ -18,14 +19,28 @@ import {
 import { Progress } from "@/components/ui/progress";
 import DasboardTable from "@/components/loggedIn/dashboard/table";
 import Image from "next/image";
+import { LuLoaderCircle } from "react-icons/lu";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<any>();
   const [queryMembersResults, setQueryMembersResults] = useState();
   const [deepFilterFunction, setDeepFilterFunction] = useState<any>([]);
+  const { status, data: session } = useSession<any>();
+
+  if (status === "loading")
+    return (
+      <div className="h-dvh grid justify-center items-center-center  ">
+        <p>Loading</p>
+        <LuLoaderCircle className="animate-spin text-black h-10 w-7" />
+      </div>
+    );
+
   console.log(queryMembersResults);
   return (
-    <Content tittle="Hello Frank!" Icon={BsEmojiSmile}>
+    <Content
+      tittle={`Hello ${session?.user?.name?.split(" ")[0]}!`}
+      Icon={BsEmojiSmile}
+    >
       <div className="grid justify-start items-start md:grid-cols-5 gap-4">
         <div className="flex flex-col justify-start items-start col-span-5 md:col-span-2 gap-8 ">
           {/* StatCard Area */}

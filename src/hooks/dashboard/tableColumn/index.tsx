@@ -15,14 +15,13 @@ import {
   BsArchive,
   BsCheck,
   BsChevronDown,
-  BsChevronUp,
   BsSortAlphaDown,
   BsSortAlphaUp,
-  BsThreeDots,
-  BsTrash,
+  BsX,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { LuLoader } from "react-icons/lu";
 
 type Tag = {
   name: string;
@@ -143,7 +142,7 @@ export default function useColumns({
       cell: ({ row }) => {
         const { verse, tags, memorised, reference } = row.original;
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-2">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3">
             <input
               type="checkbox"
               id={verse}
@@ -152,29 +151,36 @@ export default function useColumns({
               className="peer hidden"
             />
 
-            <div className="flex gap-2 items-center">
+            <Label
+              htmlFor={verse}
+              className="flex justify-between gap-2 items-center"
+            >
               <div className="flex gap-2 items-center">
                 {memorised ? (
                   <BsCheck
-                    className={`w- h- ${
+                    className={`${
                       memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
                     }`}
                   />
                 ) : (
-                  <BsThreeDots
-                    className={`w- h- ${
+                  <LuLoader
+                    className={`${
                       memorised ? "text-[#0F3187]" : "text-[#8C15E8]"
                     }`}
                   />
                 )}
 
-                <p className="md:text-xl font-bold">{reference}</p>
+                <p className="md:text-lg font-bold">{reference}</p>
+                <BsChevronDown />
               </div>
-            </div>
-            <p className="md:text-xl overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
+
+              <BsX className="text-red-800 md:w-5 md:h-7" />
+            </Label>
+
+            <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
               {verse}
             </p>
-            <div className="flex gap-1 justify-between w-full">
+            <div className="flex gap-1 justify-between w-full mt-1">
               <div className="flex gap-1">
                 {tags.map(({ name, color }, index) => (
                   <Badge key={index} className={`rounded-full ${color}`}>
@@ -182,25 +188,6 @@ export default function useColumns({
                   </Badge>
                 ))}
               </div>
-            </div>
-            <div className="flex  justify-end items-center gap-1 peer-checked:hidden">
-              <Label htmlFor={verse} className="rounded-lg p-2 border  ">
-                <BsChevronDown />
-              </Label>
-              <Button variant="outline" size="sm" className="bg-white">
-                <BsTrash className="text-red-800" />
-              </Button>
-            </div>
-            <div className="justify-end items-center gap-1 hidden peer-checked:flex">
-              <Label
-                htmlFor={verse}
-                className="rounded-lg p-2 border bg-gray-200 "
-              >
-                <BsChevronUp />
-              </Label>
-              <Button variant="outline" size="sm" className="bg-white">
-                <BsTrash className="text-red-800" />
-              </Button>
             </div>
           </div>
         );

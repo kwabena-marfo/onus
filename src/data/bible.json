@@ -1,128 +1,182 @@
 [
-  { "value": "genesis", "label": "Genesis", "chapters": 50, "verses": 1533 },
-  { "value": "exodus", "label": "Exodus", "chapters": 40, "verses": 1213 },
-  { "value": "leviticus", "label": "Leviticus", "chapters": 27, "verses": 859 },
-  { "value": "numbers", "label": "Numbers", "chapters": 36, "verses": 1288 },
   {
-    "value": "deuteronomy",
-    "label": "Deuteronomy",
-    "chapters": 34,
-    "verses": 959
-  },
-  { "value": "joshua", "label": "Joshua", "chapters": 24, "verses": 658 },
-  { "value": "judges", "label": "Judges", "chapters": 21, "verses": 618 },
-  { "value": "ruth", "label": "Ruth", "chapters": 4, "verses": 85 },
-  { "value": "1_samuel", "label": "1 Samuel", "chapters": 31, "verses": 810 },
-  { "value": "2_samuel", "label": "2 Samuel", "chapters": 24, "verses": 695 },
-  { "value": "1_kings", "label": "1 Kings", "chapters": 22, "verses": 816 },
-  { "value": "2_kings", "label": "2 Kings", "chapters": 25, "verses": 719 },
-  {
-    "value": "1_chronicles",
-    "label": "1 Chronicles",
-    "chapters": 29,
-    "verses": 942
+    "value": "matthew",
+    "label": "Matthew",
+    "versesPerChapter": [
+      25, 23, 17, 25, 48, 34, 29, 34, 38, 42, 30, 50, 58, 36, 39, 28, 27, 35,
+      30, 34, 46, 46, 39, 51, 46, 75, 66, 20
+    ]
   },
   {
-    "value": "2_chronicles",
-    "label": "2 Chronicles",
-    "chapters": 36,
-    "verses": 822
-  },
-  { "value": "ezra", "label": "Ezra", "chapters": 10, "verses": 280 },
-  { "value": "nehemiah", "label": "Nehemiah", "chapters": 13, "verses": 406 },
-  { "value": "esther", "label": "Esther", "chapters": 10, "verses": 167 },
-  { "value": "job", "label": "Job", "chapters": 42, "verses": 1070 },
-  { "value": "psalms", "label": "Psalms", "chapters": 150, "verses": 2461 },
-  { "value": "proverbs", "label": "Proverbs", "chapters": 31, "verses": 915 },
-  {
-    "value": "ecclesiastes",
-    "label": "Ecclesiastes",
-    "chapters": 12,
-    "verses": 222
+    "value": "mark",
+    "label": "Mark",
+    "versesPerChapter": [
+      45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20
+    ]
   },
   {
-    "value": "song_of_solomon",
-    "label": "Song of Solomon",
-    "chapters": 8,
-    "verses": 117
+    "value": "luke",
+    "label": "Luke",
+    "versesPerChapter": [
+      80, 52, 38, 44, 39, 49, 50, 56, 62, 42, 54, 59, 35, 35, 32, 31, 37, 43,
+      48, 47, 38, 71, 56, 53
+    ]
   },
-  { "value": "isaiah", "label": "Isaiah", "chapters": 66, "verses": 1292 },
-  { "value": "jeremiah", "label": "Jeremiah", "chapters": 52, "verses": 1364 },
   {
-    "value": "lamentations",
-    "label": "Lamentations",
-    "chapters": 5,
-    "verses": 154
+    "value": "john",
+    "label": "John",
+    "versesPerChapter": [
+      51, 25, 36, 54, 47, 71, 53, 59, 41, 42, 57, 50, 38, 31, 27, 33, 26, 40,
+      42, 31, 25
+    ]
   },
-  { "value": "ezekiel", "label": "Ezekiel", "chapters": 48, "verses": 1273 },
-  { "value": "daniel", "label": "Daniel", "chapters": 12, "verses": 357 },
-  { "value": "hosea", "label": "Hosea", "chapters": 14, "verses": 197 },
-  { "value": "joel", "label": "Joel", "chapters": 3, "verses": 73 },
-  { "value": "amos", "label": "Amos", "chapters": 9, "verses": 146 },
-  { "value": "obadiah", "label": "Obadiah", "chapters": 1, "verses": 21 },
-  { "value": "jonah", "label": "Jonah", "chapters": 4, "verses": 48 },
-  { "value": "micah", "label": "Micah", "chapters": 7, "verses": 105 },
-  { "value": "nahum", "label": "Nahum", "chapters": 3, "verses": 47 },
-  { "value": "habakkuk", "label": "Habakkuk", "chapters": 3, "verses": 56 },
-  { "value": "zephaniah", "label": "Zephaniah", "chapters": 3, "verses": 53 },
-  { "value": "haggai", "label": "Haggai", "chapters": 2, "verses": 38 },
-  { "value": "zechariah", "label": "Zechariah", "chapters": 14, "verses": 211 },
-  { "value": "malachi", "label": "Malachi", "chapters": 4, "verses": 55 },
-  { "value": "matthew", "label": "Matthew", "chapters": 28, "verses": 1071 },
-  { "value": "mark", "label": "Mark", "chapters": 16, "verses": 678 },
-  { "value": "luke", "label": "Luke", "chapters": 24, "verses": 1151 },
-  { "value": "john", "label": "John", "chapters": 21, "verses": 879 },
-  { "value": "acts", "label": "Acts", "chapters": 28, "verses": 1007 },
-  { "value": "romans", "label": "Romans", "chapters": 16, "verses": 433 },
   {
-    "value": "1_corinthians",
+    "value": "acts",
+    "label": "Acts",
+    "versesPerChapter": [
+      26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 41, 40, 34, 28,
+      41, 38, 40, 30, 35, 27, 27, 32, 44, 31
+    ]
+  },
+  {
+    "value": "romans",
+    "label": "Romans",
+    "versesPerChapter": [
+      32, 29, 31, 25, 21, 23, 25, 39, 33, 21, 36, 21, 14, 23, 33, 27
+    ]
+  },
+  {
+    "value": "1corinthians",
     "label": "1 Corinthians",
-    "chapters": 16,
-    "verses": 437
+    "versesPerChapter": [
+      31, 16, 23, 21, 13, 20, 40, 13, 27, 33, 34, 31, 13, 40, 58, 24
+    ]
   },
   {
-    "value": "2_corinthians",
+    "value": "2corinthians",
     "label": "2 Corinthians",
-    "chapters": 13,
-    "verses": 257
+    "versesPerChapter": [24, 17, 18, 18, 21, 18, 16, 24, 15, 18, 33, 21, 14]
   },
-  { "value": "galatians", "label": "Galatians", "chapters": 6, "verses": 149 },
-  { "value": "ephesians", "label": "Ephesians", "chapters": 6, "verses": 155 },
+  {
+    "value": "galatians",
+    "label": "Galatians",
+    "versesPerChapter": [24, 21, 29, 31, 26, 18]
+  },
+  {
+    "value": "ephesians",
+    "label": "Ephesians",
+    "versesPerChapter": [23, 22, 21, 32, 33, 24]
+  },
   {
     "value": "philippians",
     "label": "Philippians",
-    "chapters": 4,
-    "verses": 104
+    "versesPerChapter": [30, 30, 21, 23]
   },
-  { "value": "colossians", "label": "Colossians", "chapters": 4, "verses": 95 },
   {
-    "value": "1_thessalonians",
+    "value": "colossians",
+    "label": "Colossians",
+    "versesPerChapter": [29, 23, 25, 18]
+  },
+  {
+    "value": "1thessalonians",
     "label": "1 Thessalonians",
-    "chapters": 5,
-    "verses": 89
+    "versesPerChapter": [10, 20, 13, 18, 28]
   },
   {
-    "value": "2_thessalonians",
+    "value": "2thessalonians",
     "label": "2 Thessalonians",
-    "chapters": 3,
-    "verses": 47
+    "versesPerChapter": [12, 17, 18]
   },
-  { "value": "1_timothy", "label": "1 Timothy", "chapters": 6, "verses": 113 },
-  { "value": "2_timothy", "label": "2 Timothy", "chapters": 4, "verses": 83 },
-  { "value": "titus", "label": "Titus", "chapters": 3, "verses": 46 },
-  { "value": "philemon", "label": "Philemon", "chapters": 1, "verses": 25 },
-  { "value": "hebrews", "label": "Hebrews", "chapters": 13, "verses": 303 },
-  { "value": "james", "label": "James", "chapters": 5, "verses": 108 },
-  { "value": "1_peter", "label": "1 Peter", "chapters": 5, "verses": 105 },
-  { "value": "2_peter", "label": "2 Peter", "chapters": 3, "verses": 61 },
-  { "value": "1_john", "label": "1 John", "chapters": 5, "verses": 105 },
-  { "value": "2_john", "label": "2 John", "chapters": 1, "verses": 13 },
-  { "value": "3_john", "label": "3 John", "chapters": 1, "verses": 14 },
-  { "value": "jude", "label": "Jude", "chapters": 1, "verses": 25 },
+  {
+    "value": "1timothy",
+    "label": "1 Timothy",
+    "versesPerChapter": [20, 15, 16, 16, 25, 21]
+  },
+  {
+    "value": "2timothy",
+    "label": "2 Timothy",
+    "versesPerChapter": [18, 26, 17, 22]
+  },
+  {
+    "value": "titus",
+    "label": "Titus",
+    "versesPerChapter": [16, 15, 15]
+  },
+  {
+    "value": "philemon",
+    "label": "Philemon",
+    "versesPerChapter": [25]
+  },
+  {
+    "value": "hebrews",
+    "label": "Hebrews",
+    "versesPerChapter": [14, 18, 19, 16, 14, 20, 28, 13, 28, 39, 40, 29, 25]
+  },
+  {
+    "value": "james",
+    "label": "James",
+    "versesPerChapter": [27, 26, 18, 17, 20]
+  },
+  {
+    "value": "1peter",
+    "label": "1 Peter",
+    "versesPerChapter": [25, 25, 22, 19, 14]
+  },
+  {
+    "value": "2peter",
+    "label": "2 Peter",
+    "versesPerChapter": [21, 22, 18]
+  },
+  {
+    "value": "1john",
+    "label": "1 John",
+    "versesPerChapter": [10, 29, 24, 21, 21]
+  },
+  {
+    "value": "2john",
+    "label": "2 John",
+    "versesPerChapter": [13]
+  },
+  {
+    "value": "3john",
+    "label": "3 John",
+    "versesPerChapter": [14]
+  },
+  {
+    "value": "jude",
+    "label": "Jude",
+    "versesPerChapter": [25]
+  },
   {
     "value": "revelation",
     "label": "Revelation",
-    "chapters": 22,
-    "verses": 404
+    "versesPerChapter": [
+      20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 17, 18, 20, 8, 21, 18, 24, 21,
+      15, 27, 21
+    ]
+  },
+  {
+    "value": "psalms",
+    "label": "Psalms",
+    "versesPerChapter": [
+      6, 12, 8, 8, 12, 10, 17, 9, 20, 18, 7, 8, 6, 7, 5, 11, 15, 50, 14, 9, 13,
+      31, 6, 10, 22, 12, 14, 9, 11, 12, 24, 11, 22, 22, 28, 12, 40, 22, 13, 17,
+      7, 18, 52, 17, 16, 15, 5, 23, 11, 13, 12, 9, 9, 5, 8, 28, 22, 35, 45, 48,
+      43, 13, 31, 7, 10, 10, 9, 8, 12, 11, 10, 13, 20, 7, 35, 36, 5, 24, 20, 28,
+      23, 10, 20, 14, 9, 6, 31, 29, 25, 28, 28, 25, 13, 15, 22, 26, 11, 23, 15,
+      12, 17, 13, 12, 21, 14, 21, 22, 11, 12, 19, 12, 25, 24, 16, 18, 22, 13,
+      30, 5, 28, 7, 47, 39, 46, 64, 34, 49, 26, 20, 27, 31, 25, 24, 23, 35, 35,
+      28, 23, 29, 44, 25, 12, 34, 17, 11, 6, 10, 22, 42, 14, 26, 18, 17, 15, 21,
+      10, 20, 14, 9, 6, 5, 10, 5, 7, 7, 4, 11, 12, 8, 14, 4, 5, 12, 6, 10, 7, 9,
+      6, 8
+    ]
+  },
+  {
+    "value": "proverbs",
+    "label": "Proverbs",
+    "versesPerChapter": [
+      33, 22, 35, 27, 23, 35, 27, 36, 18, 32, 31, 28, 25, 35, 33, 33, 28, 24,
+      29, 30, 31, 29, 35, 34, 28, 28, 27, 28, 27, 33, 31
+    ]
   }
 ]
