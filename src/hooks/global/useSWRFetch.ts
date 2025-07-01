@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWR from "swr";
 
 import axios from "@/config/axios";
@@ -5,7 +6,7 @@ import axios from "@/config/axios";
 export const useGetOnus = () => {
   // const { admin } = useGetAdminStates();
   // const axios = securedAxios(admin?.accessToken);
-  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 
   const {
     data,
