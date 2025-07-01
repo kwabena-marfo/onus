@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 import verses from "@/data/verses.json";
-import bible from "@/data/bible";
+import bible from "@/data/bible.json";
 import Content from "@/components/loggedIn/global/content";
 
 import { BsBookmark } from "react-icons/bs";
