@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import bible from "@/data/bible";
+import bible from "@/data/bible.json";
 import bibleVerses from "@/data/verses.json";
 
 export default function groupVersesByBookOrdered() {
