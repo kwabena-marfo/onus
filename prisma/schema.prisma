@@ -24,6 +24,7 @@ model verses {
   version      String   
   onusVerse    String    
   verseNotes   String?   
+  tags         Json?
   memorised    MemorisedStatus
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
