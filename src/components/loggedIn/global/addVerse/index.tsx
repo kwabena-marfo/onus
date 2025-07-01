@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import AddVerseForm from "./form";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function AddVerseModal({ TriggerComp }: any) {
   const isDesktop = useMediaQuery({
@@ -26,9 +27,11 @@ export default function AddVerseModal({ TriggerComp }: any) {
             <TriggerComp />
           </DialogTrigger>
           <DialogContent className="min-w-2xl">
-            <div className="flex items-center gap-2">
-              <AddVerseForm />
-            </div>
+            <ScrollArea className="min-h-[300px] py-6 px-4">
+              <div className="flex items-center gap-2">
+                <AddVerseForm />
+              </div>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       ) : (
@@ -37,8 +40,9 @@ export default function AddVerseModal({ TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <AddVerseForm />
-
+            <ScrollArea className="h-svh py-6 px-4">
+              <AddVerseForm />
+            </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>

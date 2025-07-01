@@ -21,6 +21,7 @@ import DasboardTable from "@/components/loggedIn/tables/dashboard";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
 import { TableSkeleton } from "@/components/loggedIn/tables/skeleton";
+import { Progress } from "@/components/ui/progress";
 
 export default function Dashboard() {
   // const [searchQuery, setSearchQuery] = useState<any>();
@@ -42,9 +43,12 @@ export default function Dashboard() {
       tittle={`Hello ${session?.user?.name?.split(" ")[0]}!`}
       Icon={BsEmojiSmile}
     >
-      <div className="grid justify-start items-start md:grid-cols-5 gap-4">
-        <div className="flex flex-col justify-start items-start col-span-5 md:col-span-2 gap-8 ">
-          {/* StatCard Area */}
+      <div className="grid grid-cols-1 md:grid-cols-6 md:gap-4 gap-6">
+        <div
+          id="stat"
+          className="col-span-12 md:col-span-2 flex flex-col gap-4 w-full"
+        >
+          {" "}
           <div className="grid grid-cols-2  gap-4 w-full">
             {[
               {
@@ -113,13 +117,13 @@ export default function Dashboard() {
               )
             )}
           </div>
-          {/* Progress Area */}
-          {/* <div className="flex flex-col w-full gap-1">
-            <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
-              Your Progress
-            </h4>{" "}
+          <div className="flex flex-col w-full gap-1">
             <div className="grid gap-6 rounded-lg  p-3 bg-gray-50 border h-full">
-              {bible.splice(0, 20).map(({ label, verses }: any) => {
+              <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
+                Your Progress
+              </h4>{" "}
+              <Progress value={Math.min(800 * 100, 100)} />
+              {/* {bible.splice(0, 20).map(({ label, verses }: any) => {
                 return (
                   <div key={label} className="grid">
                     <p>{label}</p>
@@ -132,12 +136,11 @@ export default function Dashboard() {
                     />
                   </div>
                 );
-              })}
+              })} */}
             </div>
-          </div> */}
+          </div>
         </div>
-
-        <div className="rounded-lg  p-3 border md:col-span-3 col-span-5 ">
+        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
           {getOnusIsLoading ? (
             <TableSkeleton />
           ) : getOnusIsError ? (

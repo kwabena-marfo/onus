@@ -13,7 +13,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
-  BsCheck,
+  BsCheckCircle,
   BsChevronDown,
   BsSortAlphaDown,
   BsSortAlphaUp,
@@ -137,6 +137,8 @@ export default function useColumns() {
       cell: ({ row }) => {
         const { book, chapter, verse, onusVerse, version, tags, memorised } =
           row.original;
+
+        console.log(tags);
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3">
             <input
@@ -153,13 +155,13 @@ export default function useColumns() {
             >
               <div className="flex gap-2 items-center">
                 {memorised !== "saved" ? (
-                  <BsCheck className={`${"text-[#0F3187]"}`} />
+                  <BsCheckCircle className={`${"text-[#0F3187]"}`} />
                 ) : (
                   <LuLoader className={`${"text-[#8C15E8]"}`} />
                 )}
 
-                <p className="md:text-lg font-bold">
-                  {book} {chapter}:{verse} {version}
+                <p className="md:text-lg font-bold uppercase">
+                  {book} {chapter}:{verse} - {version}
                 </p>
                 <BsChevronDown />
               </div>
