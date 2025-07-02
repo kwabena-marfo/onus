@@ -122,7 +122,14 @@ export default function Dashboard() {
               <h4 className="text-xl md:text-4xl font-bold text-gray-700  ">
                 Your Progress
               </h4>{" "}
-              <Progress value={Math.min(800 * 100, 100)} />
+              <div className="grid">
+                <p>Matthew</p>
+                <Progress value={Math.min(800 * 100, 100)} />
+              </div>{" "}
+              <div className="grid">
+                <p>Matthew</p>
+                <Progress value={Math.min(800 * 100, 100)} />
+              </div>
               {/* {bible.splice(0, 20).map(({ label, verses }: any) => {
                 return (
                   <div key={label} className="grid">

@@ -44,8 +44,8 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
   });
 
   const onSubmit = async (data: any) => {
-    // return
-    console.log(data);
+    //
+    // return console.log(data);
 
     await createOnus({
       route: "/api/create-onus",

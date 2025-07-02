@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -17,6 +18,7 @@ app.post("/create-onus", async ({ req, json }) => {
       onusVerse,
       verseNotes,
       memorised,
+      tags,
     }: {
       book: string;
       chapter: string;
@@ -24,18 +26,20 @@ app.post("/create-onus", async ({ req, json }) => {
       version: string;
       onusVerse: string;
       verseNotes?: string;
+      tags?: any;
       memorised: "memorised" | "saved";
     } = await req.json();
 
     await prisma.verses.create({
       data: {
-        book: book,
-        chapter: chapter,
-        verse: verse,
-        version: version,
-        onusVerse: onusVerse,
-        verseNotes: verseNotes,
-        memorised: memorised,
+        book,
+        chapter,
+        verse,
+        version,
+        onusVerse,
+        verseNotes,
+        tags,
+        memorised,
       },
     });
 

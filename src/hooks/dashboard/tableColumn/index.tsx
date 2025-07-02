@@ -138,7 +138,6 @@ export default function useColumns() {
         const { book, chapter, verse, onusVerse, version, tags, memorised } =
           row.original;
 
-        console.log(tags);
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3">
             <input
@@ -175,7 +174,10 @@ export default function useColumns() {
             <div className="flex gap-1 justify-between w-full mt-1">
               <div className="flex gap-1">
                 {tags?.map(({ tag, color }: any, index) => (
-                  <Badge key={index} className={`rounded-full ${color}`}>
+                  <Badge
+                    key={index}
+                    className={`rounded-full text-gray-800 ${color}`}
+                  >
                     {tag}
                   </Badge>
                 ))}

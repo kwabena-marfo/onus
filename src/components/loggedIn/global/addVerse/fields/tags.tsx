@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -22,41 +21,40 @@ import { BsX } from "react-icons/bs";
 
 export default function Tags({ addTag, removeTag, tags, watch }: any) {
   const tagsData = [
-    { tag: "peace", color: "bg-blue-300" },
-    { tag: "faith", color: "bg-purple-300" },
-    { tag: "love", color: "bg-red-300" },
+    { tag: "peace", color: "bg-blue-400" },
+    { tag: "faith", color: "bg-purple-400" },
+    { tag: "love", color: "bg-red-400" },
     { tag: "grace", color: "bg-pink-200" },
     { tag: "hope", color: "bg-yellow-200" },
     { tag: "joy", color: "bg-orange-200" },
-    { tag: "wisdom", color: "bg-green-300" },
-    { tag: "strength", color: "bg-gray-300" },
-    { tag: "truth", color: "bg-indigo-300" },
-    { tag: "salvation", color: "bg-teal-300" },
+    { tag: "wisdom", color: "bg-green-400" },
+    { tag: "strength", color: "bg-gray-400" },
+    { tag: "truth", color: "bg-indigo-400" },
+    { tag: "salvation", color: "bg-teal-400" },
     { tag: "forgiveness", color: "bg-lime-200" },
-    { tag: "obedience", color: "bg-sky-300" },
-    { tag: "righteousness", color: "bg-emerald-300" },
+    { tag: "obedience", color: "bg-sky-400" },
+    { tag: "righteousness", color: "bg-emerald-400" },
     { tag: "kindness", color: "bg-rose-200" },
     { tag: "mercy", color: "bg-cyan-200" },
     { tag: "discipline", color: "bg-amber-200" },
     { tag: "patience", color: "bg-fuchsia-200" },
-    { tag: "humility", color: "bg-slate-300" },
+    { tag: "humility", color: "bg-slate-400" },
     { tag: "truthfulness", color: "bg-violet-200" },
-    { tag: "reverence", color: "bg-yellow-300" },
+    { tag: "reverence", color: "bg-yellow-400" },
     { tag: "fellowship", color: "bg-green-200" },
-    { tag: "generosity", color: "bg-rose-300" },
+    { tag: "generosity", color: "bg-rose-400" },
     { tag: "devotion", color: "bg-purple-200" },
     { tag: "holiness", color: "bg-indigo-200" },
     { tag: "light", color: "bg-zinc-200" },
-    { tag: "eternity", color: "bg-cyan-300" },
-    { tag: "healing", color: "bg-lime-300" },
-    { tag: "purpose", color: "bg-orange-300" },
+    { tag: "eternity", color: "bg-cyan-400" },
+    { tag: "healing", color: "bg-lime-400" },
+    { tag: "purpose", color: "bg-orange-400" },
     { tag: "truth", color: "bg-indigo-400" },
     { tag: "courage", color: "bg-red-400" },
   ];
-  const [openTags, setOpenTags] = useState(false);
   return (
     <div className="flex flex-col gap-2 ">
-      <Popover open={openTags} onOpenChange={setOpenTags}>
+      <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -88,7 +86,6 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
                           tag: currentValue,
                           color: color,
                         });
-                        setOpenTags(false);
                       }}
                     >
                       <div className="flex">
