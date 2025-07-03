@@ -33,6 +33,8 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
     shouldFocusError: true,
   });
 
+  console.log(createOnusStates);
+
   const {
     fields: tags,
     append: addTag,
@@ -154,7 +156,7 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
             </Button>
             {createOnusStates?.error ? (
               <p className="text-red-500 text-sm text-center">
-                Sorry, an error occured.
+                {createOnusStates?.error as any}
               </p>
             ) : null}
           </div>

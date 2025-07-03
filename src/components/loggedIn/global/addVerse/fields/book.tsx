@@ -39,6 +39,13 @@ export default function BibleBook({ Controller, control }: any) {
         30, 34, 46, 46, 39, 51, 46, 75, 66, 20,
       ],
     },
+    {
+      value: "mark",
+      label: "Mark",
+      versesPerChapter: [
+        45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20,
+      ],
+    },
   ];
 
   return (

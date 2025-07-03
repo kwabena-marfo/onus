@@ -9,12 +9,18 @@ import Export from "./export";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
   BsCheckCircle,
   BsChevronDown,
+  BsJournal,
   BsSortAlphaDown,
   BsSortAlphaUp,
   BsX,
@@ -135,11 +141,19 @@ export default function useColumns() {
         </div>
       ),
       cell: ({ row }) => {
-        const { book, chapter, verse, onusVerse, version, tags, memorised } =
-          row.original;
+        const {
+          book,
+          chapter,
+          verse,
+          onusVerse,
+          verseNotes,
+          version,
+          tags,
+          memorised,
+        } = row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3 gap-1">
             <input
               type="checkbox"
               id={verse}
@@ -171,17 +185,30 @@ export default function useColumns() {
             <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
               {onusVerse}
             </p>
-            <div className="flex gap-1 justify-between w-full mt-1">
-              <div className="flex gap-1">
-                {tags?.map(({ tag, color }: any, index) => (
-                  <Badge
-                    key={index}
-                    className={`rounded-full text-gray-800 ${color}`}
-                  >
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
+
+            <div className="hidden gap-1  peer-checked:flex ">
+              {tags?.map(({ tag, color }: any, index) => (
+                <Badge
+                  key={index}
+                  className={`rounded-full text-gray-800 ${color}`}
+                >
+                  {tag}
+                </Badge>
+              ))}
+              {verseNotes ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full"
+                    >
+                      <BsJournal />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80">{verseNotes}</PopoverContent>
+                </Popover>
+              ) : null}
             </div>
           </div>
         );

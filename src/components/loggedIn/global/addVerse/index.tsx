@@ -40,7 +40,7 @@ export default function AddVerseModal({ TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <ScrollArea className="h-svh py-6 px-4">
+            <ScrollArea className="min-h-[300px] py-6 px-4">
               <AddVerseForm />
             </ScrollArea>
             <DrawerFooter className="pt-2">

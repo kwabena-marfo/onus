@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 
 import prisma from "@/config/prisma";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.CLIENT_ID as any,
@@ -37,8 +37,7 @@ const authOptions: NextAuthOptions = {
 
           return {
             name: user.display_name,
-            id: user._id,
-            role: user.role,
+            id: user.id,
           };
         } catch (error) {
           console.log(error);
@@ -49,18 +48,20 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: any) {
-      console.log(user);
+      console.log({ user });
       if (user) {
         token.accessToken = user?.accessToken;
+        token.id = user.id;
       }
 
       return { ...token, ...(user || {}) };
     },
 
     async session({ session, token }: any) {
-      console.log(session);
-      session.user = token;
-
+      console.log({ session });
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.name = token.name;
       return session;
     },
   },

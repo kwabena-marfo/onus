@@ -14,6 +14,7 @@ model users {
   password     String
   role         String
   username     String
+  verses       verses[] @relation(fields: [], references: [])
 }
 
 model verses {
@@ -26,6 +27,8 @@ model verses {
   verseNotes   String?   
   tags         Json?
   memorised    MemorisedStatus
+  userId       String   @db.ObjectId
+  user         users    @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
