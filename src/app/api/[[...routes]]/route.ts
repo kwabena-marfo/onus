@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 
 import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 export const runtime = "nodejs";
 
