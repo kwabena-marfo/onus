@@ -53,13 +53,13 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
     { tag: "courage", color: "bg-red-400" },
   ];
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col gap-2">
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
-            className="md:w-fit w-full justify-between"
+            className="w-full justify-between"
           >
             Select Tags...
             <ChevronsUpDown className="opacity-50" />

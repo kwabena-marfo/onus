@@ -14,22 +14,58 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
+        username: { label: "email", type: "text" },
+        password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        const { username, password } = credentials as any;
-        const user = await prisma.users.findFirst({ where: { username } });
-        if (!user || !(await bcrypt.compare(password, user.password)))
-          return null;
+        const { email, password } = credentials as any;
+        const user = await prisma.user.findFirst({ where: { email } });
+
+        if (!user) return null;
+
+        const passwordsMatch = await bcrypt.compare(
+          password,
+          user?.password as any
+        );
+
+        if (!passwordsMatch) return null;
+
         return {
           id: user.id,
-          name: user.display_name,
+          name: user.name,
         };
       },
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      const existingUser = await prisma.user.findFirst({
+        where: { googleId: user?.id },
+      });
+
+      if (existingUser) {
+        await prisma.user.update({
+          where: { googleId: existingUser?.googleId as any },
+          data: { name: user?.name || "", image: user?.image || "" },
+        });
+
+        user.id = existingUser.id;
+        return true;
+      }
+
+      const createdUser = await prisma.user.create({
+        data: {
+          googleId: user.id,
+          email: user?.email as string,
+          name: user?.name || "",
+          image: user?.image || "",
+        },
+      });
+
+      user.id = createdUser.id;
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

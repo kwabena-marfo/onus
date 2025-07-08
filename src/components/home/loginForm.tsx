@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
 
-import loginFormSchema from "@/schemas/loginForm";
+import loginFormSchema from "@/schemas/loginSchema";
 
 import { cn } from "@/lib/utils";
 
@@ -101,20 +101,20 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
 
       <div className="grid gap-4">
         <div className="grid gap-1">
-          <Label htmlFor="name">Username</Label>
+          <Label htmlFor="email">Email</Label>
           <div className="relative w-full">
             <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
               <BsPerson />
             </span>
             <Input
-              id="username"
+              id="email"
               className="pl-8"
-              placeholder="Enter your username"
-              {...register("username")}
+              placeholder="Enter your email"
+              {...register("email")}
             />
           </div>
-          {errors.username && (
-            <p className="text-red-500 text-sm">{errors.username.message}</p>
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
           )}
         </div>
         <div className="flex flex-col space-y-1.5">

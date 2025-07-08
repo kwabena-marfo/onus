@@ -20,8 +20,8 @@ export default function HomeLayout({
     <>
       <LayoutComp>
         {children}
-        {signupModal}
-        {loginModal}
+        {!!children && signupModal}
+        {!!children && loginModal}
       </LayoutComp>
     </>
   );

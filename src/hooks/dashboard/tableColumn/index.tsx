@@ -9,18 +9,12 @@ import Export from "./export";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
   BsCheckCircle,
   BsChevronDown,
-  BsJournal,
   BsSortAlphaDown,
   BsSortAlphaUp,
   BsX,
@@ -153,7 +147,7 @@ export default function useColumns() {
         } = row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3 gap-1">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3  ">
             <input
               type="checkbox"
               id={verse}
@@ -186,7 +180,34 @@ export default function useColumns() {
               {onusVerse}
             </p>
 
-            <div className="hidden gap-1  peer-checked:flex ">
+            <div className="hidden gap-1  peer-checked:flex peer-checked:flex-col">
+              {verseNotes ? (
+                <div>
+                  <input
+                    type="checkbox"
+                    id={verseNotes}
+                    value={verseNotes}
+                    name="notes"
+                    className="peer hidden "
+                  />
+                  <Label
+                    htmlFor={verseNotes}
+                    className="flex justify-between gap-2 items-center"
+                  >
+                    Notes
+                  </Label>
+                  <p className="md:text-lg overflow-hidden hidden text-ellipsis peer-checked:flex peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
+                    {verseNotes}
+                  </p>
+                  {/* <Popover>
+                    <PopoverTrigger asChild>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80">
+                      {verseNotes}
+                    </PopoverContent>
+                  </Popover> */}
+                </div>
+              ) : null}
               {tags?.map(({ tag, color }: any, index) => (
                 <Badge
                   key={index}
@@ -195,20 +216,6 @@ export default function useColumns() {
                   {tag}
                 </Badge>
               ))}
-              {verseNotes ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-full"
-                    >
-                      <BsJournal />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80">{verseNotes}</PopoverContent>
-                </Popover>
-              ) : null}
             </div>
           </div>
         );

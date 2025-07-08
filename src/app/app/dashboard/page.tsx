@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-// import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
-// import verses from "@/data/verses.json";
 // import bible from "@/data/bible.json";
 
 import Content from "@/components/loggedIn/global/content";
@@ -15,12 +13,11 @@ import {
   BsBookHalf,
   BsBookmarkFill,
   BsLightbulbFill,
+  BsTriangleFill,
 } from "react-icons/bs";
-// import { Progress } from "@/components/ui/progress";
 import DasboardTable from "@/components/loggedIn/tables/dashboard";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
-import { TableSkeleton } from "@/components/loggedIn/tables/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -30,6 +27,10 @@ export default function Dashboard() {
   const { status, data: session } = useSession<any>();
 
   const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
+
+  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
+
+  if (getOnusIsError) return <BsTriangleFill />;
 
   if (status === "loading")
     return (
@@ -63,9 +64,10 @@ export default function Dashboard() {
                   {
                     label: "Memorised Verses",
                     link: "/myonusbible",
-                    value: onusData?.verses?.filter(
-                      ({ memorised }: any) => memorised === "memorised"
-                    )?.length,
+                    value:
+                      onusData?.verses?.filter(
+                        ({ memorised }: any) => memorised === "memorised"
+                      )?.length || 0,
                     colorB: "border-l-[#0F3187]",
                     colorT: "text-[#0F3187]",
                     icon: () => (
@@ -84,9 +86,10 @@ export default function Dashboard() {
                   {
                     label: "Saved Verses",
                     link: "/saved",
-                    value: onusData?.verses?.filter(
-                      ({ memorised }: any) => memorised === "saved"
-                    )?.length,
+                    value:
+                      onusData?.verses?.filter(
+                        ({ memorised }: any) => memorised === "saved"
+                      )?.length || 0,
                     colorB: "border-l-[#8C15E8]",
                     colorT: "text-[#8C15E8]",
                     icon: BsBookmarkFill,
@@ -95,15 +98,13 @@ export default function Dashboard() {
                   },
                   {
                     label: "Completed Books",
-                    value: onusData?.grouped?.reduce(
-                      (count: any, entry: any) => {
+                    value:
+                      onusData?.grouped?.reduce((count: any, entry: any) => {
                         const bookName = Object.keys(entry)[0];
                         const bookData = entry[bookName];
 
                         return bookData.memorised >= 5 ? count + 1 : count;
-                      },
-                      0
-                    ),
+                      }, 0) || 0,
                     colorB: "border-l-[#9A6A10]",
                     colorT: "text-[#9A6A10]",
                     icon: BsBookHalf,
@@ -140,9 +141,8 @@ export default function Dashboard() {
               </>
             )}
           </div>
-          {!onusData || !onusData.grouped ? (
-            <p>No progress to show</p>
-          ) : (
+          {!onusData?.verses?.length &&
+          (!onusData || !onusData.grouped?.length) ? null : (
             <div className="flex flex-col w-full gap-1">
               <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
                 <h4 className="text-xl md:text-4xl font-bold text-gray-700">
@@ -176,15 +176,11 @@ export default function Dashboard() {
             </div>
           )}
         </div>
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
-          {getOnusIsLoading ? (
-            <TableSkeleton />
-          ) : getOnusIsError ? (
-            <p>Sorry an error occured</p>
-          ) : (
+        {onusData?.verses?.length ? (
+          <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
             <DasboardTable data={onusData?.verses || []} />
-          )}
-        </div>
+          </div>
+        ) : null}
       </div>
     </Content>
   );

@@ -1,77 +1,258 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
+import signupFormSchema from "@/schemas/signupSchema";
+
+import { cn } from "@/lib/utils";
+
+import useTriggerRequest from "@/hooks/global/useTriggerRequest";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaGoogle } from "react-icons/fa";
-import { BsCheck2Circle } from "react-icons/bs";
-import { useState } from "react";
-import Link from "next/link";
+import {
+  BsCheck2Circle,
+  BsEnvelope,
+  BsEye,
+  BsEyeSlash,
+  BsHandThumbsUp,
+  BsLock,
+  BsPerson,
+} from "react-icons/bs";
+import { LucideLoader2 } from "lucide-react";
+import { LuLogIn } from "react-icons/lu";
 
-export default function SignupForm({
-  className,
-}: React.ComponentProps<"form">) {
-  const [signupDone, setSignupDone] = useState(false);
+export default function LoginForm({ className }: React.ComponentProps<"form">) {
+  type signupSchema = z.infer<typeof signupFormSchema>;
+
+  type signinStateProps = {
+    pending?: boolean;
+    ok?: boolean;
+    status?: any;
+    error?: string | undefined;
+  };
+
+  const {
+    reqFunction: createUser,
+    reqState: createUserStates,
+    setReqState: resetCreatUserStates,
+  } = useTriggerRequest();
+
+  console.log(createUserStates);
+
+  const router = useRouter();
+  const [isHidePass, setIsHidePass] = useState(true);
+  const [googleSigninState, setGoogleSigninState] =
+    useState<signinStateProps | null>();
+
+  const { status } = useSession();
+
+  const googleLogin = async () => {
+    setGoogleSigninState({ pending: true });
+
+    const res: signinStateProps | any = await signIn("google", {
+      redirect: false,
+    });
+
+    setGoogleSigninState(res);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<signupSchema>({
+    resolver: zodResolver(signupFormSchema),
+    mode: "all",
+    shouldFocusError: true,
+  });
+
+  const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
+    // return console.log(data);
+    await createUser({
+      route: "/api/create-user",
+      reqType: "post",
+      data,
+    });
+  };
+
   return (
     <>
-      {signupDone ? (
-        <div className="flex flex-col justify-center items-center gap-3">
-          <BsCheck2Circle className="w-16 h-16 text-green-700" />
-          <h1 className="text-center text-3xl md:text-4xl font-bold text-gray-700">
-            All Done Frank, <br /> Great Job!
+      {createUserStates?.data || status === "authenticated" ? (
+        <div className="flex flex-col justify-center items-center gap-3 p-4">
+          <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
+          <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
+            All Done! <br /> Welcome to the ONUS family!
           </h1>
           <p className="text-center text-lg">
-            We are excited to have you start your journey to spiritual growth
+            Get started on your jounery to spiritual growth
           </p>
-          <Link href="/login" className="w-full">
-            <Button type="submit" className="rounded-md bg-[#fa9a40] w-full">
-              Login
-            </Button>
-          </Link>
+          <Button
+            onClick={() => {
+              reset();
+              resetCreatUserStates(null);
+              router.push("/login");
+            }}
+            className="w-full bg-[#fa9a40] text-gray-800"
+          >
+            Sure! Log me in <BsHandThumbsUp />
+          </Button>
         </div>
       ) : (
         <form
+          onSubmit={handleSubmit(onSubmitSignupForm)}
           className={cn(
             "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
             className
           )}
         >
-          <div className="flex flex-col gap-0 justify-center items-center ">
+          <div className="flex flex-col gap-1 justify-center items-center">
             <p className="text-3xl md:text-6xl font-bold">Get Started</p>
             <p className="text-center">
-              Your Journey to Spritual Growth Begins here
+              Your Journey to Spritual Growth Starts Here.
             </p>
           </div>
-          <div className="grid gap-1">
-            <Label htmlFor="name">Your Name</Label>
-            <Input id="name" />
+
+          <div className="grid gap-4">
+            <div className="grid gap-1">
+              <Label htmlFor="name">Your Name</Label>
+              <div className="relative w-full">
+                <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+                  <BsPerson />
+                </span>
+                <Input
+                  id="name"
+                  className="pl-8"
+                  placeholder="Enter your name"
+                  {...register("name")}
+                />
+              </div>
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors?.name?.message}</p>
+              )}
+            </div>
+            <div className="grid gap-1">
+              <Label htmlFor="name">Your Email</Label>
+              <div className="relative w-full">
+                <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+                  <BsEnvelope />
+                </span>
+                <Input
+                  id="email"
+                  className="pl-8"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors?.email?.message}</p>
+              )}
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative w-full">
+                <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+                  <BsLock />
+                </span>
+                <Input
+                  id="password"
+                  className="pl-8"
+                  autoComplete="password"
+                  placeholder="Enter your password"
+                  {...register("password")}
+                  type={`${isHidePass ? "password" : "text"}`}
+                />
+
+                <span
+                  onClick={() => setIsHidePass(!isHidePass)}
+                  className="absolute right-2.5 bottom-2.5"
+                >
+                  {isHidePass ? <BsEyeSlash /> : <BsEye />}
+                </span>
+              </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="relative w-full">
+                <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+                  <BsLock />
+                </span>
+                <Input
+                  id="confirmPassword"
+                  className="pl-8"
+                  autoComplete="password"
+                  placeholder="Confirm your password"
+                  {...register("confirmPassword")}
+                  type={`${isHidePass ? "password" : "text"}`}
+                />
+
+                <span
+                  onClick={() => setIsHidePass(!isHidePass)}
+                  className="absolute right-2.5 bottom-2.5"
+                >
+                  {isHidePass ? <BsEyeSlash /> : <BsEye />}
+                </span>
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
           </div>
-          <div className="grid gap-1">
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" id="email" />
+
+          <div className="mt-2">
+            <Button className="w-full bg-[#FFAB5B]">
+              {createUserStates?.pending && (
+                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Sign Up
+              <LuLogIn className="h-4 w-4 " />
+            </Button>
+            {createUserStates &&
+              !createUserStates?.pending &&
+              createUserStates?.error && (
+                <p className="text-red-500 text-sm text-center pt-2">
+                  {createUserStates?.error as any}
+                </p>
+              )}
           </div>
-          <div className="grid gap-1">
-            <Label htmlFor="password">Choose Password</Label>
-            <Input id="password" />
-          </div>{" "}
-          <div className="grid gap-1">
-            <Label htmlFor="password">Confirm Password</Label>
-            <Input id="password" />
-          </div>{" "}
-          <div className="flex flex-col">
+
+          <div className="flex flex-col p-1">
+            <p className="text-center">Or</p>
             <Button
+              onClick={() => googleLogin()}
               type="button"
-              onClick={() => setSignupDone(true)}
-              className="rounded-md bg-[#fa9a40]"
+              variant="outline"
+              className="rounded-md cursor-pointer"
             >
-              Submit
+              {googleSigninState?.pending && (
+                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              <FaGoogle /> Continue With Google
             </Button>
-            <p className="text-center ">Or</p>
-            <Button type="submit" variant="outline" className="rounded-md ">
-              <FaGoogle /> Sign Up With Google
-            </Button>
+            {googleSigninState &&
+              !googleSigninState?.pending &&
+              googleSigninState?.status !== 200 && (
+                <p className="text-red-500 text-sm text-center pt-2">
+                  Sorry, an error occured.
+                </p>
+              )}
           </div>
         </form>
       )}

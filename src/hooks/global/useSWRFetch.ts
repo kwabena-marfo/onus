@@ -12,7 +12,7 @@ export const useGetOnus = () => {
     data,
     error: getOnusIsError,
     mutate: mutateGetOnus,
-  } = useSWR("/api/get-onus", fetcher);
+  } = useSWR("/api/app/get-onus", fetcher);
 
   return {
     getOnusIsLoading: !getOnusIsError && !data,
