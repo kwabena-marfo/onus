@@ -135,16 +135,8 @@ export default function useColumns() {
         </div>
       ),
       cell: ({ row }) => {
-        const {
-          book,
-          chapter,
-          verse,
-          onusVerse,
-          verseNotes,
-          version,
-          tags,
-          memorised,
-        } = row.original;
+        const { book, chapter, verse, onusVerse, verseNotes, tags, memorised } =
+          row.original;
 
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3  ">
@@ -168,7 +160,7 @@ export default function useColumns() {
                 )}
 
                 <p className="md:text-lg font-bold uppercase">
-                  {book} {chapter}:{verse} - {version}
+                  {book} {chapter}:{verse}
                 </p>
                 <BsChevronDown />
               </div>

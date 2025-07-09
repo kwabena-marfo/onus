@@ -50,12 +50,11 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
     // return console.log(data);
 
     await createOnus({
-      route: "/api/create-onus",
+      route: "/api/app/create-onus",
       reqType: "post",
       data: {
         ...data,
         book: data.book.value,
-        version: data.version.value,
       },
     });
   };

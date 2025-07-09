@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import Provider from "@/components/provider";
+import Provider from "@/components/home/provider";
 
 import "@/styles/globals.css";
 

@@ -2,8 +2,8 @@
 
 import type { Metadata } from "next";
 
-import Header from "@/components/loggedIn/global/header";
-import Aside from "@/components/loggedIn/global/aside";
+import Header from "@/components/app/header";
+import Aside from "@/components/app/aside";
 // import Footer from "@/components/loggedIn/global/footer";
 
 export const metadata: Metadata = {

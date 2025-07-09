@@ -4,8 +4,8 @@
 import { useSession } from "next-auth/react";
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
-import Content from "@/components/loggedIn/global/content";
-import StatCard from "@/components/loggedIn/global/statCard";
+import Content from "@/components/app/content";
+import StatCard from "@/components/app/statCard";
 
 import {
   BsEmojiSmile,
@@ -15,7 +15,7 @@ import {
   BsTriangleFill,
   BsDatabaseSlash,
 } from "react-icons/bs";
-import DasboardTable from "@/components/loggedIn/tables/dashboardTable";
+import VersesTable from "@/components/app/tables/verses";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
 import { Progress } from "@/components/ui/progress";
@@ -34,7 +34,13 @@ export default function Dashboard() {
       </div>
     );
 
-  if (getOnusIsError) return <BsTriangleFill />;
+  if (getOnusIsError)
+    return (
+      <div className="h-dvh grid justify-center items-center-center  ">
+        <p>Sorry An error Occured, Could not fetch data</p>
+        <BsTriangleFill />
+      </div>
+    );
 
   return (
     <Content
@@ -186,7 +192,7 @@ export default function Dashboard() {
               <p>Your added verses will appear here</p>
             </div>
           ) : (
-            <DasboardTable data={onusData?.verses || []} />
+            <VersesTable data={onusData?.verses || []} />
           )}
         </div>
       </div>

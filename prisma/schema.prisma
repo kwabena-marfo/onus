@@ -24,7 +24,7 @@ model verses {
   book         String    
   chapter      String
   verse        String
-  version      String   
+  version      String?   
   onusVerse    String    
   verseNotes   String?   
   tags         Json?
