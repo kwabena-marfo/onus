@@ -20,6 +20,6 @@ export default [
   {
     label: "My Account",
     icon: <BsGear />,
-    key: "/app/account",
+    key: "/app/myaccount",
   },
 ];

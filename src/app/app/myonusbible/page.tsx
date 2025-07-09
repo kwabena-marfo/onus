@@ -25,7 +25,6 @@ export default function MyOnusBible() {
     return bookData.verses.length >= 5; // ✅ only books with 5 or more verses
   });
 
-  console.log(onusData.grouped);
   return (
     <Content
       tittle="My Onus Bible"
@@ -40,7 +39,7 @@ export default function MyOnusBible() {
       )}
     >
       <div className="grid  w-full  md:gap-6 gap-4 mt-6">
-        <div className="grid h-fit md:grid-cols-5  gap-2 ">
+        <div className="grid h-full md:grid-cols-5  grid-cols-1 md:divide-x-2  gap-2 ">
           {!filteredBooks?.length ? (
             <div className="flex flex-col md:col-span-3 justify-center items-center   w-full ">
               <BsDatabaseSlash className="w-12 h-12" />

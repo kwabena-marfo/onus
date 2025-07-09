@@ -32,29 +32,38 @@ export default function VerseFlashcardCarousel({ verses }: any) {
   return (
     <Carousel setApi={setApi}>
       <CarouselContent className="p-3">
-        {verses?.map(({ reference, verse, tags, notes }: any, index: any) => (
-          <CarouselItem
-            className="flex flex-col rounded-xl gap-3 justify-center items-center bg-gray-100 p-3 "
-            key={index}
-          >
-            <p className="md:text-4xl text-2xl text-gray-700 font-bold">
-              {reference}
-            </p>
-            <p className="text-2xl text-gray-700 text-center">{verse}</p>
-            <div className="flex gap-1 justify-center">
-              {tags.map(({ name, color }: any, index: any) => (
-                <Badge key={index} className={`rounded-full ${color}`}>
-                  {name}
-                </Badge>
-              ))}
-            </div>
-            <Separator />
-            <div className="flex flex-col justify-start items-start w-full">
-              <p className="font-bold">My Notes</p>{" "}
-              <p className="text-lg 2xl text-gray-700  ">{notes}</p>
-            </div>
-          </CarouselItem>
-        ))}
+        {verses?.map(
+          (
+            { book, verse, chapter, onusVerse, verseNotes, tags }: any,
+            index: any
+          ) => (
+            <CarouselItem
+              className="flex flex-col rounded-xl gap-2 justify-center items-center bg-gray-100 p-3 "
+              key={index}
+            >
+              <p className="md:text-4xl text-2xl text-gray-700 font-bold uppercase">
+                {book} {chapter}:{verse}
+              </p>
+              <p className="text-2xl text-gray-700 text-center">{onusVerse}</p>
+              <div className="flex gap-1 justify-center">
+                {tags?.map(({ tag, color }: any, index: any) => (
+                  <Badge key={index} className={`rounded-full ${color}`}>
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              {verseNotes ? (
+                <>
+                  <Separator />
+                  <div className="flex flex-col justify-start items-start w-full">
+                    <p className="font-bold">My Notes</p>{" "}
+                    <p className="text-lg 2xl text-gray-700  ">{verseNotes}</p>
+                  </div>
+                </>
+              ) : null}
+            </CarouselItem>
+          )
+        )}
       </CarouselContent>
       <div className="grid">
         <div className="flex gap-1 justify-center">
