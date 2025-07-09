@@ -4,14 +4,14 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+// import {
+//   Sheet,
+//   SheetContent,
+//   SheetDescription,
+//   SheetHeader,
+//   SheetTitle,
+//   SheetTrigger,
+// } from "@/components/ui/sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,15 +24,16 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  BsBell,
+  // BsBell,
   BsBook,
   BsBookmark,
-  BsCircleFill,
+  // BsCircleFill,
   BsHouse,
+  BsLightbulb,
   BsPerson,
   BsPlusCircleFill,
   BsSearch,
-  BsX,
+  // BsX,
 } from "react-icons/bs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AddVerseModal from "./addVerse";
@@ -51,72 +52,6 @@ export default function Header() {
   return (
     <>
       <nav className="flex items-center  justify-between gap-2 p-1 px-3 md:left-1/6   fixed  top-0 bg-white z-50   md:w-5/6 w-full  md:border-b-2">
-        <div className="flex md:hidden">
-          <Popover>
-            <PopoverTrigger>
-              <Avatar className="h-10 w-10   ">
-                <AvatarImage src="" alt="@shadcn" />
-                <AvatarFallback>
-                  <BsPerson className="h-6 w-6  " />
-                </AvatarFallback>
-              </Avatar>{" "}
-            </PopoverTrigger>
-            <PopoverContent className="w-80   ">
-              <div className="grid gap-4">
-                <div className="flex flex-col justify-center items-center">
-                  <div className="flex items-center space-x-1">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage src="/" alt="admin" />
-                      <AvatarFallback>
-                        <BsPerson className="text-black w-16 h-16" />
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <h1 className="text-xl font-bold">{session?.user?.name}</h1>
-                  <p className="text-sm p-1">{session?.user?.email}</p>
-                </div>
-                <div className="grid gap-2">
-                  <div className=" flex items-center gap-3 ml-2 cursor-pointer">
-                    <BsPerson className="w-5 h-5" />
-                    <p className="">My Account</p>
-                  </div>
-                  <Separator orientation="horizontal" />
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <div className=" flex text-red-900  items-center gap-3 ml-2 cursor-pointer">
-                        <LuLogOut className="w-5 h-5" />
-                        <p className="">Logout</p>
-                      </div>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will log you out of the app
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => signOut({ callbackUrl: "/login" })}
-                          className="bg-red-900"
-                        >
-                          <div className="flex items-center space-x-1">
-                            <LuLogOut className="w-8 h-8" />
-                            <p className="">Continue</p>
-                          </div>
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
         <Image
           priority
           width={36}
@@ -137,14 +72,13 @@ export default function Header() {
           </div>
           <SearchModal
             TriggerComp={() => (
-              <div className="hidden md:flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
+              <div className="  flex items-center justify-center    rounded-full border-2  md:p-2 p-1.5 cursor-pointer  ">
                 <BsSearch className="w-6 h-6" />
-                <p className="text-xs">Search</p>
+                <p className="text-xs  ">Search</p>
               </div>
             )}
           />
-
-          <Sheet>
+          {/* <Sheet>
             <SheetTrigger>
               {" "}
               <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
@@ -186,7 +120,72 @@ export default function Header() {
                 </div>
               </div>
             </SheetContent>
-          </Sheet>
+          </Sheet>{" "} */}
+          <div className="flex md:hidden">
+            <Popover>
+              <PopoverTrigger>
+                <Avatar className="h-10 w-10   ">
+                  <AvatarImage src="" alt="@shadcn" />
+                  <AvatarFallback>
+                    <BsPerson className="h-6 w-6  " />
+                  </AvatarFallback>
+                </Avatar>{" "}
+              </PopoverTrigger>
+              <PopoverContent className="w-80   ">
+                <div className="grid gap-4">
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex items-center space-x-1">
+                      <Avatar className="w-16 h-16">
+                        <AvatarImage src="/" alt="admin" />
+                        <AvatarFallback>
+                          <BsPerson className="text-black w-16 h-16" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <h1 className="text-xl font-bold">{session?.user?.name}</h1>
+                    <p className="text-sm p-1">{session?.user?.email}</p>
+                  </div>
+                  <div className="grid gap-2">
+                    <div className=" flex items-center gap-3 ml-2 cursor-pointer">
+                      <BsPerson className="w-5 h-5" />
+                      <p className="">My Account</p>
+                    </div>
+                    <Separator orientation="horizontal" />
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <div className=" flex text-red-900  items-center gap-3 ml-2 cursor-pointer">
+                          <LuLogOut className="w-5 h-5" />
+                          <p className="">Logout</p>
+                        </div>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will log you out of the app
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => signOut({ callbackUrl: "/login" })}
+                            className="bg-red-900"
+                          >
+                            <div className="flex items-center space-x-1">
+                              <LuLogOut className="w-8 h-8" />
+                              <p className="">Continue</p>
+                            </div>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </nav>
       <nav className=" flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6  h-fit fixed md:hidden  bottom-0 bg-white z-50   md:w-5/6 w-full   border-t-1">
@@ -219,14 +218,20 @@ export default function Header() {
             <BsBookmark className="block md:hidden w-6 h-6  " />
             <p className="text-xs">Saved</p>
           </Link>{" "}
-          <SearchModal
+          <Link href="/app/dashboard">
+            <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
+              <BsLightbulb className=" w-6 h-6" />
+              <p className="text-xs">Quizes</p>
+            </div>
+          </Link>
+          {/* <SearchModal
             TriggerComp={() => (
               <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
                 <BsSearch className="w-6 h-6" />
-                <p className="text-xs">Search</p>
+                <p className="text-xs ">Search</p>
               </div>
             )}
-          />
+          /> */}
         </div>
       </nav>
     </>

@@ -45,8 +45,6 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
     setReqState: resetCreatUserStates,
   } = useTriggerRequest();
 
-  console.log(createUserStates);
-
   const router = useRouter();
   const [isHidePass, setIsHidePass] = useState(true);
   const [googleSigninState, setGoogleSigninState] =
