@@ -50,7 +50,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
       redirect: false,
     });
 
-    setSigninState(res);
+    setGoogleSigninState(res);
   };
 
   const onSubmitLoginForm: SubmitHandler<loginSchema> = async (data) => {
@@ -60,8 +60,8 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
 
     const res: signinStateProps | any = await signIn("credentials", {
       redirect: false,
+      email: data.email,
       password: data.password,
-      username: data.username,
     });
 
     setSigninState(res);
@@ -157,7 +157,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
           !signinState?.pending &&
           signinState?.status !== 200 && (
             <p className="text-red-500 text-sm text-center pt-2">
-              Sorry, an error occured.
+              {signinState?.error}
             </p>
           )}
       </div>

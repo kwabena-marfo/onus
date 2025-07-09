@@ -13,18 +13,6 @@ export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
 
-app.use("/app/*", async ({ path, json, set }: any, next) => {
-  console.log(path);
-  if (path === "/create-user") await next();
-
-  const session = (await getServerSession(authOptions)) as any;
-
-  if (!session) return json("An Error Occured", 401);
-
-  set("session", session);
-  return await next();
-});
-
 app.post(
   "/create-user",
   createUserChecker(prisma),
@@ -60,6 +48,18 @@ app.post(
     }
   }
 );
+
+app.use("/app/*", async ({ path, json, set }: any, next) => {
+  console.log(path);
+  if (path === "/create-user") await next();
+
+  const session = (await getServerSession(authOptions)) as any;
+
+  if (!session) return json("An Error Occured", 401);
+
+  set("session", session);
+  return await next();
+});
 
 app.post(
   "/app/create-onus",

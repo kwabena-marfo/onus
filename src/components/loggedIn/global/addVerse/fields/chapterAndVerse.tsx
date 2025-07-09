@@ -13,7 +13,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
   const chapter = watch("chapter");
 
   return (
-    <div className="flex gap-3 md:w-fit w-full">
+    <div className="flex gap-3 w-full">
       <Controller
         control={control}
         name="chapter"
@@ -30,7 +30,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                 disabled={!book ? true : false}
               >
                 <SelectTrigger
-                  className={`md:w-fit w-full ${error && "border-red-500"}`}
+                  className={` w-full ${error && "border-red-500"}`}
                 >
                   <SelectValue placeholder="Chapter" />
                 </SelectTrigger>
@@ -63,7 +63,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                 disabled={!chapter ? true : false}
               >
                 <SelectTrigger
-                  className={`md:w-fit w-full ${error && "border-red-500"}`}
+                  className={`w-full ${error && "border-red-500"}`}
                 >
                   <SelectValue placeholder="Verse" />
                 </SelectTrigger>

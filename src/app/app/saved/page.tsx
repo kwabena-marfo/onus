@@ -6,7 +6,7 @@ import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
 import { BsBookmark, BsTriangleFill } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
-import Table from "@/components/loggedIn/tables/saved";
+import Table from "@/components/loggedIn/tables/savedTable";
 import { LuLoaderCircle } from "react-icons/lu";
 
 export default function Dashboard() {

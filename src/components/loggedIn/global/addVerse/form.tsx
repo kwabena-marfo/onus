@@ -17,7 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { LuLoader } from "react-icons/lu";
 import BibleBook from "./fields/book";
 import ChapterAndVerse from "./fields/chapterAndVerse";
-import Version from "./fields/version";
+// import Version from "./fields/version";
 import VerseAndNotes from "./fields/verseAndNotes";
 import Tags from "./fields/tags";
 
@@ -100,16 +100,14 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
               Your Journey to Spritual Growth Begins here
             </p>
           </div>
-          <div className="grid md:flex gap-3">
-            <div className="flex flex-wrap gap-3 w-full justify-center">
-              <BibleBook Controller={Controller} control={control} />
-              <ChapterAndVerse
-                Controller={Controller}
-                watch={watch}
-                control={control}
-              />
-              <Version Controller={Controller} control={control} />
-            </div>
+          <div className="flex  gap-3 w-full justify-between">
+            <BibleBook Controller={Controller} control={control} />
+            <ChapterAndVerse
+              Controller={Controller}
+              watch={watch}
+              control={control}
+            />
+            {/* <Version Controller={Controller} control={control} /> */}
           </div>
 
           <VerseAndNotes Controller={Controller} control={control} />

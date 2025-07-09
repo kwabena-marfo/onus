@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -23,7 +23,6 @@ import {
   BsEnvelope,
   BsEye,
   BsEyeSlash,
-  BsHandThumbsUp,
   BsLock,
   BsPerson,
 } from "react-icons/bs";
@@ -52,6 +51,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
   const [isHidePass, setIsHidePass] = useState(true);
   const [googleSigninState, setGoogleSigninState] =
     useState<signinStateProps | null>();
+  const [signinState, setSigninState] = useState<signinStateProps | null>();
 
   const { status } = useSession();
 
@@ -65,10 +65,23 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
     setGoogleSigninState(res);
   };
 
+  console.log(status);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setSigninState(null);
+      setGoogleSigninState(null);
+      reset();
+      resetCreatUserStates(null);
+      router.push("/app/dashboard");
+    }
+  }, [status]);
+
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<signupSchema>({
     resolver: zodResolver(signupFormSchema),
@@ -77,7 +90,6 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
   });
 
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
-    // return console.log(data);
     await createUser({
       route: "/api/create-user",
       reqType: "post",
@@ -97,14 +109,21 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
             Get started on your jounery to spiritual growth
           </p>
           <Button
-            onClick={() => {
-              reset();
-              resetCreatUserStates(null);
-              router.push("/login");
+            onClick={async () => {
+              setSigninState({ pending: true });
+              const result = await signIn("credentials", {
+                redirect: false, // prevent redirect so you can handle manually
+                email: watch("email"),
+                password: watch("confirmPassword"),
+              });
+              setSigninState(result as any);
             }}
-            className="w-full bg-[#fa9a40] text-gray-800"
+            className="w-full bg-[#fa9a40] font-medium"
           >
-            Sure! Log me in <BsHandThumbsUp />
+            Sure! Log me in{" "}
+            {signinState?.pending && (
+              <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
           </Button>
         </div>
       ) : (

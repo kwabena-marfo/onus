@@ -3,7 +3,6 @@
 
 import { useSession } from "next-auth/react";
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
-// import bible from "@/data/bible.json";
 
 import Content from "@/components/loggedIn/global/content";
 import StatCard from "@/components/loggedIn/global/statCard";
@@ -14,31 +13,28 @@ import {
   BsBookmarkFill,
   BsLightbulbFill,
   BsTriangleFill,
+  BsDatabaseSlash,
 } from "react-icons/bs";
-import DasboardTable from "@/components/loggedIn/tables/dashboard";
+import DasboardTable from "@/components/loggedIn/tables/dashboardTable";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
-  // const [searchQuery, setSearchQuery] = useState<any>();
-
   const { status, data: session } = useSession<any>();
 
   const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
 
-  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
-
-  if (getOnusIsError) return <BsTriangleFill />;
-
-  if (status === "loading")
+  if (status == "loading" || getOnusIsLoading)
     return (
       <div className="h-dvh grid justify-center items-center-center  ">
         <p>Loading</p>
         <LuLoaderCircle className="animate-spin text-black h-10 w-7" />
       </div>
     );
+
+  if (getOnusIsError) return <BsTriangleFill />;
 
   return (
     <Content
@@ -141,46 +137,58 @@ export default function Dashboard() {
               </>
             )}
           </div>
-          {!onusData?.verses?.length &&
-          (!onusData || !onusData.grouped?.length) ? null : (
-            <div className="flex flex-col w-full gap-1">
-              <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
-                <h4 className="text-xl md:text-4xl font-bold text-gray-700">
-                  Your Progress
-                </h4>
+          <div className="flex flex-col w-full gap-1">
+            <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
+              {!onusData || !onusData.grouped?.length ? (
+                <div className="flex flex-col justify-center items-center">
+                  <BsDatabaseSlash className="w-12 h-12" />
+                  <p>No Data Found</p>
+                  <p>Your Progress will appear here</p>
+                </div>
+              ) : (
+                <>
+                  <h4 className="text-xl md:text-4xl font-bold text-gray-700">
+                    Your Progress
+                  </h4>
+                  {onusData.grouped.map((entry: any) => {
+                    const bookName = Object.keys(entry)[0];
+                    const { memorised } = entry[bookName];
 
-                {onusData.grouped.map((entry: any) => {
-                  const bookName = Object.keys(entry)[0];
-                  const { memorised } = entry[bookName];
+                    if (!memorised) return null; // Hide if memorised = 0
 
-                  if (!memorised) return null; // Hide if memorised = 0
+                    const percentage = Math.min(
+                      Math.round((memorised / 5) * 100),
+                      100
+                    );
 
-                  const percentage = Math.min(
-                    Math.round((memorised / 5) * 100),
-                    100
-                  );
-
-                  return (
-                    <div key={bookName} className="grid gap-1">
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm font-semibold text-gray-600 capitalize">
-                          {bookName}
-                        </p>
-                        <p className="text-sm text-gray-500">{percentage}%</p>
+                    return (
+                      <div key={bookName} className="grid gap-1">
+                        <div className="flex justify-between items-center">
+                          <p className="text-sm font-semibold text-gray-600 capitalize">
+                            {bookName}
+                          </p>
+                          <p className="text-sm text-gray-500">{percentage}%</p>
+                        </div>
+                        <Progress value={percentage} />
                       </div>
-                      <Progress value={percentage} />
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
+          </div>
+        </div>
+        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
+          {!onusData?.verses?.length ? (
+            <div className="flex flex-col justify-center items-center h-full">
+              <BsDatabaseSlash className="w-12 h-12" />
+              <p>No Data Found</p>
+              <p>Your added verses will appear here</p>
+            </div>
+          ) : (
+            <DasboardTable data={onusData?.verses || []} />
           )}
         </div>
-        {onusData?.verses?.length ? (
-          <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
-            <DasboardTable data={onusData?.verses || []} />
-          </div>
-        ) : null}
       </div>
     </Content>
   );

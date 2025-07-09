@@ -14,42 +14,81 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "email", type: "text" },
-        password: { label: "password", type: "password" },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         const { email, password } = credentials as any;
-        const user = await prisma.user.findFirst({ where: { email } });
 
-        if (!user) return null;
+        if (!email || !password) throw new Error("Missing email or password");
+
+        const googleUser = await prisma.user.findFirst({
+          where: {
+            email,
+            googleId: {
+              not: null,
+            },
+          },
+        });
+
+        if (googleUser) throw new Error("Please sign in with google");
+
+        const user = await prisma.user.findFirst({
+          where: { email },
+        });
+
+        if (!user)
+          throw new Error(
+            "Sorry, this email is not associated with any account"
+          );
 
         const passwordsMatch = await bcrypt.compare(
           password,
           user?.password as any
         );
 
-        if (!passwordsMatch) return null;
+        if (!passwordsMatch) throw new Error("Incorrect password");
 
         return {
           id: user.id,
           name: user.name,
+          email: user.email,
         };
       },
     }),
   ],
+  session: {
+    strategy: "jwt", // or 'database' if you're using database sessions
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 5, // Update the session every 5 minutes if the user is active
+  },
+  jwt: {
+    maxAge: 60 * 60 * 24 * 30, // Match session maxAge for consistency
+  },
   callbacks: {
     async signIn({ user }) {
-      const existingUser = await prisma.user.findFirst({
+      const googleUser = await prisma.user.findFirst({
+        where: {
+          id: user?.id,
+          googleId: {
+            not: null,
+          },
+        },
+      });
+
+      if (!googleUser) return true;
+
+      const existingGoogleUser = await prisma.user.findFirst({
         where: { googleId: user?.id },
       });
 
-      if (existingUser) {
+      if (existingGoogleUser) {
         await prisma.user.update({
-          where: { googleId: existingUser?.googleId as any },
+          where: { googleId: existingGoogleUser?.googleId as any },
           data: { name: user?.name || "", image: user?.image || "" },
         });
 
-        user.id = existingUser.id;
+        user.id = existingGoogleUser.id;
         return true;
       }
 
@@ -74,13 +113,11 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }: any) {
       session.user.id = token.id;
+
       return session;
     },
   },
   pages: {
     signIn: "/login",
-  },
-  session: {
-    maxAge: 60 * 60,
   },
 };

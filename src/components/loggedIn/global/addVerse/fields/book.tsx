@@ -49,62 +49,67 @@ export default function BibleBook({ Controller, control }: any) {
   ];
 
   return (
-    <Controller
-      control={control}
-      name="book"
-      rules={{ required: "Book is required" }}
-      render={({ field: { value, onChange }, fieldState: { error } }: any) => {
-        return (
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className={`md:w-fit w-full justify-between ${
-                  error && "border-red-500"
-                }`}
-              >
-                {value?.label || "Select Book..."}
-                <ChevronsUpDown className="opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="md:w-[200px] w-full p-0">
-              <Command>
-                <CommandInput placeholder="Search Book..." className="h-9" />
-                <CommandList>
-                  <CommandEmpty>No book found.</CommandEmpty>
-                  <CommandGroup>
-                    {bibleData.map((book) => (
-                      <CommandItem
-                        key={book.value}
-                        value={book.value}
-                        onSelect={(currentValue) => {
-                          const foundBook = bibleData.find(
-                            (book) => book.value === currentValue
-                          );
-                          onChange(foundBook);
-                          setOpen(false);
-                        }}
-                      >
-                        {book.label}
-                        <Check
-                          className={cn(
-                            "ml-auto",
-                            value?.value === book.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        );
-      }}
-    />
+    <div className="flex w-full">
+      <Controller
+        control={control}
+        name="book"
+        rules={{ required: "Book is required" }}
+        render={({
+          field: { value, onChange },
+          fieldState: { error },
+        }: any) => {
+          return (
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className={` w-full justify-between ${
+                    error && "border-red-500"
+                  }`}
+                >
+                  {value?.label || "Select Book..."}
+                  <ChevronsUpDown className="opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="md:w-[200px] w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search Book..." className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>No book found.</CommandEmpty>
+                    <CommandGroup>
+                      {bibleData.map((book) => (
+                        <CommandItem
+                          key={book.value}
+                          value={book.value}
+                          onSelect={(currentValue) => {
+                            const foundBook = bibleData.find(
+                              (book) => book.value === currentValue
+                            );
+                            onChange(foundBook);
+                            setOpen(false);
+                          }}
+                        >
+                          {book.label}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              value?.value === book.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          );
+        }}
+      />
+    </div>
   );
 }

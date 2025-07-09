@@ -4,6 +4,8 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
@@ -38,7 +40,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
         </Avatar>
         <div className="flex flex-col gap-0">
           <h1 className="text-lg font-bold">{session?.user?.name}</h1>
-          <p className="text-sm p-1">{session?.user?.email}</p>
+          <p className="text-sm ">{session?.user?.email}</p>
         </div>
       </div>
       <ul className="space-y-3 text-sm mt-24">
@@ -81,7 +83,10 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction className="bg-destructive">
+              <AlertDialogAction
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="bg-destructive"
+              >
                 <div className="flex items-center space-x-1">
                   <LuLogOut className="w-8 h-8" />
                   <p className="hidden md:block">Continue</p>

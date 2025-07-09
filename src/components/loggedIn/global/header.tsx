@@ -2,6 +2,7 @@
 "use client";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import {
   Sheet,
@@ -98,7 +99,10 @@ export default function Header() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="bg-red-900">
+                        <AlertDialogAction
+                          onClick={() => signOut({ callbackUrl: "/login" })}
+                          className="bg-red-900"
+                        >
                           <div className="flex items-center space-x-1">
                             <LuLogOut className="w-8 h-8" />
                             <p className="">Continue</p>
