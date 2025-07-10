@@ -1,43 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import Flashcard from "./flashCard";
+import { CarouselItem } from "@/components/ui/carousel";
+import Flashcard from "../flashCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import CarouselComp from "../carousel";
 
 export default function VerseFlashcardCarousel() {
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
   return (
-    <div className="grid items-center gap-2 w-full">
-      <div className="flex flex-col justify-center items-center">
-        <p className="font-extrabold text-3xl text-center">Quize on Mathew</p>{" "}
-        <p>Complete the following quotes</p>
-      </div>
-      <Carousel setApi={setApi} className=" w-full">
-        <CarouselContent>
+    <CarouselComp
+      tittle="Quize on Mathew"
+      subTittle="Complete the following quotes"
+      Content={() => (
+        <>
           {[
             {
               front: () => (
@@ -75,23 +51,8 @@ export default function VerseFlashcardCarousel() {
               <Flashcard FrontComp={card.front} BackComp={card.back} />
             </CarouselItem>
           ))}
-        </CarouselContent>
-        <div className="grid">
-          <div className="flex gap-1 justify-center">
-            <BsArrowLeft
-              onClick={() => api?.scrollPrev()}
-              className="w-12 h-12 cursor-pointer"
-            />
-            <BsArrowRight
-              onClick={() => api?.scrollNext()}
-              className="w-12 h-12 cursor-pointer"
-            />
-          </div>
-          <p className="text-center">
-            Question {current} of {count}
-          </p>
-        </div>
-      </Carousel>
-    </div>
+        </>
+      )}
+    />
   );
 }
