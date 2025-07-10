@@ -67,17 +67,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user }) {
-      const googleUser = await prisma.user.findFirst({
-        where: {
-          id: user?.id,
-          googleId: {
-            not: null,
-          },
-        },
-      });
-
-      if (!googleUser) return true;
-
       const existingGoogleUser = await prisma.user.findFirst({
         where: { googleId: user?.id },
       });

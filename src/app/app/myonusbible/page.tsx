@@ -11,8 +11,6 @@ import VerseFlashCardModal from "@/components/app/verseFlashcard";
 import { LuLoaderCircle } from "react-icons/lu";
 import { BsDatabaseSlash, BsTriangleFill } from "react-icons/bs";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { BiSolidBookOpen } from "react-icons/bi";
 
 export default function MyOnusBible() {
   const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
@@ -29,7 +27,7 @@ export default function MyOnusBible() {
 
   return (
     <Content
-      tittle="My Onus Bible"
+      tittle="My ONUS Bible"
       Icon={() => (
         <Image
           priority
@@ -56,40 +54,20 @@ export default function MyOnusBible() {
                 const verses = bookData.verses;
 
                 return (
-                  <div
+                  <VerseFlashCardModal
                     key={index}
-                    className="flex flex-col  rounded-lg gap-2 p-2 bg-gray-50 border border-l-4 border-l-[#8C15E8] hover:bg-[#8C15E8]/10"
-                  >
-                    <div className="flex flex-col gap-0">
-                      <p className="md:text-xl text-left text-lg text-gray-700 font-bold capitalize">
-                        {book}
-                      </p>
-                      <p className="text-left text-md text-gray-600 font-medium">
-                        {verses.length} verse
-                        {verses.length === 1 ? "" : "s"}
-                      </p>
-                    </div>
-                    <div className="flex  gap-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="w-fit cursor-pointer "
-                      >
-                        Quize Me
-                      </Button>
-                      <VerseFlashCardModal
-                        verses={verses}
-                        TriggerComp={() => (
-                          <Button
-                            size="sm"
-                            className="w-fit cursor-pointer bg-yellow-500  "
-                          >
-                            <BiSolidBookOpen className="w-8 h-8" />
-                          </Button>
-                        )}
-                      />
-                    </div>
-                  </div>
+                    verses={verses}
+                    TriggerComp={() => (
+                      <div className="flex flex-col  rounded-lg gap-0 p-2 bg-gray-50 border border-l-4 border-l-[#8C15E8] hover:bg-[#8C15E8]/10">
+                        <p className="md:text-xl text-left text-lg text-gray-700 font-bold capitalize">
+                          {book}:
+                        </p>
+                        <p className="text-left text-md text-gray-600 ">
+                          {verses.length} Verses
+                        </p>
+                      </div>
+                    )}
+                  />
                 );
               })}
             </div>

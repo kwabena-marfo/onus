@@ -1,4 +1,10 @@
-import { BsBook, BsBookmark, BsGear, BsHouse } from "react-icons/bs";
+import {
+  BsBook,
+  BsBookmark,
+  BsGear,
+  BsHouse,
+  BsLightbulb,
+} from "react-icons/bs";
 
 export default [
   {
@@ -15,6 +21,11 @@ export default [
     label: "Saved Verses",
     icon: <BsBookmark />,
     key: "/app/saved",
+  },
+  {
+    label: "Quizzes",
+    icon: <BsLightbulb />,
+    key: "/app/quizzes",
   },
 
   {

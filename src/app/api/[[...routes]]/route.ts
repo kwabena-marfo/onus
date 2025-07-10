@@ -122,8 +122,6 @@ app.get("/app/get-onus", async ({ json, get }: any) => {
       },
     });
 
-    console.log({ verses });
-
     if (!verses) return json("An Error Occured", 500);
 
     const grouped = verses.reduce((acc, verse) => {
