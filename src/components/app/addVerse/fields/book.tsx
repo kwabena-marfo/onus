@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// import bibleData from "@/data/bible.json";
+import bibleData from "@/data/bible.json";
 
 import { cn } from "@/lib/utils";
 
@@ -23,30 +23,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// const res = await fetch("@/data/bible.json");
-// const booksData = await res.json();
-// console.log(booksData);
-
 export default function BibleBook({ Controller, control }: any) {
   const [open, setOpen] = useState(false);
-
-  const bibleData = [
-    {
-      value: "matthew",
-      label: "Matthew",
-      versesPerChapter: [
-        25, 23, 17, 25, 48, 34, 29, 34, 38, 42, 30, 50, 58, 36, 39, 28, 27, 35,
-        30, 34, 46, 46, 39, 51, 46, 75, 66, 20,
-      ],
-    },
-    {
-      value: "mark",
-      label: "Mark",
-      versesPerChapter: [
-        45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20,
-      ],
-    },
-  ];
 
   return (
     <div className="flex w-full">
@@ -79,13 +57,13 @@ export default function BibleBook({ Controller, control }: any) {
                   <CommandList>
                     <CommandEmpty>No book found.</CommandEmpty>
                     <CommandGroup>
-                      {bibleData.map((book) => (
+                      {bibleData.map((book: any) => (
                         <CommandItem
                           key={book.value}
                           value={book.value}
                           onSelect={(currentValue) => {
                             const foundBook = bibleData.find(
-                              (book) => book.value === currentValue
+                              (book: any) => book.value === currentValue
                             );
                             onChange(foundBook);
                             setOpen(false);

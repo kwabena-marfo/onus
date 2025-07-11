@@ -29,8 +29,8 @@ export default function CarouselComp({ Content, tittle, subTittle }: any) {
   return (
     <div className="grid items-center gap-2 w-full">
       <div className="flex flex-col justify-center items-center">
-        <p className="font-extrabold text-3xl text-center">{tittle}</p>{" "}
-        <p className="font-bold text-2xl uppercase">{subTittle}</p>
+        <p className="font-extrabold text-3xl text-center">{tittle}</p>
+        <p className="font-medium text-center text-2xl">{subTittle}</p>
       </div>
       <Carousel setApi={setApi} className=" w-full">
         <CarouselContent>
