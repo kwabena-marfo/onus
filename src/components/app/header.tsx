@@ -218,7 +218,7 @@ export default function Header() {
             <BsBookmark className="block md:hidden w-6 h-6  " />
             <p className="text-xs">Saved</p>
           </Link>{" "}
-          <Link href="/app/dashboard">
+          <Link href="/app/quizzes">
             <div className="md:hidden flex flex-col items-center justify-center   md:rounded-full md:border md:p-2 cursor-pointer">
               <BsLightbulb className=" w-6 h-6" />
               <p className="text-xs">Quizes</p>

@@ -13,6 +13,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function VerseFlashCardModal({ verses, TriggerComp }: any) {
   const isDesktop = useMediaQuery({
@@ -27,9 +28,11 @@ export default function VerseFlashCardModal({ verses, TriggerComp }: any) {
             <TriggerComp />
           </DialogTrigger>
           <DialogContent className="min-w-4xl">
-            <div className="flex items-center gap-2 ">
-              <VerseFlashcardCarousel verses={verses} />
-            </div>
+            <ScrollArea className="min-h-[300px] py-6 px-4">
+              <div className="flex items-center gap-2">
+                <VerseFlashcardCarousel verses={verses} />
+              </div>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       ) : (
@@ -38,8 +41,9 @@ export default function VerseFlashCardModal({ verses, TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <VerseFlashcardCarousel verses={verses} />
-
+            <ScrollArea className="min-h-[300px] py-6 px-4">
+              <VerseFlashcardCarousel verses={verses} />
+            </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
             </DrawerFooter>
