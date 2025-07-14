@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { BsArrowBarLeft, BsArrowBarRight, BsX } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 
-export default function DataTable({ data, searchGlobal, mutateGetOnus }: any) {
+export default function DataTable({ data, mutateGetOnus }: any) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
@@ -41,8 +41,6 @@ export default function DataTable({ data, searchGlobal, mutateGetOnus }: any) {
   const columns = useColumns({ mutateGetOnus, searchQuery });
 
   const queryMembers: any = useQueryOnus(data);
-
-  console.log(queryResults);
 
   useEffect(() => {
     if (!searchQuery) return;

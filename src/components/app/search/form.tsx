@@ -26,7 +26,6 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
         {onusData?.verses?.length ? (
           <>
             <VersesTable
-              searchGlobal={true}
               data={onusData?.verses}
               mutateGetOnus={mutateGetOnus}
             />
