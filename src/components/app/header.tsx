@@ -4,14 +4,6 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
-// import {
-//   Sheet,
-//   SheetContent,
-//   SheetDescription,
-//   SheetHeader,
-//   SheetTitle,
-//   SheetTrigger,
-// } from "@/components/ui/sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,16 +16,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  // BsBell,
   BsBook,
   BsBookmark,
-  // BsCircleFill,
   BsHouse,
   BsLightbulb,
   BsPerson,
   BsPlusCircleFill,
   BsSearch,
-  // BsX,
 } from "react-icons/bs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AddVerseModal from "./addVerse";
@@ -78,49 +67,7 @@ export default function Header() {
               </div>
             )}
           />
-          {/* <Sheet>
-            <SheetTrigger>
-              {" "}
-              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
-                <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
-                <BsBell className="w-6 h-6" />
-                <p className="text-xs hidden md:flex">Notifications</p>
-              </div>
-            </SheetTrigger>
-            <SheetContent className="p-2">
-              <SheetHeader>
-                <SheetTitle>
-                  <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer relative">
-                    <BsCircleFill className="text-yellow-500 w-2.5 h-2.5" />{" "}
-                    <BsBell className="w-6 h-6" />
-                    <p className="text-base">Notifications</p>
-                  </div>
-                </SheetTitle>
-                <SheetDescription className="text-center">
-                  Your Notifications Will appear here
-                </SheetDescription>
-              </SheetHeader>
-              <div className="grid gap-2">
-                <div className="grid p-2 border rounded-lg bg-gray-100">
-                  <div className="flex justify-between font-medium">
-                    Congratulations, You just completed the book of Matthew
-                    <BsX />
-                  </div>
-                  <Separator className="my-2" />
-                  <p className="text-xs">May 20, 5:90pm</p>
-                </div>
 
-                <div className="grid p-2 border rounded-lg bg-gray-100">
-                  <div className="flex justify-between font-medium">
-                    Your Reminder for today, you are growing already
-                    <BsX />
-                  </div>
-                  <Separator className="my-2" />
-                  <p className="text-xs">May 20, 5:90pm</p>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>{" "} */}
           <div className="flex md:hidden">
             <Popover>
               <PopoverTrigger>

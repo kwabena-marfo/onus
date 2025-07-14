@@ -17,11 +17,12 @@ import {
   BsChevronDown,
   BsSortAlphaDown,
   BsSortAlphaUp,
-  BsX,
 } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
+import Delete from "./delete";
+import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 
 type Tag = {
   value: string;
@@ -44,8 +45,8 @@ export default function useColumns() {
   const [showSelectToggle, setshowSelectToggle] = useState<any>();
   const [sortingToggle, setSortingToggle] = useState<any>(false);
 
-  // const { reqFunction: delMember, reqState: delMemberState } =
-  //   useTriggerRequest();
+  const { reqFunction: delMember, reqState: delMemberState } =
+    useTriggerRequest();
 
   const columns: ColumnDef<MemoryVerse>[] = [
     {
@@ -96,13 +97,13 @@ export default function useColumns() {
                   <BsArchive className="w-4 h-4" />
                 </Button>
 
-                {/* <Delete
+                <Delete
                   table={table}
-                  setQueryBuilder={setQueryBuilder}
-                  mutateGetMembers={mutateGetMembers}
+                  // setQueryBuilder={setQueryBuilder}
+                  // mutateGetMembers={mutateGetMembers}
                   delMemberState={delMemberState}
                   delMember={delMember}
-                /> */}
+                />
               </>
             ) : (
               <>
@@ -139,17 +140,17 @@ export default function useColumns() {
           row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group mt-3  ">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group  ">
             <input
               type="checkbox"
-              id={verse}
-              value={verse}
+              id={`${book}-${chapter}-${verse}`}
+              value={`${book}-${chapter}-${verse}`}
               name="verse"
               className="peer hidden"
             />
 
             <Label
-              htmlFor={verse}
+              htmlFor={`${book}-${chapter}-${verse}`}
               className="flex justify-between gap-2 items-center"
             >
               <div className="flex gap-2 items-center">
@@ -164,8 +165,12 @@ export default function useColumns() {
                 </p>
                 <BsChevronDown />
               </div>
-
-              <BsX className="text-red-800 md:w-5 md:h-7" />
+              <Delete
+                // setQueryBuilder={setQueryBuilder}
+                // mutateGetMembers={mutateGetMembers}
+                delMemberState={delMemberState}
+                delMember={delMember}
+              />
             </Label>
 
             <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
@@ -175,39 +180,27 @@ export default function useColumns() {
             <div className="hidden gap-1  peer-checked:flex peer-checked:flex-col">
               {verseNotes ? (
                 <div>
-                  <input
-                    type="checkbox"
-                    id={verseNotes}
-                    value={verseNotes}
-                    name="notes"
-                    className="peer hidden "
-                  />
                   <Label
                     htmlFor={verseNotes}
                     className="flex justify-between gap-2 items-center"
                   >
                     Notes
                   </Label>
-                  <p className="md:text-lg overflow-hidden hidden text-ellipsis peer-checked:flex peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
+                  <p className="md:text-lg overflow-hidden   text-ellipsis  text-nowrap text-left">
                     {verseNotes}
                   </p>
-                  {/* <Popover>
-                    <PopoverTrigger asChild>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80">
-                      {verseNotes}
-                    </PopoverContent>
-                  </Popover> */}
                 </div>
               ) : null}
-              {tags?.map(({ tag, color }: any, index) => (
-                <Badge
-                  key={index}
-                  className={`rounded-full text-gray-800 ${color}`}
-                >
-                  {tag}
-                </Badge>
-              ))}
+              <div className="flex  gap-1">
+                {tags?.map(({ tag, color }: any, index) => (
+                  <Badge
+                    key={index}
+                    className={`rounded-full text-gray-800 ${color}`}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
         );

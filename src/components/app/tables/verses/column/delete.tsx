@@ -14,13 +14,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { BsTrash } from "react-icons/bs";
+import { BsTrash, BsX } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
 
 export default function Delete({
   table,
-  setQueryBuilder,
-  mutateGetMembers,
+  // setQueryBuilder,
+  // mutateGetMembers,
   delMember,
   delMemberState,
 }: any) {
@@ -30,7 +30,11 @@ export default function Delete({
     <Dialog open={delDialogueToggle} onOpenChange={setDelDialogueToggle}>
       <DialogTrigger asChild>
         <Button size="sm" variant="ghost">
-          <BsTrash className="w-4 h-4 text-red-800" />
+          {table ? (
+            <BsTrash className="w-4 h-4 text-red-800" />
+          ) : (
+            <BsX className="w-4 h-4 text-red-800" />
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -43,22 +47,22 @@ export default function Delete({
         </DialogHeader>
         <DialogFooter>
           <Button
-            className="text-black"
+            className="text-black bg-red-400"
             onClick={async () => {
               await delMember({
                 route: `/api/app/member?ids=${JSON.stringify(
                   table
-                    .getFilteredSelectedRowModel()
+                    ?.getFilteredSelectedRowModel()
                     ?.rows?.map(({ original }: any) => original?._id)
                 )}`,
                 reqType: "delete",
               });
-              mutateGetMembers();
-              setQueryBuilder((state: any) => {
-                return {
-                  ...state,
-                };
-              });
+              // mutateGetMembers();
+              // setQueryBuilder((state: any) => {
+              //   return {
+              //     ...state,
+              //   };
+              // });
               setDelDialogueToggle(false);
             }}
           >

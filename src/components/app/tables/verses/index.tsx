@@ -78,7 +78,10 @@ any) {
             />
           </div>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="flex items-center">
+            <TableRow
+              key={headerGroup.id}
+              className="flex items-center justify-start"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
@@ -97,7 +100,7 @@ any) {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="grid">
+        <TableBody className="grid gap-3">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { LucideRotateCcwSquare } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -11,12 +11,37 @@ export default function Flashcard({
   options,
   correctAnswerIndex,
   reference,
+  handleScoreChange,
+  resetSignal, // 👈 new prop to watch
 }: any) {
   const [flipped, setFlipped] = useState(false);
+  const [hasFlipped, setHasFlipped] = useState(false);
   const [selected, setSelected] = useState("");
+  const [wasCorrect, setWasCorrect] = useState(false);
+
+  // 🔁 Reset internal state when resetSignal changes
+  useEffect(() => {
+    setFlipped(false);
+    setHasFlipped(false);
+    setSelected("");
+    setWasCorrect(false);
+  }, [resetSignal]);
 
   const handleSelect = (value: any) => {
     setSelected(value);
+  };
+
+  const handleFlip = () => {
+    if (!hasFlipped) {
+      const isCorrect = selected === options[correctAnswerIndex];
+      setWasCorrect(isCorrect);
+      if (isCorrect && typeof handleScoreChange === "function") {
+        handleScoreChange(1);
+      }
+    }
+
+    setFlipped(true);
+    setHasFlipped(true);
   };
 
   return (
@@ -30,14 +55,14 @@ export default function Flashcard({
         <div className="absolute w-full h-full backface-hidden rounded-xl bg-white border border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] flex flex-col justify-between text-center text-lg font-medium p-6">
           <div className="grid gap-3">
             <p className="text-lg text-center font-semibold">{question}</p>
-            <RadioGroup defaultValue="" onValueChange={handleSelect}>
+            <RadioGroup
+              defaultValue=""
+              disabled={hasFlipped}
+              onValueChange={handleSelect}
+            >
               {options.map((item: any, index: any) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    id={`option-${index}`}
-                    value={item}
-                    disabled={flipped} // ❌ disables selection if card is flipped
-                  />
+                  <RadioGroupItem id={`option-${index}`} value={item} />
                   <Label
                     htmlFor={`option-${index}`}
                     className="text-sm font-medium"
@@ -49,10 +74,9 @@ export default function Flashcard({
             </RadioGroup>
           </div>
 
-          {/* Flip Button — disabled if no selection */}
           <Button
-            disabled={!selected}
-            onClick={() => setFlipped(true)}
+            disabled={!selected || hasFlipped}
+            onClick={handleFlip}
             className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
           >
             Flip Card
@@ -64,11 +88,12 @@ export default function Flashcard({
         <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] flex flex-col justify-between text-center text-lg font-medium p-6">
           <div>
             <p className="text-lg font-semibold mb-2">Correct Answer:</p>
-            <p>{options[correctAnswerIndex]}</p>
+            <p className={wasCorrect ? "text-green-600" : "text-red-600"}>
+              {options[correctAnswerIndex]}
+            </p>
             <p className="text-sm text-gray-600 mt-2">{reference}</p>
           </div>
 
-          {/* Back → Front Button */}
           <Button
             variant="outline"
             onClick={() => setFlipped(false)}

@@ -10,21 +10,30 @@ import {
 } from "@/components/ui/carousel";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 
-export default function CarouselComp({ Content, tittle, subTittle }: any) {
+export default function CarouselComp({
+  Content,
+  tittle,
+  subTittle,
+  onSlideChange, // 👈 new prop
+}: any) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!api) {
-      return;
-    }
+    if (!api) return;
+
     setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
+    const newIndex = api.selectedScrollSnap();
+    setCurrent(newIndex + 1);
+    onSlideChange?.(newIndex); // 👈 notify parent of current index
+
     api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
+      const index = api.selectedScrollSnap();
+      setCurrent(index + 1);
+      onSlideChange?.(index); // 👈 notify parent again on every scroll
     });
-  }, [api]);
+  }, [api, onSlideChange]);
 
   return (
     <div className="grid items-center gap-2 w-full">
@@ -32,7 +41,7 @@ export default function CarouselComp({ Content, tittle, subTittle }: any) {
         <p className="font-extrabold text-3xl text-center">{tittle}</p>
         <p className="font-medium text-center text-2xl">{subTittle}</p>
       </div>
-      <Carousel setApi={setApi} className=" w-full">
+      <Carousel setApi={setApi} className="w-full">
         <CarouselContent>
           <Content />
         </CarouselContent>
