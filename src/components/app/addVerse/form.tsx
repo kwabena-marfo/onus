@@ -20,6 +20,7 @@ import ChapterAndVerse from "./fields/chapterAndVerse";
 // import Version from "./fields/version";
 import VerseAndNotes from "./fields/verseAndNotes";
 import Tags from "./fields/tags";
+import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
 export default function AddVerseForm({ className }: ComponentProps<"form">) {
   const {
@@ -28,12 +29,12 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
 
+  const { mutateGetOnus } = useGetOnus();
+
   const { handleSubmit, reset, watch, control } = useForm({
     mode: "all",
     shouldFocusError: true,
   });
-
-  console.log(createOnusStates);
 
   const {
     fields: tags,
@@ -62,6 +63,7 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
   useEffect(() => {
     if (createOnusStates?.data) {
       reset();
+      mutateGetOnus();
     }
   }, [createOnusStates]);
 

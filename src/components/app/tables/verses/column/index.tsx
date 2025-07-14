@@ -30,6 +30,7 @@ type Tag = {
 };
 
 type MemoryVerse = {
+  id: string;
   book: string;
   chapter: string;
   verse: string;
@@ -41,7 +42,7 @@ type MemoryVerse = {
   color: "blue" | "purple";
 };
 
-export default function useColumns() {
+export default function useColumns(mutateGetOnus: any) {
   const [showSelectToggle, setshowSelectToggle] = useState<any>();
   const [sortingToggle, setSortingToggle] = useState<any>(false);
 
@@ -100,7 +101,7 @@ export default function useColumns() {
                 <Delete
                   table={table}
                   // setQueryBuilder={setQueryBuilder}
-                  // mutateGetMembers={mutateGetMembers}
+                  mutateGetOnus={mutateGetOnus}
                   delMemberState={delMemberState}
                   delMember={delMember}
                 />
@@ -136,8 +137,16 @@ export default function useColumns() {
         </div>
       ),
       cell: ({ row }) => {
-        const { book, chapter, verse, onusVerse, verseNotes, tags, memorised } =
-          row.original;
+        const {
+          id,
+          book,
+          chapter,
+          verse,
+          onusVerse,
+          verseNotes,
+          tags,
+          memorised,
+        } = row.original;
 
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group  ">
@@ -167,7 +176,8 @@ export default function useColumns() {
               </div>
               <Delete
                 // setQueryBuilder={setQueryBuilder}
-                // mutateGetMembers={mutateGetMembers}
+                onusId={id}
+                mutateGetOnus={mutateGetOnus}
                 delMemberState={delMemberState}
                 delMember={delMember}
               />

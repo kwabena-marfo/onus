@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { getServerSession } from "next-auth";
 import bcrypt from "bcrypt";
-
+import z from "zod";
 import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import { authOptions } from "@/lib/authOptions";
@@ -155,6 +155,37 @@ app.get("/app/get-onus", async ({ json, get }: any) => {
   } catch (error) {
     console.log({ error });
     return json("An Error Occured", 500);
+  }
+});
+
+app.delete("/api/app/delete-onus", async (c) => {
+  const idsParam: any = c.req.query("ids");
+
+  // Validate and parse JSON array from query string
+  try {
+    const parsed = z.array(z.string()).parse(JSON.parse(idsParam));
+
+    const result = await prisma.verses.deleteMany({
+      where: {
+        id: { in: parsed }, // assuming 'id' is your primary key
+      },
+    });
+
+    return c.json(
+      {
+        message: "Verse deleted successfully",
+        count: result.count,
+      },
+      200
+    );
+  } catch (error) {
+    return c.json(
+      {
+        message: "Invalid request or IDs",
+        error: error instanceof Error ? error.message : String(error),
+      },
+      400
+    );
   }
 });
 

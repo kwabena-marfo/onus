@@ -20,7 +20,8 @@ import { LuLoader } from "react-icons/lu";
 export default function Delete({
   table,
   // setQueryBuilder,
-  // mutateGetMembers,
+  onusId,
+  mutateGetOnus,
   delMember,
   delMemberState,
 }: any) {
@@ -47,23 +48,28 @@ export default function Delete({
         </DialogHeader>
         <DialogFooter>
           <Button
+            type="button"
+            disabled={delMemberState?.pending}
             className="text-black bg-red-400"
             onClick={async () => {
-              await delMember({
-                route: `/api/app/member?ids=${JSON.stringify(
-                  table
-                    ?.getFilteredSelectedRowModel()
-                    ?.rows?.map(({ original }: any) => original?._id)
-                )}`,
-                reqType: "delete",
-              });
-              // mutateGetMembers();
-              // setQueryBuilder((state: any) => {
-              //   return {
-              //     ...state,
-              //   };
-              // });
-              setDelDialogueToggle(false);
+              try {
+                await delMember({
+                  route: `/api/app/delete-onus?ids=${JSON.stringify(
+                    table
+                      ? table
+                          ?.getFilteredSelectedRowModel()
+                          ?.rows?.map(({ original }: any) => original?._id)
+                      : [onusId]
+                  )}`,
+                  reqType: "delete",
+                });
+
+                mutateGetOnus();
+                // setDelDialogueToggle(false); // ✅ close after mutation
+              } catch (error) {
+                console.error("Delete failed:", error);
+                // optionally show error message to user here
+              }
             }}
           >
             {delMemberState?.pending ? (

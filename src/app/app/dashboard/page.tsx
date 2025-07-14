@@ -18,13 +18,14 @@ import {
 import VersesTable from "@/components/app/tables/verses";
 import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
-import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import ProgressComp from "@/components/app/progress";
 
 export default function Dashboard() {
   const { status, data: session } = useSession<any>();
 
-  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
+  const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
+    useGetOnus();
 
   if (status == "loading" || getOnusIsLoading)
     return (
@@ -143,46 +144,7 @@ export default function Dashboard() {
               </>
             )}
           </div>
-          <div className="flex flex-col w-full gap-1">
-            <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
-              {!onusData || !onusData.grouped?.length ? (
-                <div className="flex flex-col justify-center items-center">
-                  <BsDatabaseSlash className="w-12 h-12" />
-                  <p>No Data Found</p>
-                  <p>Your Progress will appear here</p>
-                </div>
-              ) : (
-                <>
-                  <h4 className="text-xl md:text-4xl font-bold text-gray-700">
-                    Your Progress
-                  </h4>
-                  {onusData.grouped.map((entry: any) => {
-                    const bookName = Object.keys(entry)[0];
-                    const { memorised } = entry[bookName];
-
-                    if (!memorised) return null; // Hide if memorised = 0
-
-                    const percentage = Math.min(
-                      Math.round((memorised / 5) * 100),
-                      100
-                    );
-
-                    return (
-                      <div key={bookName} className="grid gap-1">
-                        <div className="flex justify-between items-center">
-                          <p className="text-sm font-semibold text-gray-600 capitalize">
-                            {bookName}
-                          </p>
-                          <p className="text-sm text-gray-500">{percentage}%</p>
-                        </div>
-                        <Progress value={percentage} />
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-            </div>
-          </div>
+          <ProgressComp data={onusData?.grouped || []} />
         </div>
         <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
           {!onusData?.verses?.length ? (
@@ -192,7 +154,10 @@ export default function Dashboard() {
               <p>Your added verses will appear here</p>
             </div>
           ) : (
-            <VersesTable data={onusData?.verses || []} />
+            <VersesTable
+              data={onusData?.verses || []}
+              mutateGetOnus={mutateGetOnus}
+            />
           )}
         </div>
       </div>

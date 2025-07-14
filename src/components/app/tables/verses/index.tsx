@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 
 export default function DataTable({
   data,
+  mutateGetOnus,
 }: // searchQuery,
 // setSearchQuery,
 // setQueryMembersResults,
@@ -38,7 +39,7 @@ any) {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useColumns();
+  const columns = useColumns(mutateGetOnus);
 
   const table = useReactTable({
     data,
