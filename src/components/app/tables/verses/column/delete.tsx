@@ -1,88 +1,87 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { BsTrash, BsX } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
 
 export default function Delete({
   table,
-  // setQueryBuilder,
-  onusId,
+  ids,
   mutateGetOnus,
-  delMember,
-  delMemberState,
+  delOnus,
+  delOnusState,
 }: any) {
-  const [delDialogueToggle, setDelDialogueToggle] = useState<any>();
+  const [open, setOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      await delOnus({
+        route: `/api/app/delete-onus/?ids=${JSON.stringify(ids)}`,
+        reqType: "delete",
+      });
+      await mutateGetOnus();
+      toast("Verse Deleted succesfully");
+      // setOpen(false); // ✅ only close after success
+    } catch (error) {
+      console.log(error);
+      toast("Sorry an error occured");
+    }
+  };
 
   return (
-    <Dialog open={delDialogueToggle} onOpenChange={setDelDialogueToggle}>
-      <DialogTrigger asChild>
-        <Button size="sm" variant="ghost">
-          {table ? (
-            <BsTrash className="w-4 h-4 text-red-800" />
-          ) : (
-            <BsX className="w-4 h-4 text-red-800" />
-          )}
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            type="button"
-            disabled={delMemberState?.pending}
-            className="text-black bg-red-400"
-            onClick={async () => {
-              try {
-                await delMember({
-                  route: `/api/app/delete-onus?ids=${JSON.stringify(
-                    table
-                      ? table
-                          ?.getFilteredSelectedRowModel()
-                          ?.rows?.map(({ original }: any) => original?._id)
-                      : [onusId]
-                  )}`,
-                  reqType: "delete",
-                });
+    <>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => setOpen(true)}
+        className="text-red-800"
+      >
+        {table ? <BsTrash className="w-4 h-4" /> : <BsX className="w-4 h-4" />}
+      </Button>
 
-                mutateGetOnus();
-                // setDelDialogueToggle(false); // ✅ close after mutation
-              } catch (error) {
-                console.error("Delete failed:", error);
-                // optionally show error message to user here
-              }
-            }}
-          >
-            {delMemberState?.pending ? (
-              <>
-                <LuLoader className="mr-2 h-4 w-4 animate-spin" />
-                Sending Request
-              </>
-            ) : (
-              "Continue"
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              selected item(s).
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <Button
+              className="bg-red-600 text-white hover:bg-red-700"
+              disabled={delOnusState?.pending}
+              onClick={handleDelete}
+            >
+              {delOnusState?.pending ? (
+                <>
+                  <LuLoader className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Continue"
+              )}
+            </Button>
+            {delOnusState?.erro ? <p>An Error Occured</p> : null}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import VersesTable from "@/components/app/tables/verses";
 
 import { ComponentProps } from "react";
-import { BsX } from "react-icons/bs";
+import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
 export default function SearchForm({ className }: ComponentProps<"form">) {
+  const { onusData, mutateGetOnus } = useGetOnus();
+
   return (
     <>
-      <form
+      <div
         className={cn(
           "grid w-full gap-4 z-50 bg-white p-4 rounded-md",
           className
@@ -21,15 +23,16 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
             Search Through Your Verses
           </p>
         </div>
-        <div className=" relative w-full">
-          <div className="flex items-center">
-            <span className="absolute inset-y-0 right-2 flex items-center gap-0">
-              <BsX className="cursor-pointer" />
-            </span>
-            <Input className="h-12 rounded-full" />
-          </div>
-        </div>
-      </form>
+        {onusData?.verses?.length ? (
+          <>
+            <VersesTable
+              searchGlobal={true}
+              data={onusData?.verses}
+              mutateGetOnus={mutateGetOnus}
+            />
+          </>
+        ) : null}
+      </div>
     </>
   );
 }

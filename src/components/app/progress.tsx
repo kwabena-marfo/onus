@@ -9,7 +9,7 @@ export default function ProgressComp({ data }: any) {
   return (
     <div className="flex flex-col w-full gap-1">
       <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
-        {data ? (
+        {!data?.length ? (
           <div className="flex flex-col justify-center items-center">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>

@@ -31,7 +31,7 @@ export default function MyOnusBible() {
           {!filteredBooks?.length ? (
             <div className="flex flex-col md:col-span-3 justify-center items-center   w-full ">
               <BsDatabaseSlash className="w-12 h-12" />
-              <p>No Data Found</p>
+              <p>No Quizzes Found</p>
               <p>Your completed books will appear here for quizzes</p>
             </div>
           ) : (

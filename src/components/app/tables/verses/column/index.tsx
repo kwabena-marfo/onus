@@ -9,8 +9,8 @@ import Export from "./export";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
+import Highlighter from "react-highlight-words";
 
-import { BiSelectMultiple } from "react-icons/bi";
 import {
   BsArchive,
   BsCheckCircle,
@@ -42,12 +42,11 @@ type MemoryVerse = {
   color: "blue" | "purple";
 };
 
-export default function useColumns(mutateGetOnus: any) {
-  const [showSelectToggle, setshowSelectToggle] = useState<any>();
+export default function useColumns({ mutateGetOnus, searchQuery }: any) {
+  // const [showSelectToggle, setshowSelectToggle] = useState<any>();
   const [sortingToggle, setSortingToggle] = useState<any>(false);
 
-  const { reqFunction: delMember, reqState: delMemberState } =
-    useTriggerRequest();
+  const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
   const columns: ColumnDef<MemoryVerse>[] = [
     {
@@ -74,7 +73,7 @@ export default function useColumns(mutateGetOnus: any) {
       header: ({ table, column }) => (
         <div className="flex justify-between items-center">
           <div className="flex  justify-start  ">
-            <Toggle
+            {/* <Toggle
               size="sm"
               pressed={showSelectToggle}
               onPressedChange={(pressed) => {
@@ -90,7 +89,7 @@ export default function useColumns(mutateGetOnus: any) {
               aria-label="Toggle"
             >
               <BiSelectMultiple className="w-4 h-4" />
-            </Toggle>
+            </Toggle> */}
 
             {table.getFilteredSelectedRowModel().rows.length ? (
               <>
@@ -98,13 +97,16 @@ export default function useColumns(mutateGetOnus: any) {
                   <BsArchive className="w-4 h-4" />
                 </Button>
 
-                <Delete
+                {/* <Delete
                   table={table}
+                  ids={table
+                    ?.getFilteredSelectedRowModel()
+                    ?.rows?.map(({ original }: any) => original?._id)}
                   // setQueryBuilder={setQueryBuilder}
                   mutateGetOnus={mutateGetOnus}
                   delMemberState={delMemberState}
                   delMember={delMember}
-                />
+                /> */}
               </>
             ) : (
               <>
@@ -130,7 +132,6 @@ export default function useColumns(mutateGetOnus: any) {
               data={{
                 table,
                 setSortingToggle,
-                setshowSelectToggle,
               }}
             />
           </div>
@@ -170,16 +171,20 @@ export default function useColumns(mutateGetOnus: any) {
                 )}
 
                 <p className="md:text-lg font-bold uppercase">
-                  {book} {chapter}:{verse}
+                  <Highlighter
+                    searchWords={[searchQuery]}
+                    autoEscape={true}
+                    textToHighlight={book}
+                  />
+                  {chapter}:{verse}
                 </p>
                 <BsChevronDown />
               </div>
               <Delete
-                // setQueryBuilder={setQueryBuilder}
-                onusId={id}
+                ids={[id]}
                 mutateGetOnus={mutateGetOnus}
-                delMemberState={delMemberState}
-                delMember={delMember}
+                delOnusState={delOnusState}
+                delOnus={delOnus}
               />
             </Label>
 

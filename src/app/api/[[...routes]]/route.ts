@@ -158,8 +158,10 @@ app.get("/app/get-onus", async ({ json, get }: any) => {
   }
 });
 
-app.delete("/api/app/delete-onus", async (c) => {
+app.delete("/app/delete-onus", async (c) => {
   const idsParam: any = c.req.query("ids");
+
+  console.log(idsParam);
 
   // Validate and parse JSON array from query string
   try {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   flexRender,
@@ -11,6 +11,8 @@ import {
   SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
+import useQueryOnus from "@/hooks/useFuseQuery";
+
 import useColumns from "./column";
 import {
   Table,
@@ -24,25 +26,32 @@ import {
 import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
 
-import { BsArrowBarLeft, BsArrowBarRight } from "react-icons/bs";
+import { BsArrowBarLeft, BsArrowBarRight, BsX } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 
-export default function DataTable({
-  data,
-  mutateGetOnus,
-}: // searchQuery,
-// setSearchQuery,
-// setQueryMembersResults,
-any) {
+export default function DataTable({ data, searchGlobal, mutateGetOnus }: any) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useColumns(mutateGetOnus);
+  const [queryResults, setQueryResults] = useState<any>();
+  const [searchQuery, setSearchQuery] = useState<any>();
+
+  const columns = useColumns({ mutateGetOnus, searchQuery });
+
+  const queryMembers: any = useQueryOnus(data);
+
+  console.log(queryResults);
+
+  useEffect(() => {
+    if (!searchQuery) return;
+    const results = queryMembers(searchQuery);
+    setQueryResults(results?.map((data: any) => data.item));
+  }, [searchQuery, queryMembers]);
 
   const table = useReactTable({
-    data,
+    data: queryResults || data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -61,21 +70,25 @@ any) {
         <TableHeader>
           <div className="relative col-span-6  ">
             <div className="flex items-center">
-              <span className="absolute inset-y-0 right-0 flex items-center gap-0">
-                {/* {searchQuery ? (
+              <span className="absolute inset-y-0 right-2 flex items-center gap-0">
+                {searchQuery ? (
                   <BsX
                     className="cursor-pointer"
                     onClick={() => {
-                      setSearchQuery();
-                      setQueryMembersResults();
+                      setSearchQuery("");
+                      setQueryResults(null);
                     }}
                   />
-                ) : null} */}
+                ) : null}
               </span>
             </div>
             <Input
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
               placeholder="Search through Added Verses..."
               className="rounded-full  h-12 bg-gray-50 "
+              value={searchQuery || ""}
             />
           </div>
           {table.getHeaderGroups().map((headerGroup) => (

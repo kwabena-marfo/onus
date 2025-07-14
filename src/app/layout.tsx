@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import Provider from "@/components/home/provider";
-
+import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 
 const montserrat = Roboto({
@@ -25,6 +25,7 @@ export default function RootLayout({
       <body className={`${montserrat.variable} antialiased`}>
         <NextTopLoader />
         <Provider>{children}</Provider>
+        <Toaster />
       </body>
     </html>
   );
