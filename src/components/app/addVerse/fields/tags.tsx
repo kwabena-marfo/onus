@@ -48,7 +48,7 @@ const getNextUnusedColor = (usedColors: string[]) => {
   return available || "bg-gray-300";
 };
 
-export default function Tags({ tags = [], addTag, removeTag }: any) {
+export default function Tags({ tags, addTag, removeTag }: any) {
   const [customInput, setCustomInput] = useState("");
   const [allTags, setAllTags] = useState([...defaultTags]);
 

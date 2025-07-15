@@ -62,7 +62,16 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
 
   useEffect(() => {
     if (createOnusStates?.data) {
-      reset();
+      reset({
+        book: null,
+        chapter: "",
+        verse: "",
+        onusVerse: "",
+        verseNotes: "",
+        tags: [],
+        memorised: "", // or "saved", or whatever default value you use
+        color: "blue", // default color if needed
+      });
       mutateGetOnus();
     }
   }, [createOnusStates]);
