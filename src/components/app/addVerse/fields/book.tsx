@@ -51,10 +51,10 @@ export default function BibleBook({ Controller, control }: any) {
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="max-w-xs w-fit h-52 p-0">
-                <Command>
+              <PopoverContent className="max-w-xs w-[280px] max-h-[60vh] overflow-y-auto p-0">
+                <Command className="h-full">
                   <CommandInput placeholder="Search Book..." className="h-9" />
-                  <CommandList>
+                  <CommandList className="max-h-[50vh] overflow-y-auto overscroll-contain">
                     <CommandEmpty>No book found.</CommandEmpty>
                     <CommandGroup>
                       {bibleData.map((book: any) => (

@@ -66,10 +66,10 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="max-w-xs w-fit h-52 p-0">
-          <Command>
+          <Command className="h-full">
             <CommandInput placeholder="Search Tags..." className="h-9" />
-            <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandList className="max-h-[50vh] overflow-y-auto overscroll-contain">
+              <CommandEmpty>No tags found.</CommandEmpty>
               <CommandGroup>
                 {tagsData.map(({ tag, color }: any, index: any) => {
                   const isThere = tags?.find(
