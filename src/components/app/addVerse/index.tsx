@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
 import { useMediaQuery } from "react-responsive";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -10,7 +9,7 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { DialogTrigger } from "@radix-ui/react-dialog";
+
 import AddVerseForm from "./form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -23,11 +22,11 @@ export default function AddVerseModal({ TriggerComp }: any) {
     <>
       {isDesktop ? (
         <Dialog>
-          <DialogTrigger className="cursor-pointer">
+          <DialogTrigger asChild>
             <TriggerComp />
           </DialogTrigger>
           <DialogContent className="min-w-2xl">
-            <ScrollArea className="min-h-[300px] py-6 px-4">
+            <ScrollArea className="max-h-[80vh] py-6 px-4">
               <div className="flex items-center gap-2">
                 <AddVerseForm />
               </div>
@@ -36,15 +35,16 @@ export default function AddVerseModal({ TriggerComp }: any) {
         </Dialog>
       ) : (
         <Drawer>
-          <DrawerTrigger>
+          <DrawerTrigger asChild>
             <TriggerComp />
           </DrawerTrigger>
-          <DrawerContent>
-            <ScrollArea className="min-h-[300px] py-6 px-4">
+          <DrawerContent className="h-screen max-h-screen flex flex-col">
+            {/* This makes the form scrollable within the drawer */}
+            <ScrollArea className="flex-1 overflow-y-auto px-4 py-6">
               <AddVerseForm />
             </ScrollArea>
             <DrawerFooter className="pt-2">
-              <DrawerClose asChild></DrawerClose>
+              <DrawerClose asChild />
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
