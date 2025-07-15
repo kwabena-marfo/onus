@@ -51,7 +51,7 @@ export default function BibleBook({ Controller, control }: any) {
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="md:w-[200px]  h-52 p-0">
+              <PopoverContent className="max-w-xs w-fit h-52 p-0">
                 <Command>
                   <CommandInput placeholder="Search Book..." className="h-9" />
                   <CommandList>
