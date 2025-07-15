@@ -19,6 +19,7 @@ export default function VerseAndNotes({ Controller, control }: any) {
               onChange={onChange}
               value={value || ""}
               placeholder="Write Verse"
+              className="text-[16px]"
             />
             {error && <p className="text-red-500 text-sm">{error.message}</p>}
           </div>

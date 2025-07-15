@@ -65,7 +65,7 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="md:w-[200px] w-full p-0">
+        <PopoverContent className="md:w-[200px]  h-52 p-0">
           <Command>
             <CommandInput placeholder="Search Tags..." className="h-9" />
             <CommandList>

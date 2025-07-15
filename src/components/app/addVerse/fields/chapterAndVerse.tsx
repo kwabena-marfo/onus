@@ -34,7 +34,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                 >
                   <SelectValue placeholder="Chapter" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="h-52">
                   {watch("book")?.versesPerChapter.map((_: any, index: any) => (
                     <SelectItem key={index} value={`${index + 1}`}>
                       Chapter {index + 1}
@@ -67,7 +67,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                 >
                   <SelectValue placeholder="Verse" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="h-52">
                   {new Array(book?.versesPerChapter[+chapter - 1])
                     .fill(" ")
                     .map((_: any, index: any) => (
