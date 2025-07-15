@@ -18,7 +18,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
+  // TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
@@ -64,7 +64,7 @@ export default function DataTable({ data, mutateGetOnus }: any) {
 
   return (
     <div className="w-full" id="table">
-      <Table>
+      <Table className="grid gap-3">
         <TableHeader>
           <div className="relative col-span-6  ">
             <div className="flex items-center">
@@ -89,7 +89,7 @@ export default function DataTable({ data, mutateGetOnus }: any) {
               value={searchQuery || ""}
             />
           </div>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {/* {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
               key={headerGroup.id}
               className="flex items-center justify-start"
@@ -110,7 +110,7 @@ export default function DataTable({ data, mutateGetOnus }: any) {
                 );
               })}
             </TableRow>
-          ))}
+          ))} */}
         </TableHeader>
         <TableBody className="grid gap-3">
           {table.getRowModel().rows?.length ? (
