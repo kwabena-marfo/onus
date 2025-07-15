@@ -22,7 +22,7 @@ export default function AddVerseModal({ TriggerComp }: any) {
     <>
       {isDesktop ? (
         <Dialog>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <TriggerComp />
           </DialogTrigger>
           <DialogContent className="min-w-2xl">
@@ -35,7 +35,7 @@ export default function AddVerseModal({ TriggerComp }: any) {
         </Dialog>
       ) : (
         <Drawer>
-          <DrawerTrigger asChild>
+          <DrawerTrigger>
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent className="h-screen max-h-screen flex flex-col">
