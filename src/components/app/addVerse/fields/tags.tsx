@@ -27,6 +27,49 @@ const defaultTags = [
   { tag: "joy", color: "bg-orange-200" },
 ];
 
+const colorPalette = [
+  "bg-blue-400",
+  "bg-purple-400",
+  "bg-red-400",
+  "bg-pink-200",
+  "bg-yellow-200",
+  "bg-orange-200",
+  "bg-green-400",
+  "bg-gray-400",
+  "bg-indigo-400",
+  "bg-teal-400",
+  "bg-lime-200",
+  "bg-sky-400",
+  "bg-emerald-400",
+  "bg-rose-200",
+  "bg-cyan-200",
+  "bg-amber-200",
+  "bg-fuchsia-200",
+  "bg-slate-400",
+  "bg-violet-200",
+  "bg-green-200",
+  "bg-rose-400",
+  "bg-purple-200",
+  "bg-indigo-200",
+  "bg-zinc-200",
+  "bg-cyan-400",
+  "bg-lime-400",
+  "bg-orange-400",
+  "bg-red-400",
+];
+
+function getUnusedColor(usedColors: string[]) {
+  const availableColors = colorPalette.filter(
+    (color) => !usedColors.includes(color)
+  );
+
+  // Fallback if all colors are used
+  if (availableColors.length === 0) {
+    return "bg-gray-300";
+  }
+
+  return availableColors[Math.floor(Math.random() * availableColors.length)];
+}
 const getSavedCustomTags = () => {
   if (typeof window !== "undefined") {
     const saved = localStorage.getItem("customTags");
@@ -61,7 +104,7 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
     const coloredNewTags = uniqueNewTags.map((tag) => ({
       tag,
       tagId: `custom-${tag}`,
-      color: "bg-gray-300",
+      color: getUnusedColor(tags.map((t: any) => t.color)),
     }));
 
     const updated = [...customTags, ...coloredNewTags];
