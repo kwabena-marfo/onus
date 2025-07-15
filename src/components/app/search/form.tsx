@@ -18,11 +18,6 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
           className
         )}
       >
-        <div className="flex flex-col gap-0 justify-center items-center ">
-          <p className="text-2xl md:text-4xl font-bold text-center">
-            Search Through Your Verses
-          </p>
-        </div>
         {onusData?.verses?.length ? (
           <>
             <VersesTable
