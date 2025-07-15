@@ -1,8 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import { cn } from "@/lib/utils";
-
+import { useEffect, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { BsX } from "react-icons/bs";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -11,49 +19,63 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { BsX } from "react-icons/bs";
+
+const defaultTags = [
+  { tag: "peace", color: "bg-blue-400" },
+  { tag: "faith", color: "bg-purple-400" },
+  { tag: "love", color: "bg-red-400" },
+  { tag: "joy", color: "bg-orange-200" },
+];
+
+const getSavedCustomTags = () => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("customTags");
+    return saved ? JSON.parse(saved) : [];
+  }
+  return [];
+};
 
 export default function Tags({ addTag, removeTag, tags, watch }: any) {
-  const tagsData = [
-    { tag: "peace", color: "bg-blue-400" },
-    { tag: "faith", color: "bg-purple-400" },
-    { tag: "love", color: "bg-red-400" },
-    { tag: "grace", color: "bg-pink-200" },
-    { tag: "hope", color: "bg-yellow-200" },
-    { tag: "joy", color: "bg-orange-200" },
-    { tag: "wisdom", color: "bg-green-400" },
-    { tag: "strength", color: "bg-gray-400" },
-    { tag: "truth", color: "bg-indigo-400" },
-    { tag: "salvation", color: "bg-teal-400" },
-    { tag: "forgiveness", color: "bg-lime-200" },
-    { tag: "obedience", color: "bg-sky-400" },
-    { tag: "righteousness", color: "bg-emerald-400" },
-    { tag: "kindness", color: "bg-rose-200" },
-    { tag: "mercy", color: "bg-cyan-200" },
-    { tag: "discipline", color: "bg-amber-200" },
-    { tag: "patience", color: "bg-fuchsia-200" },
-    { tag: "humility", color: "bg-slate-400" },
-    { tag: "truthfulness", color: "bg-violet-200" },
-    { tag: "reverence", color: "bg-yellow-400" },
-    { tag: "fellowship", color: "bg-green-200" },
-    { tag: "generosity", color: "bg-rose-400" },
-    { tag: "devotion", color: "bg-purple-200" },
-    { tag: "holiness", color: "bg-indigo-200" },
-    { tag: "light", color: "bg-zinc-200" },
-    { tag: "eternity", color: "bg-cyan-400" },
-    { tag: "healing", color: "bg-lime-400" },
-    { tag: "purpose", color: "bg-orange-400" },
-    { tag: "truth", color: "bg-indigo-400" },
-    { tag: "courage", color: "bg-red-400" },
-  ];
+  const [customTags, setCustomTags] = useState<any[]>([]);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    const savedTags = getSavedCustomTags();
+    setCustomTags(savedTags);
+  }, []);
+
+  const handleAddCustomTags = (value: string) => {
+    const inputTags = value
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag.length > 0);
+
+    const existingTags = [...defaultTags, ...customTags, ...(tags || [])].map(
+      (t) => t.tag.toLowerCase()
+    );
+
+    const uniqueNewTags = inputTags.filter(
+      (tag) => !existingTags.includes(tag)
+    );
+
+    const coloredNewTags = uniqueNewTags.map((tag) => ({
+      tag,
+      tagId: `custom-${tag}`,
+      color: "bg-gray-300",
+    }));
+
+    const updated = [...customTags, ...coloredNewTags];
+    setCustomTags(updated);
+    localStorage.setItem("customTags", JSON.stringify(updated));
+
+    coloredNewTags.forEach((t) => addTag(t));
+    setInputValue("");
+  };
+
+  const allTags = [...defaultTags, ...customTags];
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -61,42 +83,49 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
             role="combobox"
             className="w-full justify-between"
           >
-            Select Tags...
+            Select or Create Tags...
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="max-w-xs w-fit h-52 p-0">
+        <PopoverContent className="max-w-xs w-[300px] max-h-[60vh] overflow-y-auto p-0">
           <Command className="h-full">
-            <CommandInput placeholder="Search Tags..." className="h-9" />
-            <CommandList className="max-h-[50vh] overflow-y-auto overscroll-contain">
-              <CommandEmpty>No tags found.</CommandEmpty>
+            <CommandInput
+              value={inputValue}
+              onValueChange={setInputValue}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddCustomTags(inputValue);
+                }
+              }}
+              placeholder="Type and press enter to add"
+              className="h-9"
+            />
+            <CommandList>
+              <CommandEmpty>No tag found.</CommandEmpty>
               <CommandGroup>
-                {tagsData.map(({ tag, color }: any, index: any) => {
-                  const isThere = tags?.find(
-                    (item: any) => item.tagId === index
+                {allTags.map(({ tag, color }: any, index: any) => {
+                  const isSelected = tags?.find(
+                    (item: any) => item.tag === tag
                   );
                   return (
                     <CommandItem
                       key={tag}
                       value={tag}
-                      onSelect={(currentValue) => {
-                        if (isThere) return;
-                        addTag({
-                          tagId: index,
-                          tag: currentValue,
-                          color: color,
-                        });
+                      onSelect={() => {
+                        if (isSelected) return;
+                        addTag({ tag, tagId: index, color });
                       }}
                     >
-                      <div className="flex">
+                      <div className="flex items-center justify-between w-full">
+                        <span className={color}>{tag}</span>
                         <Check
                           className={cn(
                             "ml-auto",
-                            isThere ? "opacity-100" : "opacity-0"
+                            isSelected ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </div>
-                      {tag}
                     </CommandItem>
                   );
                 })}
@@ -107,23 +136,19 @@ export default function Tags({ addTag, removeTag, tags, watch }: any) {
       </Popover>
 
       {watch("tags")?.length ? (
-        <div className="flex justify-between   space-x-4 items-start rounded-md ">
-          <div className="flex flex-1 flex-wrap items-center gap-2 w-20">
-            {tags?.map(({ tag, color }: any, index: any) => (
-              <div
-                key={index}
-                className={`scroll-ml-6 border rounded-full px-3 py-0.5 flex justify-between items-center w-fit ${color}`}
-              >
-                <span className="font-medium text-gray-800">{tag}</span>
-                <span
-                  onClick={() => removeTag(index)}
-                  className="cursor-pointer"
-                >
-                  <BsX />
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {tags.map(({ tag, color }: any, index: any) => (
+            <div
+              key={index}
+              className={`flex items-center gap-1 px-3 py-1 rounded-full ${color}`}
+            >
+              <span className="text-sm font-medium text-gray-800">{tag}</span>
+              <BsX
+                className="cursor-pointer"
+                onClick={() => removeTag(index)}
+              />
+            </div>
+          ))}
         </div>
       ) : null}
     </div>
