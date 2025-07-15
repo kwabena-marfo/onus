@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import NewQuizeModal from "@/components/app/newQuize";
 
-export default function MyOnusBible() {
+export default function Quizzes() {
   const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
 
   if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;

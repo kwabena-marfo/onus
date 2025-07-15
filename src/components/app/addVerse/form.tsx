@@ -4,6 +4,8 @@
 import { useEffect, ComponentProps } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
+import { useGetOnus } from "@/hooks/global/useSWRFetch";
+
 import { cn } from "@/lib/utils";
 
 import useTriggerRequest from "@/hooks/global/useTriggerRequest";
@@ -11,25 +13,25 @@ import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { BsCheck2Circle, BsHandThumbsUp } from "react-icons/bs";
-
+import { LuLoaderCircle } from "react-icons/lu";
+import { BsTriangleFill } from "react-icons/bs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { LuLoader } from "react-icons/lu";
 import BibleBook from "./fields/book";
 import ChapterAndVerse from "./fields/chapterAndVerse";
-// import Version from "./fields/version";
 import VerseAndNotes from "./fields/verseAndNotes";
 import Tags from "./fields/tags";
-import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
 export default function AddVerseForm({ className }: ComponentProps<"form">) {
+  const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
+    useGetOnus();
+
   const {
     reqFunction: createOnus,
     reqState: createOnusStates,
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
-
-  const { mutateGetOnus } = useGetOnus();
 
   const { handleSubmit, reset, watch, control } = useForm({
     mode: "all",
@@ -46,20 +48,6 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
     shouldUnregister: true,
   });
 
-  const onSubmit = async (data: any) => {
-    //
-    // return console.log(data);
-
-    await createOnus({
-      route: "/api/app/create-onus",
-      reqType: "post",
-      data: {
-        ...data,
-        book: data.book.value,
-      },
-    });
-  };
-
   useEffect(() => {
     if (createOnusStates?.data) {
       reset({
@@ -75,6 +63,21 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
       mutateGetOnus();
     }
   }, [createOnusStates]);
+
+  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
+
+  if (getOnusIsError) return <BsTriangleFill />;
+
+  const onSubmit = async (data: any) => {
+    await createOnus({
+      route: "/api/app/create-onus",
+      reqType: "post",
+      data: {
+        ...data,
+        book: data.book.value,
+      },
+    });
+  };
 
   return (
     <>
@@ -110,14 +113,18 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
               Your Journey to Spritual Growth Begins here
             </p>
           </div>
+
           <div className="flex  gap-3 w-full justify-between">
-            <BibleBook Controller={Controller} control={control} />
+            <BibleBook
+              Controller={Controller}
+              control={control}
+              onusData={onusData}
+            />
             <ChapterAndVerse
               Controller={Controller}
               watch={watch}
               control={control}
             />
-            {/* <Version Controller={Controller} control={control} /> */}
           </div>
 
           <VerseAndNotes Controller={Controller} control={control} />

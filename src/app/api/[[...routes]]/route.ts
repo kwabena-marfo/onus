@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import { cors } from "hono/cors";
 import { getServerSession } from "next-auth";
 import bcrypt from "bcrypt";
 import z from "zod";
+
 import prisma from "@/config/prisma";
+
 import createOnusChecker from "../middlewares/createOnusChecker";
-import { authOptions } from "@/lib/authOptions";
 import createUserChecker from "../middlewares/createUserChecker";
+
+import { authOptions } from "@/lib/authOptions";
 
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
+
+app.use("*", cors());
 
 app.post(
   "/create-user",

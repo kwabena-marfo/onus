@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 
 import Header from "@/components/app/header";
 import Aside from "@/components/app/aside";
-// import Footer from "@/components/loggedIn/global/footer";
 
 export const metadata: Metadata = {
   title: "Onus",
@@ -15,6 +14,7 @@ export default function LoggedInLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
+  newQuize: React.ReactNode;
 }>) {
   return (
     <>

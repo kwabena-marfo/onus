@@ -26,8 +26,11 @@ export default function NewQuizeModal({ TriggerComp }: any) {
           <DialogTrigger className="cursor-pointer">
             <TriggerComp />
           </DialogTrigger>
-          <DialogContent className="min-w-2xl">
-            <ScrollArea className="min-h-[300px] py-6 px-4">
+          <DialogContent
+            onInteractOutside={(event) => event.preventDefault()}
+            className="min-w-2xl"
+          >
+            <ScrollArea className="min-h-[300px]  py-6 px-4">
               <div className="flex items-center gap-2">
                 <NewQuizeForm />
               </div>

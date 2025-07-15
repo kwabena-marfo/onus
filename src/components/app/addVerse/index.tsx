@@ -39,7 +39,6 @@ export default function AddVerseModal({ TriggerComp }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent className="h-screen max-h-screen flex flex-col">
-            {/* This makes the form scrollable within the drawer */}
             <ScrollArea className="flex-1 overflow-y-auto px-4 py-6">
               <AddVerseForm />
             </ScrollArea>

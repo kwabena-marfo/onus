@@ -10,6 +10,7 @@ import VerseFlashCardModal from "@/components/app/verseFlashcard";
 
 import { LuLoaderCircle } from "react-icons/lu";
 import { BsDatabaseSlash, BsTriangleFill } from "react-icons/bs";
+
 import ProgressComp from "@/components/app/progress";
 
 export default function MyOnusBible() {
