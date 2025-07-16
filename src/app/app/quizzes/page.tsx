@@ -21,8 +21,6 @@ export default function Quizzes() {
     mutateGetOnusQuize,
   } = useGetOnusQuize();
 
-  console.log(onusQuizeData);
-
   if (getOnusIsLoading || getOnusQuizeIsLoading)
     return <LuLoaderCircle className="animate-spin" />;
 
@@ -53,7 +51,6 @@ export default function Quizzes() {
                   (item: any) => item.quizName?.toLowerCase() == book
                 );
 
-                console.log(quizeScore);
                 return (
                   <div
                     key={index}
