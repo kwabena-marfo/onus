@@ -93,10 +93,13 @@ export default function Header() {
                     <p className="text-sm p-1">{session?.user?.email}</p>
                   </div>
                   <div className="grid gap-2">
-                    <div className=" flex items-center gap-3 ml-2 cursor-pointer">
+                    <Link
+                      href="/app/myaccount"
+                      className=" flex items-center gap-3 ml-2 cursor-pointer"
+                    >
                       <BsPerson className="w-5 h-5" />
                       <p className="">My Account</p>
-                    </div>
+                    </Link>
                     <Separator orientation="horizontal" />
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -171,14 +174,6 @@ export default function Header() {
               <p className="text-xs">Quizes</p>
             </div>
           </Link>
-          {/* <SearchModal
-            TriggerComp={() => (
-              <div className=" flex md:flex-row flex-col items-center justify-center   md:rounded-full md:border-2 md:p-2 cursor-pointer">
-                <BsSearch className="w-6 h-6" />
-                <p className="text-xs ">Search</p>
-              </div>
-            )}
-          /> */}
         </div>
       </nav>
     </>
