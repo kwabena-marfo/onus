@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCcwSquare } from "lucide-react";
 import { BsArrowReturnLeft } from "react-icons/bs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 export default function Flashcard({
   question,
@@ -13,20 +14,8 @@ export default function Flashcard({
   quizState,
   setQuizState,
 }: any) {
-  const { selected, hasFlipped, wasCorrect, flipped } = quizState;
-
-  const handleFlip = () => {
-    if (!hasFlipped) {
-      const isCorrect = selected === options[correctAnswerIndex];
-      setQuizState({
-        wasCorrect: isCorrect,
-        hasFlipped: true,
-        flipped: true,
-      });
-    } else {
-      setQuizState({ flipped: true });
-    }
-  };
+  const { selected, hasFlipped } = quizState;
+  const [flipped, setFlipped] = useState(false);
 
   return (
     <div className="relative perspective w-full h-72 my-8 max-w-xl mx-auto">
@@ -35,42 +24,61 @@ export default function Flashcard({
           flipped ? "rotate-y-180" : ""
         }`}
       >
-        {/* Front */}
-        <div className="absolute w-full h-full backface-hidden rounded-xl bg-white border border-gray-300 shadow-lg flex flex-col justify-between p-6">
+        {/* Front Side */}
+        <div className="absolute w-full h-full backface-hidden rounded-xl bg-white border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
           <div className="grid gap-3">
-            <p className="text-lg font-semibold text-center">{question}</p>
+            <p className="text-lg text-center font-semibold">{question}</p>
             <RadioGroup
               disabled={hasFlipped}
               value={selected || ""}
-              onValueChange={(val: string) => setQuizState({ selected: val })}
+              onValueChange={(value: string) =>
+                setQuizState({ selected: value })
+              }
             >
               {options.map((option: string, index: number) => (
-                <div key={index} className="flex items-start space-x-2">
-                  <RadioGroupItem id={`${question}-${index}`} value={option} />
-                  <Label htmlFor={`${question}-${index}`}>{option}</Label>
+                <div
+                  key={index}
+                  className="flex items-start space-x-2 text-left"
+                >
+                  <RadioGroupItem
+                    id={`${question}-option-${index}`}
+                    value={option}
+                  />
+                  <Label htmlFor={`${question}-option-${index}`}>
+                    {option}
+                  </Label>
                 </div>
               ))}
             </RadioGroup>
           </div>
+
           <Button
             disabled={!selected}
-            onClick={handleFlip}
-            className="mt-4 self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
+            onClick={() => {
+              setFlipped(true);
+            }}
+            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
           >
-            Flip Card <LucideRotateCcwSquare className="ml-2 h-5 w-5" />
+            Flip Card
+            <LucideRotateCcwSquare className="w-5 h-5 ml-2" />
           </Button>
         </div>
 
-        {/* Back */}
-        <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-lg flex flex-col justify-center items-center p-6">
-          <p className="text-lg font-semibold mb-2">Correct Answer:</p>
-          <p className={wasCorrect ? "text-green-600" : "text-red-600"}>
-            {options[correctAnswerIndex]}
-          </p>
-          <p className="mt-2 text-gray-600">{reference}</p>
+        {/* Back Side */}
+        <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
+          <div>
+            <p className="text-lg font-semibold mb-2">Correct Answer:</p>
+            <p className={"text-green-600"}>{options[correctAnswerIndex]}</p>
+            <p className="text-lg text-gray-600 mt-2">{reference}</p>
+          </div>
+
           <Button
-            onClick={() => setQuizState({ flipped: false })}
-            className="mt-4 self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
+            variant="outline"
+            onClick={() => {
+              setFlipped(false);
+              setQuizState({ hasFlipped: true });
+            }}
+            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
           >
             <BsArrowReturnLeft className="mr-2" />
             See Front

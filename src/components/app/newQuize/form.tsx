@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import quizzes from "@/data/matthewQuiz.json";
-import CarouselComp from "../carousel";
+import CarouselComp from "./carousel";
 import { CarouselItem } from "@/components/ui/carousel";
 import Flashcard from "./flashCard";
+import { Button } from "@/components/ui/button";
 
 export default function QuizeFlashcardCarousel() {
-  const matthewQuizzes = quizzes.filter((item) =>
-    item.reference.startsWith("Matthew")
+  const matthewQuizzes = quizzes.filter((q) =>
+    q.reference.startsWith("Matthew")
   );
 
   const [score, setScore] = useState(0);
@@ -15,39 +16,44 @@ export default function QuizeFlashcardCarousel() {
   const [quizStates, setQuizStates] = useState(
     matthewQuizzes.map(() => ({
       selected: "",
-      wasCorrect: false,
       hasFlipped: false,
-      flipped: false,
     }))
   );
 
-  const setQuizState = (index: number, newPartial: any) => {
+  const setQuizState = (index: number, partial: any) => {
     setQuizStates((prev) => {
       const copy = [...prev];
-      copy[index] = { ...copy[index], ...newPartial };
+      copy[index] = { ...copy[index], ...partial };
       return copy;
     });
-
-    if (newPartial.wasCorrect !== undefined && newPartial.hasFlipped) {
-      setScore((prev) => prev + (newPartial.wasCorrect ? 1 : 0));
-    }
   };
+
+  const completed = quizStates.every((q) => q.hasFlipped);
 
   return (
     <CarouselComp
       tittle="Quiz on Matthew"
-      subTittle={`Your score: ${score}/${matthewQuizzes?.length}`}
+      subTittle={`Your score: ${score}/${matthewQuizzes.length}`}
       Content={() =>
-        matthewQuizzes.map((quiz, index) => (
-          <CarouselItem key={quiz.reference}>
-            <Flashcard
-              {...quiz}
-              quizState={quizStates[index]}
-              setQuizState={(partial: any) => setQuizState(index, partial)}
-            />
-          </CarouselItem>
-        ))
+        completed ? (
+          <Button>Save</Button>
+        ) : (
+          matthewQuizzes.map((quiz, index) => (
+            <CarouselItem key={quiz.reference}>
+              <Flashcard
+                {...quiz}
+                quizState={quizStates[index]}
+                setQuizState={(partial: any) => setQuizState(index, partial)}
+              />
+            </CarouselItem>
+          ))
+        )
       }
+      quizStates={quizStates}
+      setQuizState={setQuizState}
+      quizzes={matthewQuizzes}
+      score={score}
+      setScore={setScore}
     />
   );
 }
