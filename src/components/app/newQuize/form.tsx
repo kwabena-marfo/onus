@@ -49,7 +49,7 @@ export default function QuizeFlashcardCarousel() {
         </p>
 
         {/* Not Attempted (Optional Safety Check) */}
-        {quizStates.every((q) => q.wasCorrect !== undefined) && (
+        {quizStates.some((q) => !q.hasFlipped) && (
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-red-500">
               Not Attempted

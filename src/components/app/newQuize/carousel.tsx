@@ -52,7 +52,6 @@ export default function CarouselComp({
         quizzes[index].options[quizzes[index].correctAnswerIndex];
 
       setQuizState(index, {
-        hasFlipped: true,
         wasCorrect: isCorrect,
       });
 
