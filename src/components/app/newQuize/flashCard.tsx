@@ -61,7 +61,7 @@ export default function Flashcard({
           </div>
 
           <Button
-            disabled={!selected || hasFlipped}
+            disabled={!selected}
             onClick={() => setFlipped(true)}
             className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
           >

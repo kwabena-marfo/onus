@@ -16,9 +16,9 @@ export default function QuizeFlashcardCarousel({
   book,
   mutateGetOnusQuize,
 }: any) {
-  const matthewQuizzes = quizzes.filter((q) =>
-    q.reference.toLowerCase().startsWith(book.toLowerCase())
-  );
+  const matthewQuizzes = quizzes
+    .filter((q) => q.reference.toLowerCase().startsWith(book.toLowerCase()))
+    .slice(0, 6);
 
   const {
     reqFunction: createOnusQuize,
