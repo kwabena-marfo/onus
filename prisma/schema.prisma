@@ -17,6 +17,7 @@ model user {
   image       String?
   lastLogin   String? // fixed typo: "last_loggin" → "lastLogin"
   verses      verses[] // correct relation (no @relation needed here)
+  scores      quizScore[]
 }
 
 model verses {
@@ -38,4 +39,14 @@ model verses {
 enum MemorisedStatus {
   memorised
   saved
+}
+
+model quizScore {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  quizName   String   // e.g. "Matthew", "Mark", or "Quiz on Matthew"
+  score      Int
+  total      Int      // Total number of questions
+  takenAt    DateTime @default(now())
+  user       user   @relation(fields: [userId], references: [id])
 }

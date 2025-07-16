@@ -21,3 +21,22 @@ export const useGetOnus = () => {
     mutateGetOnus,
   };
 };
+
+export const useGetOnusQuize = () => {
+  // const { admin } = useGetAdminStates();
+  // const axios = securedAxios(admin?.accessToken);
+  const fetcher = (url: any) => axios.get(url).then((res) => res.data);
+
+  const {
+    data,
+    error: getOnusQuizeIsError,
+    mutate: mutateGetOnusQuize,
+  } = useSWR("/api/app/get-onus-quize", fetcher);
+
+  return {
+    getOnusQuizeIsLoading: !getOnusQuizeIsError && !data,
+    onusQuizeData: data,
+    getOnusQuizeIsError,
+    mutateGetOnusQuize,
+  };
+};

@@ -1,19 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import quizzes from "@/data/matthewQuiz.json";
 import CarouselComp from "./carousel";
 import { CarouselItem } from "@/components/ui/carousel";
 import Flashcard from "./flashCard";
-import { Button } from "@/components/ui/button";
 import Congratulations from "./congratulations";
+import useTriggerRequest from "@/hooks/global/useTriggerRequest";
+import { LuLoaderCircle } from "react-icons/lu";
+import { Button } from "@/components/ui/button";
+import { LucideRotateCw } from "lucide-react";
 
-export default function QuizeFlashcardCarousel() {
+export default function QuizeFlashcardCarousel({
+  book,
+  mutateGetOnusQuize,
+}: any) {
   const matthewQuizzes = quizzes
-    .filter((q) => q.reference.startsWith("Matthew"))
+    .filter((q) => q.reference.toLowerCase().startsWith(book.toLowerCase()))
     .slice(0, 5);
 
+  const {
+    reqFunction: createOnusQuize,
+    reqState: createOnusQuizeStates,
+    setReqState: resetCreateOnusQuizeStates,
+  } = useTriggerRequest();
+
   const [score, setScore] = useState(0);
-  const [completed, setCompleted] = useState(false);
+  const [finished, setFinished] = useState(false);
+
   const [quizStates, setQuizStates] = useState(
     matthewQuizzes.map(() => ({
       selected: "",
@@ -30,17 +45,47 @@ export default function QuizeFlashcardCarousel() {
     });
   };
 
-  const unansweredIndexes = quizStates
-    .map((q, idx) => (q.selected === "" ? idx : null))
-    .filter((v) => v !== null) as number[];
+  const handleFinish = async () => {
+    let newScore = 0;
+    const updatedStates: any = quizStates.map((state, index) => {
+      const isCorrect =
+        state.selected ===
+        matthewQuizzes[index].options[matthewQuizzes[index].correctAnswerIndex];
+      if (state.selected) {
+        if (isCorrect) newScore += 1;
+        return {
+          ...state,
+          wasCorrect: isCorrect,
+        };
+      }
+      return state; // leave wasCorrect as undefined for unanswered
+    });
 
-  const handleFinish = () => {
-    setCompleted(true);
+    await createOnusQuize({
+      route: "/api/app/create-onus-quize",
+      reqType: "post",
+      data: {
+        quizName: book,
+        score: newScore,
+        total: matthewQuizzes?.length + 1,
+      },
+    });
+
+    setScore(newScore);
+    setQuizStates(updatedStates);
   };
 
-  if (completed) {
+  useEffect(() => {
+    if (createOnusQuizeStates?.data) {
+      mutateGetOnusQuize();
+      setFinished(true);
+      resetCreateOnusQuizeStates(null);
+    }
+  }, [createOnusQuizeStates]);
+
+  if (finished) {
     return (
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start">
         <Congratulations />
 
         <p className="text-lg">
@@ -48,69 +93,58 @@ export default function QuizeFlashcardCarousel() {
           <strong>{matthewQuizzes.length}</strong>
         </p>
 
-        {/* Not Attempted (Optional Safety Check) */}
-        {quizStates.some((q) => !q.hasFlipped) && (
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold text-red-500">
-              Not Attempted
-            </h3>
-            <ul className="list-disc list-inside">
-              {matthewQuizzes.map((quiz, index) => {
-                const q = quizStates[index];
-                if (!q.hasFlipped) {
-                  return <li key={quiz.reference}>{quiz.reference}</li>;
-                }
-                return null;
-              })}
-            </ul>
-          </div>
-        )}
+        {/* Not Attempted */}
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold text-red-500">Not Attempted</h3>
+          <ul className="list-disc list-inside">
+            {matthewQuizzes.map((quiz, index) => {
+              if (!quizStates[index].selected) {
+                return <li key={quiz.reference}>{quiz.reference}</li>;
+              }
+              return null;
+            })}
+          </ul>
+        </div>
 
-        {/* 🎉 Congrats */}
+        <Button
+          onClick={() => {
+            setQuizStates(
+              matthewQuizzes.map(() => ({
+                selected: "",
+                hasFlipped: false,
+                wasCorrect: undefined,
+              }))
+            );
+            setScore(0);
+            setFinished(false);
+          }}
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white"
+        >
+          Go Again <LucideRotateCw />
+        </Button>
       </div>
     );
   }
 
-  return (
+  return createOnusQuizeStates?.pending ? (
+    <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
+  ) : (
     <CarouselComp
       tittle="Quiz on Matthew"
-      subTittle={`Your score: ${score}/${matthewQuizzes.length}`}
-      Content={() => (
-        <>
-          {matthewQuizzes.map((quiz, index) => (
-            <CarouselItem key={quiz.reference}>
-              <Flashcard
-                {...quiz}
-                quizState={quizStates[index]}
-                setQuizState={(partial: any) => setQuizState(index, partial)}
-              />
-            </CarouselItem>
-          ))}
-
-          {/* Final Slide - Finish Button */}
-          <CarouselItem key="finish">
-            <div className="flex flex-col justify-center items-center h-full space-y-6">
-              <p className="text-xl font-semibold">Ready to finish the quiz?</p>
-              <Button
-                onClick={handleFinish}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                Finish Quiz
-              </Button>
-              {unansweredIndexes.length > 0 && (
-                <p className="text-sm text-red-600">
-                  You have unanswered questions!
-                </p>
-              )}
-            </div>
+      subTittle={`Answer all questions and click Finish`}
+      Content={() =>
+        matthewQuizzes.map((quiz, index) => (
+          <CarouselItem key={quiz.reference}>
+            <Flashcard
+              {...quiz}
+              quizState={quizStates[index]}
+              setQuizState={(partial: any) => setQuizState(index, partial)}
+            />
           </CarouselItem>
-        </>
-      )}
-      quizStates={quizStates}
-      setQuizState={setQuizState}
-      quizzes={matthewQuizzes}
-      score={score}
-      setScore={setScore}
+        ))
+      }
+      onFinish={handleFinish}
+      createOnusQuizeStates={createOnusQuizeStates}
     />
   );
 }

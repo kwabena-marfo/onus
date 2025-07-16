@@ -11,7 +11,6 @@ function useWindowSize() {
 
     handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -22,19 +21,23 @@ export default function Congratulations() {
   const { width, height } = useWindowSize();
 
   return (
-    <div className="relative flex flex-col items-center justify-center mt-10">
+    <>
+      {/* Confetti spans full screen from the top */}
       <Confetti
         width={width}
         height={height}
-        recycle={false}
         numberOfPieces={300}
+        recycle={false}
+        style={{ position: "fixed", top: 0, left: 0, zIndex: 50 }}
       />
-      <h2 className="text-3xl font-bold text-green-700 z-10">
-        🎉 Congratulations! 🎉
-      </h2>
-      <p className="text-lg text-gray-600 mt-2 z-10">
-        You’ve completed the quiz!
-      </p>
-    </div>
+
+      {/* Message appears after confetti */}
+      <div className="flex flex-col items-center justify-center mt-20 z-50 relative">
+        <h2 className="text-3xl font-bold text-green-700">
+          🎉 Congratulations! 🎉
+        </h2>
+        <p className="text-lg text-gray-600 mt-2">You’ve completed the quiz!</p>
+      </div>
+    </>
   );
 }

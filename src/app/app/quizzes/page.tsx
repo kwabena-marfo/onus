@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useGetOnus } from "@/hooks/global/useSWRFetch";
+import { useGetOnus, useGetOnusQuize } from "@/hooks/global/useSWRFetch";
 
 import Content from "@/components/app/content";
 
@@ -14,9 +14,19 @@ import NewQuizeModal from "@/components/app/newQuize";
 export default function Quizzes() {
   const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
 
-  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
+  const {
+    getOnusQuizeIsLoading,
+    onusQuizeData,
+    getOnusQuizeIsError,
+    mutateGetOnusQuize,
+  } = useGetOnusQuize();
 
-  if (getOnusIsError) return <BsTriangleFill />;
+  console.log(onusQuizeData);
+
+  if (getOnusIsLoading || getOnusQuizeIsLoading)
+    return <LuLoaderCircle className="animate-spin" />;
+
+  if (getOnusIsError || getOnusQuizeIsError) return <BsTriangleFill />;
 
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];
@@ -38,9 +48,12 @@ export default function Quizzes() {
             <div className="md:col-span-3 grid h-fit justify-center items-center md:grid-cols-4 grid-cols-2  gap-3 md:pr-2 pb-2">
               {filteredBooks.map((entry: any, index: any) => {
                 const book = Object.keys(entry)[0]; // e.g. "matthew"
-                const bookData = entry[book]; // e.g. { memorised: 2, saved: 1, verses: [...] }
-                const verses = bookData.verses;
 
+                const quizeScore = onusQuizeData?.find(
+                  (item: any) => item.quizName?.toLowerCase() == book
+                );
+
+                console.log(quizeScore);
                 return (
                   <div
                     key={index}
@@ -52,14 +65,16 @@ export default function Quizzes() {
                       </p>
                     </div>
                     <p className="text-left text-md text-gray-600 font-medium -mt-1">
-                      Latest Score: {verses.length}/30
+                      {quizeScore
+                        ? `Latest Score: ${quizeScore?.score} / ${quizeScore?.total}`
+                        : "No Quize yet"}
                     </p>
 
                     <Separator className="my-1" />
                     <div className="flex  gap-1 mt-2">
                       <NewQuizeModal
-                        key={index}
-                        verses={verses}
+                        book={book}
+                        mutateGetOnusQuize={mutateGetOnusQuize}
                         TriggerComp={() => (
                           <Button
                             size="sm"

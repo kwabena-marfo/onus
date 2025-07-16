@@ -7,15 +7,14 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { Button } from "@/components/ui/button";
 
 export default function CarouselComp({
   Content,
   tittle,
   subTittle,
-  quizStates,
-  setQuizState,
-  quizzes,
-  setScore,
+  onFinish,
+  createOnusQuizeStates,
 }: any) {
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,32 +32,11 @@ export default function CarouselComp({
   }, [api]);
 
   const handleNext = () => {
-    updateScoreIfNeeded(currentIndex);
     api?.scrollNext();
   };
 
   const handlePrev = () => {
-    updateScoreIfNeeded(currentIndex);
     api?.scrollPrev();
-  };
-
-  const updateScoreIfNeeded = (index: number) => {
-    const currentState = quizStates[index];
-
-    // Only evaluate if not yet evaluated
-    if (currentState.hasFlipped && currentState.wasCorrect === undefined) {
-      const isCorrect =
-        currentState.selected ===
-        quizzes[index].options[quizzes[index].correctAnswerIndex];
-
-      setQuizState(index, {
-        wasCorrect: isCorrect,
-      });
-
-      if (isCorrect) {
-        setScore((prev: number) => prev + 1);
-      }
-    }
   };
 
   return (
@@ -67,24 +45,44 @@ export default function CarouselComp({
         <p className="font-extrabold text-3xl text-center">{tittle}</p>
         <p className="font-medium text-center text-2xl">{subTittle}</p>
       </div>
+
       <Carousel setApi={setApi} className="w-full">
         <CarouselContent>
           <Content />
         </CarouselContent>
-        <div className="grid">
-          <div className="flex gap-1 justify-center">
+
+        <div className="grid mt-4">
+          <div className="flex gap-2 justify-center">
             <BsArrowLeft
               onClick={handlePrev}
-              className="w-12 h-12 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
             />
             <BsArrowRight
               onClick={handleNext}
-              className="w-12 h-12 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
             />
           </div>
-          <p className="text-center">
+
+          <p className="text-center text-sm text-muted-foreground">
             Question {currentIndex + 1} of {count}
           </p>
+
+          {/* Finish button on last slide */}
+          {currentIndex === count - 1 && (
+            <div className="flex flex-col ">
+              <Button
+                onClick={onFinish}
+                className="mt-4 bg-green-600 hover:bg-green-700 text-white"
+              >
+                Finish Quiz
+              </Button>
+              {createOnusQuizeStates ? (
+                <p className="text-red-400">
+                  Sorry, could not save quize. Please try again
+                </p>
+              ) : null}
+            </div>
+          )}
         </div>
       </Carousel>
     </div>

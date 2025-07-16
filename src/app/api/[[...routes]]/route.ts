@@ -197,6 +197,44 @@ app.delete("/app/delete-onus", async (c) => {
   }
 });
 
+app.post("/app/create-onus-quize", async ({ json, get }: any) => {
+  try {
+    const session = await get("session");
+
+    await prisma.quizScore.create({
+      data: {
+        userId: session.user.id,
+        quizName: "Matthew",
+        score: 4,
+        total: 5,
+      },
+    });
+    return json("Done");
+  } catch (error) {
+    console.log(error);
+    return json("An Error Occured", 500);
+  }
+});
+
+app.get("/app/get-onus-quize", async ({ json, get }: any) => {
+  try {
+    const session = await get("session");
+
+    const quizzes = await prisma.quizScore.findMany({
+      where: {
+        userId: session?.user?.id,
+      },
+    });
+
+    if (!quizzes) return json("An Error Occured", 500);
+
+    return json(quizzes);
+  } catch (error) {
+    console.log({ error });
+    return json("An Error Occured", 500);
+  }
+});
+
 export const GET = handle(app);
 export const POST = handle(app);
 export const DELETE = handle(app);

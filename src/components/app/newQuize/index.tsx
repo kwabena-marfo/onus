@@ -14,7 +14,11 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import NewQuizeForm from "./form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function NewQuizeModal({ TriggerComp }: any) {
+export default function NewQuizeModal({
+  TriggerComp,
+  book,
+  mutateGetOnusQuize,
+}: any) {
   const isDesktop = useMediaQuery({
     query: "(min-width: 1224px)",
   });
@@ -32,7 +36,10 @@ export default function NewQuizeModal({ TriggerComp }: any) {
           >
             <ScrollArea className="min-h-[300px]  py-6 px-4">
               <div className="flex items-center gap-2">
-                <NewQuizeForm />
+                <NewQuizeForm
+                  book={book}
+                  mutateGetOnusQuize={mutateGetOnusQuize}
+                />
               </div>
             </ScrollArea>
           </DialogContent>
@@ -44,7 +51,10 @@ export default function NewQuizeModal({ TriggerComp }: any) {
           </DrawerTrigger>
           <DrawerContent>
             <ScrollArea className="min-h-[300px] py-6 px-4">
-              <NewQuizeForm />
+              <NewQuizeForm
+                book={book}
+                mutateGetOnusQuize={mutateGetOnusQuize}
+              />
             </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>
