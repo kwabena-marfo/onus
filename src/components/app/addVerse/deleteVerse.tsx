@@ -13,11 +13,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { BsTrash, BsX } from "react-icons/bs";
+import { BsTrash } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
 
-export default function Delete({
-  table,
+export default function DeleteVerse({
   ids,
   mutateGetOnus,
   delOnus,
@@ -41,14 +40,14 @@ export default function Delete({
   };
 
   return (
-    <>
+    <div className="flex justify-center">
       <Button
         size="sm"
         variant="ghost"
         onClick={() => setOpen(true)}
-        className="text-red-800"
+        className="text-red-800 justify-self-center"
       >
-        {table ? <BsTrash className="w-4 h-4" /> : <BsX className="w-4 h-4" />}
+        Remove Verse <BsTrash className="w-4 h-4" />
       </Button>
 
       <AlertDialog open={open} onOpenChange={setOpen}>
@@ -82,6 +81,6 @@ export default function Delete({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }

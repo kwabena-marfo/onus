@@ -22,6 +22,7 @@ import BibleBook from "./fields/book";
 import ChapterAndVerse from "./fields/chapterAndVerse";
 import VerseAndNotes from "./fields/verseAndNotes";
 import Tags from "./fields/tags";
+import DeleteVerse from "./deleteVerse";
 
 export default function AddVerseForm({ className, verse }: any) {
   const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
@@ -32,6 +33,8 @@ export default function AddVerseForm({ className, verse }: any) {
     reqState: createOnusStates,
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
+
+  const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
   const { handleSubmit, reset, watch, control } = useForm({
     mode: "all",
@@ -107,82 +110,96 @@ export default function AddVerseForm({ className, verse }: any) {
           </Button>
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={cn(
-            "grid w-full gap-4 z-50 bg-white p-4 rounded-md",
-            className
-          )}
-        >
-          <div className="flex flex-col gap-0 justify-center items-center ">
-            <p className="text-3xl md:text-4xl font-bold">Add Verse</p>
-            <p className="text-center">
-              Your Journey to Spritual Growth Begins here
-            </p>
-          </div>
-
-          <div className="flex  gap-3 w-full justify-between">
-            <BibleBook
-              Controller={Controller}
-              control={control}
-              onusData={onusData}
-            />
-            <ChapterAndVerse
-              Controller={Controller}
-              watch={watch}
-              control={control}
-            />
-          </div>
-
-          <VerseAndNotes Controller={Controller} control={control} />
-
-          <Tags
-            tags={tags}
-            addTag={addTag}
-            removeTag={removeTag}
-            watch={watch}
-          />
-
-          <Controller
-            control={control}
-            name="memorised"
-            rules={{ required: "Please choose verse status" }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <div className="grid gap-1">
-                <RadioGroup
-                  onValueChange={onChange}
-                  defaultValue={value}
-                  className="flex flex-row w-full"
-                >
-                  <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
-                    <RadioGroupItem value="memorised" id="r2" />
-                    <Label htmlFor="r2">I have Memorised</Label>
-                  </div>
-                  <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
-                    <RadioGroupItem value="saved" id="r3" />
-                    <Label htmlFor="r3">I want to save</Label>
-                  </div>
-                </RadioGroup>
-                {error && (
-                  <p className="text-red-500 text-sm">{error.message}</p>
-                )}
-              </div>
+        <>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={cn(
+              "grid w-full gap-4 z-50 bg-white p-4 rounded-md",
+              className
             )}
-          />
-          <div className="flex flex-col">
-            <Button className="rounded-md bg-[#fa9a40]">
-              {createOnusStates?.pending && (
-                <LuLoader className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Add Verse
-            </Button>
-            {createOnusStates?.error ? (
-              <p className="text-red-500 text-sm text-center">
-                {createOnusStates?.error as any}
+          >
+            <div className="flex flex-col gap-0 justify-center items-center ">
+              <p className="text-3xl md:text-4xl font-bold">Add Verse</p>
+              <p className="text-center">
+                Your Journey to Spritual Growth Begins here
               </p>
-            ) : null}
-          </div>
-        </form>
+            </div>
+
+            <div className="flex  gap-3 w-full justify-between">
+              <BibleBook
+                Controller={Controller}
+                control={control}
+                onusData={onusData}
+              />
+              <ChapterAndVerse
+                Controller={Controller}
+                watch={watch}
+                control={control}
+              />
+            </div>
+
+            <VerseAndNotes Controller={Controller} control={control} />
+
+            <Tags
+              tags={tags}
+              addTag={addTag}
+              removeTag={removeTag}
+              watch={watch}
+            />
+
+            <Controller
+              control={control}
+              name="memorised"
+              rules={{ required: "Please choose verse status" }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <div className="grid gap-1">
+                  <RadioGroup
+                    onValueChange={onChange}
+                    defaultValue={value}
+                    className="flex flex-row w-full"
+                  >
+                    <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
+                      <RadioGroupItem value="memorised" id="r2" />
+                      <Label htmlFor="r2">I have Memorised</Label>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
+                      <RadioGroupItem value="saved" id="r3" />
+                      <Label htmlFor="r3">I want to save</Label>
+                    </div>
+                  </RadioGroup>
+                  {error && (
+                    <p className="text-red-500 text-sm">{error.message}</p>
+                  )}
+                </div>
+              )}
+            />
+            <div className="flex flex-col gap-3">
+              <Button className="rounded-md bg-[#fa9a40]">
+                {createOnusStates?.pending && (
+                  <LuLoader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Add Verse
+              </Button>
+              {createOnusStates?.error ? (
+                <p className="text-red-500 text-sm text-center">
+                  {createOnusStates?.error as any}
+                </p>
+              ) : null}
+            </div>
+          </form>
+
+          {verse ? (
+            <DeleteVerse
+              ids={[verse?.id]}
+              mutateGetOnus={mutateGetOnus}
+              delOnusState={delOnusState}
+              delOnus={delOnus}
+            />
+          ) : null}
+        </>
       )}
     </>
   );

@@ -9,8 +9,6 @@ import { BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
-import Delete from "./delete";
-import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 import { LucideEdit } from "lucide-react";
 import AddVerseModal from "@/components/app/addVerse";
 
@@ -32,23 +30,13 @@ type MemoryVerse = {
   color: "blue" | "purple";
 };
 
-export default function useColumns({ mutateGetOnus, searchQuery }: any) {
-  const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
-
+export default function useColumns({ searchQuery }: any) {
   const columns: ColumnDef<MemoryVerse>[] = [
     {
       accessorKey: "book",
       cell: ({ row }) => {
-        const {
-          id,
-          book,
-          chapter,
-          verse,
-          onusVerse,
-          verseNotes,
-          tags,
-          memorised,
-        } = row.original;
+        const { book, chapter, verse, onusVerse, verseNotes, tags, memorised } =
+          row.original;
 
         return (
           <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group   ">
@@ -89,13 +77,6 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
                       <LucideEdit />
                     </Button>
                   )}
-                />
-
-                <Delete
-                  ids={[id]}
-                  mutateGetOnus={mutateGetOnus}
-                  delOnusState={delOnusState}
-                  delOnus={delOnus}
                 />
               </div>
             </Label>

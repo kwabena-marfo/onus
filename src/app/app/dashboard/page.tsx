@@ -24,8 +24,7 @@ import ProgressComp from "@/components/app/progress";
 export default function Dashboard() {
   const { status, data: session } = useSession<any>();
 
-  const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
-    useGetOnus();
+  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
 
   if (status == "loading" || getOnusIsLoading)
     return (
@@ -154,10 +153,7 @@ export default function Dashboard() {
               <p>Your added verses will appear here</p>
             </div>
           ) : (
-            <VersesTable
-              data={onusData?.verses || []}
-              mutateGetOnus={mutateGetOnus}
-            />
+            <VersesTable data={onusData?.verses || []} />
           )}
         </div>
       </div>

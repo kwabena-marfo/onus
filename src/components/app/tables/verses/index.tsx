@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { BsArrowBarLeft, BsArrowBarRight, BsX } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 
-export default function DataTable({ data, mutateGetOnus }: any) {
+export default function DataTable({ data }: any) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
@@ -38,7 +38,7 @@ export default function DataTable({ data, mutateGetOnus }: any) {
   const [queryResults, setQueryResults] = useState<any>();
   const [searchQuery, setSearchQuery] = useState<any>();
 
-  const columns = useColumns({ mutateGetOnus, searchQuery });
+  const columns = useColumns({ searchQuery });
 
   const queryMembers: any = useQueryOnus(data);
 
@@ -89,28 +89,6 @@ export default function DataTable({ data, mutateGetOnus }: any) {
               value={searchQuery || ""}
             />
           </div>
-          {/* {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="flex items-center justify-start"
-            >
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    className="border-0 flex  items-center"
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))} */}
         </TableHeader>
         <TableBody className="grid gap-3">
           {table.getRowModel().rows?.length ? (
