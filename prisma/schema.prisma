@@ -49,4 +49,6 @@ model quizScore {
   total      Int      // Total number of questions
   takenAt    DateTime @default(now())
   user       user   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, quizName])
 }

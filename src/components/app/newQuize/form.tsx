@@ -20,6 +20,8 @@ export default function QuizeFlashcardCarousel({
     .filter((q) => q.reference.toLowerCase().startsWith(book.toLowerCase()))
     .slice(0, 5);
 
+  console.log(matthewQuizzes);
+
   const {
     reqFunction: createOnusQuize,
     reqState: createOnusQuizeStates,
@@ -47,19 +49,24 @@ export default function QuizeFlashcardCarousel({
 
   const handleFinish = async () => {
     let newScore = 0;
+
     const updatedStates: any = quizStates.map((state, index) => {
-      const isCorrect =
-        state.selected ===
+      const correctAnswer =
         matthewQuizzes[index].options[matthewQuizzes[index].correctAnswerIndex];
-      if (state.selected) {
-        if (isCorrect) newScore += 1;
-        return {
-          ...state,
-          wasCorrect: isCorrect,
-        };
-      }
-      return state; // leave wasCorrect as undefined for unanswered
+
+      const isCorrect = state.selected === correctAnswer;
+
+      if (state.selected && isCorrect) newScore += 1;
+
+      return {
+        ...state,
+        wasCorrect: state.selected ? isCorrect : undefined,
+        hasFlipped: true,
+      };
     });
+
+    setQuizStates(updatedStates);
+    setScore(newScore);
 
     await createOnusQuize({
       route: "/api/app/create-onus-quize",
@@ -67,12 +74,9 @@ export default function QuizeFlashcardCarousel({
       data: {
         quizName: book,
         score: newScore,
-        total: matthewQuizzes?.length + 1,
+        total: matthewQuizzes.length,
       },
     });
-
-    setScore(newScore);
-    setQuizStates(updatedStates);
   };
 
   useEffect(() => {
@@ -83,7 +87,7 @@ export default function QuizeFlashcardCarousel({
     }
   }, [createOnusQuizeStates]);
 
-  if (finished) {
+  if (!createOnusQuizeStates?.error && finished) {
     return (
       <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start">
         <Congratulations />
@@ -94,17 +98,21 @@ export default function QuizeFlashcardCarousel({
         </p>
 
         {/* Not Attempted */}
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-red-500">Not Attempted</h3>
-          <ul className="list-disc list-inside">
-            {matthewQuizzes.map((quiz, index) => {
-              if (!quizStates[index].selected) {
-                return <li key={quiz.reference}>{quiz.reference}</li>;
-              }
-              return null;
-            })}
-          </ul>
-        </div>
+        {quizStates.some((q) => !q.selected) && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-red-500">
+              Not Attempted
+            </h3>
+            <ul className="list-disc list-inside">
+              {matthewQuizzes.map((quiz, index) => {
+                if (!quizStates[index].selected) {
+                  return <li key={quiz.reference}>{quiz.reference}</li>;
+                }
+                return null;
+              })}
+            </ul>
+          </div>
+        )}
 
         <Button
           onClick={() => {

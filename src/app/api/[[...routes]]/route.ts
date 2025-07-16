@@ -197,16 +197,28 @@ app.delete("/app/delete-onus", async (c) => {
   }
 });
 
-app.post("/app/create-onus-quize", async ({ json, get }: any) => {
+app.post("/app/create-onus-quize", async ({ json, get, req }: any) => {
   try {
     const session = await get("session");
+    const { quizName, score, total } = await req.json();
 
-    await prisma.quizScore.create({
-      data: {
-        userId: session.user.id,
-        quizName: "Matthew",
-        score: 4,
-        total: 5,
+    await prisma.quizScore.upsert({
+      where: {
+        userId_quizName: {
+          userId: session?.user?.id,
+          quizName,
+        },
+      },
+      update: {
+        score,
+        total,
+        takenAt: new Date(),
+      },
+      create: {
+        userId: session?.user?.id,
+        quizName,
+        score,
+        total,
       },
     });
     return json("Done");
@@ -220,18 +232,16 @@ app.get("/app/get-onus-quize", async ({ json, get }: any) => {
   try {
     const session = await get("session");
 
-    const quizzes = await prisma.quizScore.findMany({
+    const latestQuizzes = await prisma.quizScore.findMany({
       where: {
         userId: session?.user?.id,
       },
     });
 
-    if (!quizzes) return json("An Error Occured", 500);
-
-    return json(quizzes);
+    return json(latestQuizzes);
   } catch (error) {
-    console.log({ error });
-    return json("An Error Occured", 500);
+    console.error("Error fetching latest quiz scores:", error);
+    return json("An error occurred", 500);
   }
 });
 
