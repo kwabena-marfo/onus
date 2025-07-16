@@ -42,6 +42,7 @@
     "nextjs-toploader": "^3.8.16",
     "prisma": "^6.10.1",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
     "react-highlight-words": "^0.21.0",
     "react-hook-form": "^7.58.1",

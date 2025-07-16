@@ -45,22 +45,20 @@ export default function CarouselComp({
   const updateScoreIfNeeded = (index: number) => {
     const currentState = quizStates[index];
 
-    // Already scored, no need to recalculate
-    if (currentState.wasCorrect !== undefined) return;
+    // Only evaluate if not yet evaluated
+    if (currentState.hasFlipped && currentState.wasCorrect === undefined) {
+      const isCorrect =
+        currentState.selected ===
+        quizzes[index].options[quizzes[index].correctAnswerIndex];
 
-    // If no option selected, skip
-    if (!currentState.selected) return;
+      setQuizState(index, {
+        hasFlipped: true,
+        wasCorrect: isCorrect,
+      });
 
-    const isCorrect =
-      currentState.selected ===
-      quizzes[index].options[quizzes[index].correctAnswerIndex];
-
-    setQuizState(index, {
-      wasCorrect: isCorrect,
-    });
-
-    if (isCorrect) {
-      setScore((prev: number) => prev + 1);
+      if (isCorrect) {
+        setScore((prev: number) => prev + 1);
+      }
     }
   };
 
