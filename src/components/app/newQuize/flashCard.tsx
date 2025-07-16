@@ -27,7 +27,7 @@ export default function Flashcard({
         {/* Front Side */}
         <div className="absolute w-full h-full backface-hidden rounded-xl bg-white border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
           <div className="grid gap-3">
-            <p className="text-lg text-center font-semibold">{question}</p>
+            <p className="text-lg text-left font-semibold">{question}</p>
             <RadioGroup
               disabled={hasFlipped}
               value={selected || ""}
@@ -65,7 +65,7 @@ export default function Flashcard({
         </div>
 
         {/* Back Side */}
-        <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
+        <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-md flex flex-col justify-center items-center text-center text-lg font-medium p-6">
           <div>
             <p className="text-lg font-semibold mb-2">Correct Answer:</p>
             <p className={"text-green-600"}>{options[correctAnswerIndex]}</p>
