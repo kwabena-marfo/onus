@@ -18,7 +18,7 @@ export default function Flashcard({
   const [flipped, setFlipped] = useState(false);
 
   return (
-    <div className="relative perspective w-full h-72 my-8 max-w-xl mx-auto">
+    <div className="relative perspective w-full h-80 my-8 max-w-xl mx-auto">
       <div
         className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${
           flipped ? "rotate-y-180" : ""
