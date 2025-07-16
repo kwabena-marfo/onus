@@ -13,7 +13,7 @@ import {
 import AddVerseForm from "./form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function AddVerseModal({ TriggerComp }: any) {
+export default function AddVerseModal({ TriggerComp, verse }: any) {
   const isDesktop = useMediaQuery({
     query: "(min-width: 1224px)",
   });
@@ -28,7 +28,7 @@ export default function AddVerseModal({ TriggerComp }: any) {
           <DialogContent className="min-w-2xl">
             <ScrollArea className="max-h-[80vh] py-6 px-4">
               <div className="flex items-center gap-2">
-                <AddVerseForm />
+                <AddVerseForm verse={verse} />
               </div>
             </ScrollArea>
           </DialogContent>
@@ -40,7 +40,7 @@ export default function AddVerseModal({ TriggerComp }: any) {
           </DrawerTrigger>
           <DrawerContent className="h-screen max-h-screen flex flex-col">
             <ScrollArea className="flex-1 overflow-y-auto px-4 py-6">
-              <AddVerseForm />
+              <AddVerseForm verse={verse} />
             </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild />

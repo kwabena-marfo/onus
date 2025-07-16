@@ -34,6 +34,7 @@ model verses {
   user         user     @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  @@unique([userId, book, chapter, verse]) // <--- unique constraint
 }
 
 enum MemorisedStatus {

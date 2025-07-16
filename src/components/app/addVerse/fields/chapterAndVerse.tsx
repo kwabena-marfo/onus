@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import bibleData from "@/data/bible.json";
+
 import {
   Select,
   SelectContent,
@@ -11,6 +13,8 @@ import {
 export default function ChapterAndVerse({ Controller, control, watch }: any) {
   const book = watch("book");
   const chapter = watch("chapter");
+
+  const foundBook = bibleData.find((b: any) => b.value === book);
 
   return (
     <div className="flex gap-3 w-full">
@@ -35,7 +39,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                   <SelectValue placeholder="Chapter" />
                 </SelectTrigger>
                 <SelectContent className="h-52">
-                  {watch("book")?.versesPerChapter.map((_: any, index: any) => (
+                  {foundBook?.versesPerChapter.map((_: any, index: any) => (
                     <SelectItem key={index} value={`${index + 1}`}>
                       Chapter {index + 1}
                     </SelectItem>
@@ -68,7 +72,7 @@ export default function ChapterAndVerse({ Controller, control, watch }: any) {
                   <SelectValue placeholder="Verse" />
                 </SelectTrigger>
                 <SelectContent className="h-52">
-                  {new Array(book?.versesPerChapter[+chapter - 1])
+                  {new Array(foundBook?.versesPerChapter[+chapter - 1])
                     .fill(" ")
                     .map((_: any, index: any) => (
                       <SelectItem key={index} value={`${index + 1}`}>

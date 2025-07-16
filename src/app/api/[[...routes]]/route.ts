@@ -81,8 +81,8 @@ app.post(
         version,
         onusVerse,
         verseNotes,
-        memorised,
         tags,
+        memorised,
       }: {
         book: string;
         chapter: string;
@@ -94,8 +94,23 @@ app.post(
         memorised: "memorised" | "saved";
       } = await req.json();
 
-      await prisma.verses.create({
-        data: {
+      await prisma.verses.upsert({
+        where: {
+          userId_book_chapter_verse: {
+            userId: session.user.id,
+            book,
+            chapter,
+            verse,
+          },
+        },
+        update: {
+          version,
+          onusVerse,
+          verseNotes,
+          tags,
+          memorised,
+        },
+        create: {
           book,
           chapter,
           verse,
@@ -105,15 +120,15 @@ app.post(
           tags,
           memorised,
           user: {
-            connect: { id: session?.user?.id },
+            connect: { id: session.user.id },
           },
         },
       });
 
       return json("Done");
     } catch (error) {
-      console.log(error);
-      return json("An Error Occured", 500);
+      console.error(error);
+      return json("An Error Occurred", 500);
     }
   }
 );

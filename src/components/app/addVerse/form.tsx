@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, ComponentProps } from "react";
+import { useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
@@ -23,7 +23,7 @@ import ChapterAndVerse from "./fields/chapterAndVerse";
 import VerseAndNotes from "./fields/verseAndNotes";
 import Tags from "./fields/tags";
 
-export default function AddVerseForm({ className }: ComponentProps<"form">) {
+export default function AddVerseForm({ className, verse }: any) {
   const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
     useGetOnus();
 
@@ -36,6 +36,13 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
   const { handleSubmit, reset, watch, control } = useForm({
     mode: "all",
     shouldFocusError: true,
+    ...(verse
+      ? {
+          defaultValues: {
+            ...verse,
+          },
+        }
+      : { defaultValues: { tags: [] } }),
   });
 
   const {
@@ -74,7 +81,7 @@ export default function AddVerseForm({ className }: ComponentProps<"form">) {
       reqType: "post",
       data: {
         ...data,
-        book: data.book.value,
+        ...(verse ? { isUpdate: "yes" } : {}),
       },
     });
   };

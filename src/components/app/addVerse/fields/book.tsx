@@ -28,13 +28,7 @@ export default function BibleBook({ control, onusData }: any) {
       rules={{ required: "Book is required" }}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <div className="w-full">
-          <Select
-            onValueChange={(val) => {
-              const foundBook = bibleData.find((b: any) => b.value === val);
-              onChange(foundBook);
-            }}
-            value={value?.value}
-          >
+          <Select onValueChange={onChange} value={value}>
             <SelectTrigger
               className={`w-full ${error ? "border-red-500" : ""}`}
             >

@@ -1,30 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 
-import Reset from "./reset";
-import Export from "./export";
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Toggle } from "@/components/ui/toggle";
 import Highlighter from "react-highlight-words";
 
-import {
-  BsArchive,
-  BsCheckCircle,
-  BsChevronDown,
-  BsPen,
-  BsSortAlphaDown,
-  BsSortAlphaUp,
-} from "react-icons/bs";
+import { BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
 import Delete from "./delete";
 import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 import { LucideEdit } from "lucide-react";
+import AddVerseModal from "@/components/app/addVerse";
 
 type Tag = {
   value: string;
@@ -45,100 +33,11 @@ type MemoryVerse = {
 };
 
 export default function useColumns({ mutateGetOnus, searchQuery }: any) {
-  // const [showSelectToggle, setshowSelectToggle] = useState<any>();
-  const [sortingToggle, setSortingToggle] = useState<any>(false);
-
   const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
   const columns: ColumnDef<MemoryVerse>[] = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: true,
-    },
-    {
-      accessorKey: "fullname",
-      header: ({ table, column }) => (
-        <div className="flex justify-between items-center">
-          <div className="flex  justify-start  ">
-            {/* <Toggle
-              size="sm"
-              pressed={showSelectToggle}
-              onPressedChange={(pressed) => {
-                table
-                  .getAllColumns()
-                  .map(
-                    (column) =>
-                      column.id == "select" && column.toggleVisibility(pressed)
-                  );
-                setshowSelectToggle(pressed);
-                table.resetRowSelection();
-              }}
-              aria-label="Toggle"
-            >
-              <BiSelectMultiple className="w-4 h-4" />
-            </Toggle> */}
-
-            {table.getFilteredSelectedRowModel().rows.length ? (
-              <>
-                <Button size="sm" variant="ghost">
-                  <BsArchive className="w-4 h-4" />
-                </Button>
-
-                {/* <Delete
-                  table={table}
-                  ids={table
-                    ?.getFilteredSelectedRowModel()
-                    ?.rows?.map(({ original }: any) => original?._id)}
-                  // setQueryBuilder={setQueryBuilder}
-                  mutateGetOnus={mutateGetOnus}
-                  delMemberState={delMemberState}
-                  delMember={delMember}
-                /> */}
-              </>
-            ) : (
-              <>
-                <Toggle
-                  pressed={sortingToggle}
-                  onPressedChange={(pressed) => {
-                    column.toggleSorting(column.getIsSorted() === "asc");
-                    setSortingToggle(pressed);
-                  }}
-                  size="sm"
-                >
-                  {sortingToggle ? (
-                    <BsSortAlphaDown className="w-4 h-4" />
-                  ) : (
-                    <BsSortAlphaUp className="w-4 h-4" />
-                  )}
-                </Toggle>
-                <Export />
-              </>
-            )}
-
-            <Reset
-              data={{
-                table,
-                setSortingToggle,
-              }}
-            />
-          </div>
-        </div>
-      ),
+      accessorKey: "book",
       cell: ({ row }) => {
         const {
           id,
@@ -152,7 +51,7 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
         } = row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group  ">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group   ">
             <input
               type="checkbox"
               id={`${book}-${chapter}-${verse}`}
@@ -183,9 +82,15 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
                 <BsChevronDown />
               </div>
               <div className="flex  justify-center items-center gap-0 ">
-                <Button size="icon" variant="ghost">
-                  <LucideEdit />
-                </Button>
+                <AddVerseModal
+                  verse={row.original}
+                  TriggerComp={() => (
+                    <Button size="icon" variant="ghost">
+                      <LucideEdit />
+                    </Button>
+                  )}
+                />
+
                 <Delete
                   ids={[id]}
                   mutateGetOnus={mutateGetOnus}
@@ -199,7 +104,7 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
               {onusVerse}
             </p>
 
-            <div className="hidden gap-1  peer-checked:flex peer-checked:flex-col">
+            <div className="hidden gap-1 peer-checked:grid  mt-2">
               {verseNotes ? (
                 <div>
                   <Label
@@ -208,7 +113,7 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
                   >
                     Notes
                   </Label>
-                  <p className="md:text-lg overflow-hidden   text-ellipsis  text-nowrap text-left">
+                  <p className="md:text-lg overflow-hidden   text-ellipsis  text-wrap text-left">
                     {verseNotes}
                   </p>
                 </div>
