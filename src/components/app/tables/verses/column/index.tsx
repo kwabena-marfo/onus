@@ -15,6 +15,7 @@ import {
   BsArchive,
   BsCheckCircle,
   BsChevronDown,
+  BsPen,
   BsSortAlphaDown,
   BsSortAlphaUp,
 } from "react-icons/bs";
@@ -23,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
 import Delete from "./delete";
 import useTriggerRequest from "@/hooks/global/useTriggerRequest";
+import { LucideEdit } from "lucide-react";
 
 type Tag = {
   value: string;
@@ -180,12 +182,17 @@ export default function useColumns({ mutateGetOnus, searchQuery }: any) {
                 </p>
                 <BsChevronDown />
               </div>
-              <Delete
-                ids={[id]}
-                mutateGetOnus={mutateGetOnus}
-                delOnusState={delOnusState}
-                delOnus={delOnus}
-              />
+              <div className="flex  justify-center items-center gap-0 ">
+                <Button size="icon" variant="ghost">
+                  <LucideEdit />
+                </Button>
+                <Delete
+                  ids={[id]}
+                  mutateGetOnus={mutateGetOnus}
+                  delOnusState={delOnusState}
+                  delOnus={delOnus}
+                />
+              </div>
             </Label>
 
             <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
