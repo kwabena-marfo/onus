@@ -12,6 +12,7 @@ import createOnusChecker from "../middlewares/createOnusChecker";
 import createUserChecker from "../middlewares/createUserChecker";
 
 import { authOptions } from "@/lib/authOptions";
+import axios from "axios";
 
 export const runtime = "nodejs";
 
@@ -65,6 +66,22 @@ app.use("/app/*", async ({ path, json, set }: any, next) => {
 
   set("session", session);
   return await next();
+});
+
+app.get("/app/get-verse/:version/:book/:chapter/:verse", async (c) => {
+  const { version, book, chapter, verse } = c.req.param();
+
+  console.log(version, book, chapter, verse);
+
+  try {
+    const url = `https://bolls.life/get-verse/${version}/${book}/${chapter}/${verse}`;
+    const response = await axios.get(url);
+
+    return c.json(response.data);
+  } catch (err) {
+    console.error(err);
+    return c.json({ error: "Failed to fetch verse" }, 500);
+  }
 });
 
 app.post(

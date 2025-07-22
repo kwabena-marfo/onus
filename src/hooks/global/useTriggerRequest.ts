@@ -8,6 +8,7 @@ export default function useTriggerRequest() {
     route: string;
     reqType: "get" | "post" | "put" | "delete";
     data?: object;
+    headers?: object;
   };
 
   type SetReqStateProps = {
@@ -38,17 +39,37 @@ export default function useTriggerRequest() {
   //   };
   // }
 
-  const globalTrigger = async ({ route, reqType, data }: TriggerProps) => {
+  const globalTrigger = async ({
+    route,
+    reqType,
+    data,
+    headers,
+  }: TriggerProps) => {
     try {
       setReqState({ pending: true });
 
-      const response = await axios[reqType](route, data && data);
+      let response;
 
-      setReqState({ data: response.data });
-    } catch ({ response }: any) {
-      setReqState({ error: response?.data || "Error" });
+      if (reqType === "get") {
+        response = await axios.get(route, {
+          params: data,
+          headers,
+        });
+      } else {
+        response = await axios[reqType](route, data, {
+          headers,
+        });
+      }
+
+      setReqState({ data: response.data, pending: false });
+    } catch (error: any) {
+      setReqState({
+        error: error?.response?.data || "An error occurred",
+        pending: false,
+      });
     }
   };
+
   return {
     reqFunction: globalTrigger,
     setReqState,

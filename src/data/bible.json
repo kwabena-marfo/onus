@@ -5,14 +5,16 @@
     "versesPerChapter": [
       25, 23, 17, 25, 48, 34, 29, 34, 38, 42, 30, 50, 58, 36, 39, 28, 27, 35,
       30, 34, 46, 46, 39, 51, 46, 75, 66, 20
-    ]
+    ],
+    "abbreviation": "MAT"
   },
   {
     "value": "mark",
     "label": "Mark",
     "versesPerChapter": [
       45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20
-    ]
+    ],
+    "abbreviation": "MRK"
   },
   {
     "value": "luke",
@@ -20,7 +22,8 @@
     "versesPerChapter": [
       80, 52, 38, 44, 39, 49, 50, 56, 62, 42, 54, 59, 35, 35, 32, 31, 37, 43,
       48, 47, 38, 71, 56, 53
-    ]
+    ],
+    "abbreviation": "LUK"
   },
   {
     "value": "john",
@@ -28,7 +31,8 @@
     "versesPerChapter": [
       51, 25, 36, 54, 47, 71, 53, 59, 41, 42, 57, 50, 38, 31, 27, 33, 26, 40,
       42, 31, 25
-    ]
+    ],
+    "abbreviation": "JHN"
   },
   {
     "value": "acts",
@@ -36,116 +40,138 @@
     "versesPerChapter": [
       26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 41, 40, 34, 28,
       41, 38, 40, 30, 35, 27, 27, 32, 44, 31
-    ]
+    ],
+    "abbreviation": "ACT"
   },
   {
     "value": "romans",
     "label": "Romans",
     "versesPerChapter": [
       32, 29, 31, 25, 21, 23, 25, 39, 33, 21, 36, 21, 14, 23, 33, 27
-    ]
+    ],
+    "abbreviation": "ROM"
   },
   {
     "value": "1corinthians",
     "label": "1 Corinthians",
     "versesPerChapter": [
       31, 16, 23, 21, 13, 20, 40, 13, 27, 33, 34, 31, 13, 40, 58, 24
-    ]
+    ],
+    "abbreviation": "1CO"
   },
   {
     "value": "2corinthians",
     "label": "2 Corinthians",
-    "versesPerChapter": [24, 17, 18, 18, 21, 18, 16, 24, 15, 18, 33, 21, 14]
+    "versesPerChapter": [24, 17, 18, 18, 21, 18, 16, 24, 15, 18, 33, 21, 14],
+    "abbreviation": "2CO"
   },
   {
     "value": "galatians",
     "label": "Galatians",
-    "versesPerChapter": [24, 21, 29, 31, 26, 18]
+    "versesPerChapter": [24, 21, 29, 31, 26, 18],
+    "abbreviation": "GAL"
   },
   {
     "value": "ephesians",
     "label": "Ephesians",
-    "versesPerChapter": [23, 22, 21, 32, 33, 24]
+    "versesPerChapter": [23, 22, 21, 32, 33, 24],
+    "abbreviation": "EPH"
   },
   {
     "value": "philippians",
     "label": "Philippians",
-    "versesPerChapter": [30, 30, 21, 23]
+    "versesPerChapter": [30, 30, 21, 23],
+    "abbreviation": "PHP"
   },
   {
     "value": "colossians",
     "label": "Colossians",
-    "versesPerChapter": [29, 23, 25, 18]
+    "versesPerChapter": [29, 23, 25, 18],
+    "abbreviation": "COL"
   },
   {
     "value": "1thessalonians",
     "label": "1 Thessalonians",
-    "versesPerChapter": [10, 20, 13, 18, 28]
+    "versesPerChapter": [10, 20, 13, 18, 28],
+    "abbreviation": "1TH"
   },
   {
     "value": "2thessalonians",
     "label": "2 Thessalonians",
-    "versesPerChapter": [12, 17, 18]
+    "versesPerChapter": [12, 17, 18],
+    "abbreviation": "2TH"
   },
   {
     "value": "1timothy",
     "label": "1 Timothy",
-    "versesPerChapter": [20, 15, 16, 16, 25, 21]
+    "versesPerChapter": [20, 15, 16, 16, 25, 21],
+    "abbreviation": "1TI"
   },
   {
     "value": "2timothy",
     "label": "2 Timothy",
-    "versesPerChapter": [18, 26, 17, 22]
+    "versesPerChapter": [18, 26, 17, 22],
+    "abbreviation": "2TI"
   },
   {
     "value": "titus",
     "label": "Titus",
-    "versesPerChapter": [16, 15, 15]
+    "versesPerChapter": [16, 15, 15],
+    "abbreviation": "TIT"
   },
   {
     "value": "philemon",
     "label": "Philemon",
-    "versesPerChapter": [25]
+    "versesPerChapter": [25],
+    "abbreviation": "PHM"
   },
   {
     "value": "hebrews",
     "label": "Hebrews",
-    "versesPerChapter": [14, 18, 19, 16, 14, 20, 28, 13, 28, 39, 40, 29, 25]
+    "versesPerChapter": [14, 18, 19, 16, 14, 20, 28, 13, 28, 39, 40, 29, 25],
+    "abbreviation": "HEB"
   },
   {
     "value": "james",
     "label": "James",
-    "versesPerChapter": [27, 26, 18, 17, 20]
+    "versesPerChapter": [27, 26, 18, 17, 20],
+    "abbreviation": "JAS"
   },
   {
     "value": "1peter",
     "label": "1 Peter",
-    "versesPerChapter": [25, 25, 22, 19, 14]
+    "versesPerChapter": [25, 25, 22, 19, 14],
+    "abbreviation": "1PE"
   },
   {
     "value": "2peter",
     "label": "2 Peter",
-    "versesPerChapter": [21, 22, 18]
+    "versesPerChapter": [21, 22, 18],
+    "abbreviation": "2PE"
   },
   {
     "value": "1john",
     "label": "1 John",
-    "versesPerChapter": [10, 29, 24, 21, 21]
+    "versesPerChapter": [10, 29, 24, 21, 21],
+    "abbreviation": "1JN"
   },
   {
     "value": "2john",
     "label": "2 John",
-    "versesPerChapter": [13]
+    "versesPerChapter": [13],
+    "abbreviation": "2JN"
   },
   {
     "value": "3john",
     "label": "3 John",
-    "versesPerChapter": [14]
+    "versesPerChapter": [14],
+    "abbreviation": "3JN"
   },
   {
     "value": "jude",
     "label": "Jude",
-    "versesPerChapter": [25]
+    "versesPerChapter": [25],
+    "abbreviation": "JUD"
   },
   {
     "value": "revelation",
@@ -153,30 +179,28 @@
     "versesPerChapter": [
       20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 17, 18, 20, 8, 21, 18, 24, 21,
       15, 27, 21
-    ]
+    ],
+    "abbreviation": "REV"
   },
   {
     "value": "psalms",
     "label": "Psalms",
     "versesPerChapter": [
-      6, 12, 8, 8, 12, 10, 17, 9, 20, 18, 7, 8, 6, 7, 5, 11, 15, 50, 14, 9, 13,
-      31, 6, 10, 22, 12, 14, 9, 11, 12, 24, 11, 22, 22, 28, 12, 40, 22, 13, 17,
-      7, 18, 52, 17, 16, 15, 5, 23, 11, 13, 12, 9, 9, 5, 8, 28, 22, 35, 45, 48,
-      43, 13, 31, 7, 10, 10, 9, 8, 12, 11, 10, 13, 20, 7, 35, 36, 5, 24, 20, 28,
-      23, 10, 20, 14, 9, 6, 31, 29, 25, 28, 28, 25, 13, 15, 22, 26, 11, 23, 15,
-      12, 17, 13, 12, 21, 14, 21, 22, 11, 12, 19, 12, 25, 24, 16, 18, 22, 13,
-      30, 5, 28, 7, 47, 39, 46, 64, 34, 49, 26, 20, 27, 31, 25, 24, 23, 35, 35,
-      28, 23, 29, 44, 25, 12, 34, 17, 11, 6, 10, 22, 42, 14, 26, 18, 17, 15, 21,
-      10, 20, 14, 9, 6, 5, 10, 5, 7, 7, 4, 11, 12, 8, 14, 4, 5, 12, 6, 10, 7, 9,
-      6, 8
-    ]
+      6, 12, 8, 8, 12, 10, 17, 9, 20, 18, 7, 8, 6, 7, 5, 11, 15, 50, 24, 14, 9,
+      31, 6, 10, 22, 12, 14, 20, 13, 16, 24, 11, 22, 28, 13, 40, 23, 78, 35, 45,
+      48, 43, 26, 20, 28, 23, 29, 6, 37, 35, 22, 28, 27, 18, 42, 53, 17, 16, 15,
+      21, 13, 31, 7, 9, 24, 20, 28, 23, 10, 12, 20, 14, 9, 6, 37, 24, 20, 28,
+      23, 10, 12, 20, 14, 9, 6, 37, 24
+    ],
+    "abbreviation": "PSA"
   },
   {
     "value": "proverbs",
     "label": "Proverbs",
     "versesPerChapter": [
       33, 22, 35, 27, 23, 35, 27, 36, 18, 32, 31, 28, 25, 35, 33, 33, 28, 24,
-      29, 30, 31, 29, 35, 34, 28, 28, 27, 28, 27, 33, 31
-    ]
+      29, 30, 31, 29, 35, 28, 27, 28, 27, 28, 27, 33, 31
+    ],
+    "abbreviation": "PRO"
   }
 ]

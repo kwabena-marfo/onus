@@ -9,10 +9,63 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Controller } from "react-hook-form";
-import bibleData from "@/data/bible.json";
 
-export default function BibleBook({ control, onusData }: any) {
+export default function BibleBook({ control, bibleData, onusData }: any) {
   // Map book name -> verse count
+
+  // Step 2: Attach biblicalIndex to each book
+  const bibleBooksWithIndex = bibleData.map((book: any) => ({
+    ...book,
+    biblicalIndex: bibleData.indexOf(book.value as any),
+  }));
+
+  // Step 3: Filter to NT + Psalms + Proverbs
+  const allowedBooks = [
+    "matthew",
+    "mark",
+    "luke",
+    "john",
+    "acts",
+    "romans",
+    "1corinthians",
+    "2corinthians",
+    "galatians",
+    "ephesians",
+    "philippians",
+    "colossians",
+    "1thessalonians",
+    "2thessalonians",
+    "1timothy",
+    "2timothy",
+    "titus",
+    "philemon",
+    "hebrews",
+    "james",
+    "1peter",
+    "2peter",
+    "1john",
+    "2john",
+    "3john",
+    "jude",
+    "revelation",
+    "psalms",
+    "proverbs",
+  ];
+
+  const filteredBooks = bibleBooksWithIndex.filter((book: any) =>
+    allowedBooks.includes(book.value)
+  );
+
+  const sortedFilteredBooks = filteredBooks.sort((a: any, b: any) => {
+    const isAOld = a.value === "psalms" || a.value === "proverbs";
+    const isBOld = b.value === "psalms" || b.value === "proverbs";
+
+    if (isAOld && !isBOld) return 1; // Psalms/Proverbs come last
+    if (!isAOld && isBOld) return -1; // NT books come before
+
+    return a.biblicalIndex - b.biblicalIndex; // Sort within group
+  });
+
   const verseMap =
     onusData?.grouped?.reduce((acc: any, entry: any) => {
       const book = Object.keys(entry)[0];
@@ -35,7 +88,7 @@ export default function BibleBook({ control, onusData }: any) {
               <SelectValue placeholder="Select Book..." />
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">
-              {bibleData.map((book: any, index: number) => {
+              {sortedFilteredBooks.map((book: any, index: number) => {
                 const currentBook = book.value;
                 const prevBook = bibleData[index - 1]?.value;
 
@@ -46,10 +99,9 @@ export default function BibleBook({ control, onusData }: any) {
                   <SelectItem
                     key={currentBook}
                     value={currentBook}
-                    disabled={!isSelectable}
+                    // disabled={!isSelectable}
                   >
                     {book.label}
-                    {!isSelectable && " (Complete previous first)"}
                   </SelectItem>
                 );
               })}

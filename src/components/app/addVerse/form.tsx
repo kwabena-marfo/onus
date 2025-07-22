@@ -6,6 +6,8 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
+import bibleData from "@/data/bibleFull.json";
+
 import { cn } from "@/lib/utils";
 
 import useTriggerRequest from "@/hooks/global/useTriggerRequest";
@@ -34,6 +36,12 @@ export default function AddVerseForm({ className, verse }: any) {
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
 
+  const {
+    reqFunction: getVerse,
+    reqState: getVerseStates,
+    setReqState: resetGetVerseState,
+  } = useTriggerRequest();
+
   const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
   const { handleSubmit, reset, watch, control } = useForm({
@@ -58,6 +66,13 @@ export default function AddVerseForm({ className, verse }: any) {
     shouldUnregister: true,
   });
 
+  const book = watch("book");
+  const chapter = watch("chapter");
+  const verseValue = watch("verse");
+
+  const foundBook = bibleData.find((b: any) => b.value === book);
+  const foundBookIndex = bibleData.findIndex((b: any) => b.value === book);
+
   useEffect(() => {
     if (createOnusStates?.data) {
       reset({
@@ -71,6 +86,7 @@ export default function AddVerseForm({ className, verse }: any) {
         color: "blue", // default color if needed
       });
       mutateGetOnus();
+      resetGetVerseState(null);
     }
   }, [createOnusStates]);
 
@@ -128,6 +144,7 @@ export default function AddVerseForm({ className, verse }: any) {
             <div className="flex  gap-3 w-full justify-between">
               <BibleBook
                 Controller={Controller}
+                bibleData={bibleData}
                 control={control}
                 onusData={onusData}
               />
@@ -135,10 +152,21 @@ export default function AddVerseForm({ className, verse }: any) {
                 Controller={Controller}
                 watch={watch}
                 control={control}
+                book={book}
+                chapter={chapter}
+                verse={verseValue}
+                foundBook={foundBook}
               />
             </div>
-
-            <VerseAndNotes Controller={Controller} control={control} />
+            <VerseAndNotes
+              Controller={Controller}
+              getVerse={getVerse}
+              getVerseStates={getVerseStates}
+              control={control}
+              chapter={chapter}
+              verse={verseValue}
+              foundBookIndex={foundBookIndex}
+            />
 
             <Tags
               tags={tags}
