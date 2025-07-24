@@ -71,13 +71,11 @@ app.use("/app/*", async ({ path, json, set }: any, next) => {
 app.post("/app/get-verses", async ({ req, json }: any) => {
   const { book, chapter, translation, verses } = await req.json();
 
-  console.log(book, chapter, translation, verses);
-
   try {
     const url = `https://bolls.life/get-verses/`;
     const response = await axios.post(url, [
       {
-        translation: "NKJV",
+        translation,
         book: +book + 1,
         chapter: +chapter,
         verses,
