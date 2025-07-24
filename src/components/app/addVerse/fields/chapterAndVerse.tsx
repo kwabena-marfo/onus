@@ -16,7 +16,7 @@ export default function ChapterAndVerse({
   chapter,
 }: any) {
   return (
-    <div className="flex gap-3 w-full">
+    <div className="flex gap-3 w-full justify-center items-center">
       <Controller
         control={control}
         name="chapter"
@@ -85,9 +85,11 @@ export default function ChapterAndVerse({
         }}
       />
 
+      <p>to</p>
+
       <Controller
         control={control}
-        name="verse"
+        name="verseTo"
         rules={{ required: "Required" }}
         render={({
           field: { onChange, value },

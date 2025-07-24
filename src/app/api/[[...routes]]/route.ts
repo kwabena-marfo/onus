@@ -68,19 +68,26 @@ app.use("/app/*", async ({ path, json, set }: any, next) => {
   return await next();
 });
 
-app.get("/app/get-verse/:version/:book/:chapter/:verse", async (c) => {
-  const { version, book, chapter, verse } = c.req.param();
+app.post("/app/get-verses", async ({ req, json }: any) => {
+  const { book, chapter, translation, verses } = await req.json();
 
-  console.log(version, book, chapter, verse);
+  console.log(book, chapter, translation, verses);
 
   try {
-    const url = `https://bolls.life/get-verse/${version}/${book}/${chapter}/${verse}`;
-    const response = await axios.get(url);
+    const url = `https://bolls.life/get-verses/`;
+    const response = await axios.post(url, [
+      {
+        translation: "NKJV",
+        book: +book + 1,
+        chapter: +chapter,
+        verses,
+      },
+    ]);
 
-    return c.json(response.data);
+    return json(response.data);
   } catch (err) {
     console.error(err);
-    return c.json({ error: "Failed to fetch verse" }, 500);
+    return json({ error: "Failed to fetch verse" }, 500);
   }
 });
 

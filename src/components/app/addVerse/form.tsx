@@ -69,6 +69,7 @@ export default function AddVerseForm({ className, verse }: any) {
   const book = watch("book");
   const chapter = watch("chapter");
   const verseValue = watch("verse");
+  const verseToValue = watch("verseTo");
 
   const foundBook = bibleData.find((b: any) => b.value === book);
   const foundBookIndex = bibleData.findIndex((b: any) => b.value === book);
@@ -82,8 +83,8 @@ export default function AddVerseForm({ className, verse }: any) {
         onusVerse: "",
         verseNotes: "",
         tags: [],
-        memorised: "", // or "saved", or whatever default value you use
-        color: "blue", // default color if needed
+        memorised: "",
+        color: "blue",
       });
       mutateGetOnus();
       resetGetVerseState(null);
@@ -141,7 +142,7 @@ export default function AddVerseForm({ className, verse }: any) {
               </p>
             </div>
 
-            <div className="flex  gap-3 w-full justify-between">
+            <div className="flex  gap-3 w-full justify-between flex-wrap">
               <BibleBook
                 Controller={Controller}
                 bibleData={bibleData}
@@ -165,6 +166,7 @@ export default function AddVerseForm({ className, verse }: any) {
               control={control}
               chapter={chapter}
               verse={verseValue}
+              verseTo={verseToValue}
               foundBookIndex={foundBookIndex}
             />
 

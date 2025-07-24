@@ -99,7 +99,7 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
                   <SelectItem
                     key={currentBook}
                     value={currentBook}
-                    // disabled={!isSelectable}
+                    disabled={!isSelectable}
                   >
                     {book.label}
                   </SelectItem>

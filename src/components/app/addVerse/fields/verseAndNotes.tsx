@@ -10,19 +10,35 @@ export default function VerseAndNotes({
   chapter,
   foundBookIndex,
   verse,
+  verseTo,
   getVerse,
   getVerseStates,
 }: any) {
   const handeGetVerse = async () => {
     await getVerse({
-      route: `/api/app/get-verse/NKJV/${(
-        foundBookIndex + 1
-      ).toString()}/${chapter}/${verse}`,
-      reqType: "get",
+      route: `/api/app/get-verses`,
+      reqType: "post",
+      data: {
+        translation: "NKJV",
+        book: foundBookIndex,
+        chapter,
+        verses: Array.from(
+          { length: +verseTo - +verse + 1 },
+          (_, i) => +verse + i
+        ),
+      },
     });
   };
 
-  console.log({ foundBookIndex, chapter, verse, getVerseStates });
+  const verseFetched = getVerseStates?.data?.[0];
+  const combinedVerses =
+    verseFetched?.length === 1
+      ? verseFetched[0]?.text.trim()
+      : verseFetched
+          ?.map(
+            (v: { verse: any; text: string }) => `${v.verse}. ${v.text.trim()}`
+          )
+          .join(" ");
 
   return (
     <>
@@ -39,7 +55,7 @@ export default function VerseAndNotes({
               <Label>Verse</Label>
               <Textarea
                 onChange={onChange}
-                value={getVerseStates?.data?.text || value || ""}
+                value={combinedVerses || value || ""}
                 placeholder="Write Verse"
                 className="text-[16px]"
               />
