@@ -66,6 +66,11 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 60 * 24 * 30, // Match session maxAge for consistency
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allow any mobile URL scheme
+      if (url.startsWith("exp://") || url.startsWith("myapp://")) return url;
+      return baseUrl;
+    },
     async signIn({ user }) {
       const existingGoogleUser = await prisma.user.findFirst({
         where: { googleId: user?.id },
