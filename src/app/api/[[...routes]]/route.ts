@@ -2,23 +2,57 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
-import { getServerSession } from "next-auth";
 import bcrypt from "bcrypt";
 import z from "zod";
-
+import { SignJWT } from "jose";
+import { OAuth2Client } from "google-auth-library";
 import prisma from "@/config/prisma";
 
 import createOnusChecker from "../middlewares/createOnusChecker";
 import createUserChecker from "../middlewares/createUserChecker";
-
-import { authOptions } from "@/lib/authOptions";
 import axios from "axios";
 
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use("*", cors());
+
+app.post("/mobile-auth/google", async (c) => {
+  try {
+    const { id_token } = await c.req.json();
+
+    if (!id_token) return c.json({ error: "Missing id_token" }, 400);
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) return c.json({ error: "Invalid token" }, 401);
+
+    const user = {
+      id: payload.sub,
+      email: payload.email,
+      name: payload.name,
+      picture: payload.picture,
+    };
+
+    // Sign your app token
+    const token = await new SignJWT(user)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("30d") // follow your maxAge rule
+      .sign(new TextEncoder().encode(process.env.CLIENT_SECRETE as any));
+
+    return c.json({ token, user });
+  } catch (err) {
+    console.error(err);
+    return c.json({ error: "Auth failed" }, 500);
+  }
+});
 
 app.post(
   "/create-user",
@@ -56,20 +90,22 @@ app.post(
   }
 );
 
-app.use("/app/*", async ({ path, json, set }: any, next) => {
-  console.log(path);
-  if (path === "/create-user") await next();
+// app.use("/app/*", async ({ path, json, set }: any, next) => {
+//   console.log(path);
+//   if (path === "/create-user") await next();
 
-  const session = (await getServerSession(authOptions)) as any;
+//   const session = (await getServerSession(authOptions)) as any;
 
-  if (!session) return json("An Error Occured", 401);
+//   if (!session) return json("An Error Occured", 401);
 
-  set("session", session);
-  return await next();
-});
+//   set("session", session);
+//   return await next();
+// });
 
 app.post("/app/get-verses", async ({ req, json }: any) => {
   const { book, chapter, translation, verses } = await req.json();
+
+  console.log({ book, chapter, translation, verses });
 
   try {
     const url = `https://bolls.life/get-verses/`;
@@ -94,12 +130,13 @@ app.post(
   createOnusChecker(prisma),
   async ({ req, json, get }: any) => {
     try {
-      const session = get("session");
+      const session = await get("session");
 
       const {
         book,
         chapter,
         verse,
+        verseTo,
         version,
         onusVerse,
         verseNotes,
@@ -109,6 +146,7 @@ app.post(
         book: string;
         chapter: string;
         verse: string;
+        verseTo: string;
         version: string;
         onusVerse: string;
         verseNotes?: string;
@@ -118,11 +156,12 @@ app.post(
 
       await prisma.verses.upsert({
         where: {
-          userId_book_chapter_verse: {
+          userId_book_chapter_verse_verseTo: {
             userId: session.user.id,
             book,
             chapter,
             verse,
+            verseTo,
           },
         },
         update: {
@@ -136,6 +175,7 @@ app.post(
           book,
           chapter,
           verse,
+          verseTo,
           version,
           onusVerse,
           verseNotes,
@@ -155,14 +195,14 @@ app.post(
   }
 );
 
-app.get("/app/get-onus", async ({ json, get }: any) => {
+app.get("/app/get-onus", async ({ json }: any) => {
   try {
-    const session = await get("session");
+    // const session = await get("session");
 
     const verses = await prisma.verses.findMany({
-      where: {
-        userId: session?.user?.id,
-      },
+      // where: {
+      //   userId: session?.user?.id,
+      // },
     });
 
     if (!verses) return json("An Error Occured", 500);

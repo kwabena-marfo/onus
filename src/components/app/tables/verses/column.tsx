@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import Highlighter from "react-highlight-words";
+import DOMPurify from "dompurify";
 
 import { BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ type MemoryVerse = {
   book: string;
   chapter: string;
   verse: string;
+  verseTo: string;
   version: string;
   onusVerse: string;
   verseNotes: string;
@@ -35,21 +37,29 @@ export default function useColumns({ searchQuery }: any) {
     {
       accessorKey: "book",
       cell: ({ row }) => {
-        const { book, chapter, verse, onusVerse, verseNotes, tags, memorised } =
-          row.original;
+        const {
+          book,
+          chapter,
+          verse,
+          verseTo,
+          onusVerse,
+          verseNotes,
+          tags,
+          memorised,
+        } = row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group   ">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group gap-0  ">
             <input
               type="checkbox"
-              id={`${book}-${chapter}-${verse}`}
-              value={`${book}-${chapter}-${verse}`}
+              id={`${book}-${chapter}-${verse}-${verseTo}`}
+              value={`${book}-${chapter}-${verse}-${verseTo}`}
               name="verse"
               className="peer hidden"
             />
 
             <Label
-              htmlFor={`${book}-${chapter}-${verse}`}
+              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
               className="flex justify-between gap-2 items-center"
             >
               <div className="flex gap-2 items-center">
@@ -64,8 +74,9 @@ export default function useColumns({ searchQuery }: any) {
                     searchWords={[searchQuery]}
                     autoEscape={true}
                     textToHighlight={book}
-                  />
+                  />{" "}
                   {chapter}:{verse}
+                  {verseTo ? `-${verseTo}` : null}
                 </p>
                 <BsChevronDown />
               </div>
@@ -81,9 +92,12 @@ export default function useColumns({ searchQuery }: any) {
               </div>
             </Label>
 
-            <p className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left">
-              {onusVerse}
-            </p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(onusVerse),
+              }}
+              className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left"
+            />
 
             <div className="hidden gap-1 peer-checked:grid  mt-2">
               {verseNotes ? (

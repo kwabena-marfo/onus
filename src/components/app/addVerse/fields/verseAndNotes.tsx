@@ -30,16 +30,6 @@ export default function VerseAndNotes({
     });
   };
 
-  const verseFetched = getVerseStates?.data?.[0];
-  const combinedVerses =
-    verseFetched?.length === 1
-      ? verseFetched[0]?.text.trim()
-      : verseFetched
-          ?.map(
-            (v: { verse: any; text: string }) => `${v.verse}. ${v.text.trim()}`
-          )
-          .join(" ");
-
   return (
     <>
       <div className="grid gap-2">
@@ -50,18 +40,25 @@ export default function VerseAndNotes({
           render={({
             field: { onChange, value },
             fieldState: { error },
-          }: any) => (
-            <div className="grid gap-1">
-              <Label>Verse</Label>
-              <Textarea
-                onChange={onChange}
-                value={combinedVerses || value || ""}
-                placeholder="Write Verse"
-                className="text-[16px]"
-              />
-              {error && <p className="text-red-500 text-sm">{error.message}</p>}
-            </div>
-          )}
+          }: any) => {
+            const valueF = value?.replace(/<[^>]*>?/gm, "");
+
+            return (
+              <div className="grid gap-1">
+                <Label>Verse</Label>
+                <Textarea
+                  rows={3}
+                  onChange={onChange}
+                  value={valueF || ""}
+                  placeholder="Write Verse"
+                  className="text-[16px]"
+                />
+                {error && (
+                  <p className="text-red-500 text-sm">{error.message}</p>
+                )}
+              </div>
+            );
+          }}
         />
 
         <Button

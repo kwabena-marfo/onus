@@ -3,17 +3,23 @@ export default function createOnusChecker(prisma: any) {
   return async (c: any, next: any) => {
     try {
       const body = await c.req.json();
-      const { book, chapter, verse, version, isUpdate } = body;
+      const { book, chapter, verse, verseTo, version, isUpdate, onusVerse } =
+        body;
 
       // Skip checker if it's an update
-      if (isUpdate) {
-        await next();
-        return;
-      }
+      if (isUpdate) return await next();
 
       const existingOnus = await prisma.verses.findFirst({
         where: {
-          AND: [{ book }, { chapter }, { verse }, { version }],
+          book,
+          chapter,
+          verse,
+          verseTo,
+          version,
+          onusVerse: {
+            equals: onusVerse,
+            mode: "insensitive", // ignores case
+          },
         },
       });
 

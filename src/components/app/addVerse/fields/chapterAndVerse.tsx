@@ -14,6 +14,7 @@ export default function ChapterAndVerse({
   book,
   foundBook,
   chapter,
+  verse,
 }: any) {
   return (
     <div className="flex gap-3 w-full justify-center items-center">
@@ -95,29 +96,31 @@ export default function ChapterAndVerse({
           field: { onChange, value },
           fieldState: { error },
         }: any) => {
+          const totalVerses = foundBook?.versesPerChapter[+chapter - 1] || 0;
+
+          // Start from the verse after the selected "verse"
+          const start = verse ? +verse + 1 : 1;
+
           return (
-            <>
-              <Select
-                onValueChange={onChange}
-                value={value || ""}
-                disabled={!chapter ? true : false}
-              >
-                <SelectTrigger
-                  className={`w-full ${error && "border-red-500"}`}
-                >
-                  <SelectValue placeholder="Verse" />
-                </SelectTrigger>
-                <SelectContent className="h-52">
-                  {new Array(foundBook?.versesPerChapter[+chapter - 1])
-                    .fill(" ")
-                    .map((_: any, index: any) => (
-                      <SelectItem key={index} value={`${index + 1}`}>
-                        Verse {index + 1}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </>
+            <Select
+              onValueChange={onChange}
+              value={value || ""}
+              disabled={!chapter || !verse} // disable until verse is selected
+            >
+              <SelectTrigger className={`w-full ${error && "border-red-500"}`}>
+                <SelectValue placeholder="Verse" />
+              </SelectTrigger>
+              <SelectContent className="h-52">
+                {Array.from(
+                  { length: totalVerses - start + 1 },
+                  (_, i) => start + i
+                ).map((v) => (
+                  <SelectItem key={v} value={`${v}`}>
+                    Verse {v}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           );
         }}
       />

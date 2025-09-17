@@ -44,7 +44,7 @@ export default function AddVerseForm({ className, verse }: any) {
 
   const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
-  const { handleSubmit, reset, watch, control } = useForm({
+  const { handleSubmit, reset, watch, setValue, control } = useForm({
     mode: "all",
     shouldFocusError: true,
     ...(verse
@@ -80,6 +80,7 @@ export default function AddVerseForm({ className, verse }: any) {
         book: null,
         chapter: "",
         verse: "",
+        verseTo: "",
         onusVerse: "",
         verseNotes: "",
         tags: [],
@@ -90,6 +91,23 @@ export default function AddVerseForm({ className, verse }: any) {
       resetGetVerseState(null);
     }
   }, [createOnusStates]);
+
+  useEffect(() => {
+    if (getVerseStates?.data) {
+      const [verseFetched]: any = getVerseStates?.data;
+      const combinedVerses =
+        verseFetched?.length === 1
+          ? verseFetched[0]?.text.trim()
+          : verseFetched
+              ?.map(
+                (v: { verse: any; text: string }) =>
+                  `${v.verse}. ${v.text.trim()}`
+              )
+              .join(" ");
+
+      setValue("onusVerse", combinedVerses);
+    }
+  }, [getVerseStates]);
 
   if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
 
