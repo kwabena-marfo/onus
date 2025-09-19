@@ -67,8 +67,29 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 60 * 24 * 30,
   },
   callbacks: {
+    async signIn({ user }: any) {
+      const googleUser = await prisma.user.findFirst({
+        where: {
+          email: user?.email,
+          googleId: { not: null },
+        },
+      });
+
+      // Handle Google sign-in
+      if (googleUser) {
+        await prisma.user.create({
+          data: {
+            name: user?.name,
+            email: user?.email,
+            username: user?.name,
+            googleId: user?.googleId,
+          },
+        });
+      }
+
+      return true;
+    },
     async jwt({ token, account, user }) {
-      console.log({ token, account, user });
       if (account) {
         token.accessToken = account.access_token;
       }
@@ -76,7 +97,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }: any) {
-      console.log({ token });
       session.user.id = token.id;
       session.accessToken = token;
       return session;

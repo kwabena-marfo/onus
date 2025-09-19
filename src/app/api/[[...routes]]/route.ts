@@ -5,12 +5,14 @@ import { cors } from "hono/cors";
 import bcrypt from "bcrypt";
 import z from "zod";
 import { SignJWT } from "jose";
+import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
+
 import prisma from "@/config/prisma";
 
 import createOnusChecker from "../middlewares/createOnusChecker";
 import createUserChecker from "../middlewares/createUserChecker";
-import axios from "axios";
+import createAuthMiddleware from "../middlewares/authorize";
 
 export const runtime = "nodejs";
 
@@ -18,38 +20,92 @@ const app = new Hono().basePath("/api");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use("*", cors());
-
 app.post("/mobile-auth/google", async (c) => {
   try {
     const { id_token } = await c.req.json();
-
     if (!id_token) return c.json({ error: "Missing id_token" }, 400);
 
+    // Verify Google token
     const ticket = await googleClient.verifyIdToken({
       idToken: id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const payload = ticket.getPayload();
+    const payload: any = ticket.getPayload();
     if (!payload) return c.json({ error: "Invalid token" }, 401);
 
-    const user = {
-      id: payload.sub,
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture,
+    // Check if user exists by email
+    let user = await prisma.user.findFirst({
+      where: { email: payload.email },
+    });
+
+    if (user) {
+      // User exists but has no Google linked → require credentials login
+      if (!user.googleId) {
+        return c.json(
+          {
+            error:
+              "This email is registered with a password. Please log in with credentials.",
+          },
+          403
+        );
+      }
+
+      // User exists and Google ID matches → return existing DB _id
+      if (user.googleId === payload.sub) {
+        const appUser = {
+          id: user.id, // database ID
+          email: user.email,
+          name: user.name,
+        };
+
+        const secret = process.env.CLIENT_SECRETE;
+        if (!secret) throw new Error("CLIENT_SECRET env variable is missing!");
+
+        const token = await new SignJWT(appUser)
+          .setProtectedHeader({ alg: "HS256" })
+          .setIssuedAt()
+          .setExpirationTime("30d")
+          .sign(new TextEncoder().encode(secret));
+
+        return c.json({ token, user: appUser });
+      }
+
+      // Email exists but linked to a different Google account → block
+      return c.json(
+        { error: "This email is already linked to another Google account." },
+        403
+      );
+    }
+
+    // User does not exist → create new
+    user = await prisma.user.create({
+      data: {
+        name: payload.name,
+        email: payload.email,
+        username: payload.name,
+        googleId: payload.sub,
+      },
+    });
+
+    const appUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
     };
 
-    // Sign your app token
-    const token = await new SignJWT(user)
+    const secret = process.env.CLIENT_SECRETE;
+    if (!secret) throw new Error("CLIENT_SECRET env variable is missing!");
+
+    const token = await new SignJWT(appUser)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime("30d") // follow your maxAge rule
-      .sign(new TextEncoder().encode(process.env.CLIENT_SECRETE as any));
+      .setExpirationTime("30d")
+      .sign(new TextEncoder().encode(secret));
 
-    return c.json({ token, user });
+    return c.json({ token, user: appUser });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return c.json({ error: "Auth failed" }, 500);
   }
 });
@@ -90,22 +146,10 @@ app.post(
   }
 );
 
-// app.use("/app/*", async ({ path, json, set }: any, next) => {
-//   console.log(path);
-//   if (path === "/create-user") await next();
-
-//   const session = (await getServerSession(authOptions)) as any;
-
-//   if (!session) return json("An Error Occured", 401);
-
-//   set("session", session);
-//   return await next();
-// });
+app.use("/app/*", createAuthMiddleware());
 
 app.post("/app/get-verses", async ({ req, json }: any) => {
   const { book, chapter, translation, verses } = await req.json();
-
-  console.log({ book, chapter, translation, verses });
 
   try {
     const url = `https://bolls.life/get-verses/`;
@@ -130,7 +174,7 @@ app.post(
   createOnusChecker(prisma),
   async ({ req, json, get }: any) => {
     try {
-      const session = await get("session");
+      const session = get("session");
 
       const {
         book,
@@ -195,14 +239,14 @@ app.post(
   }
 );
 
-app.get("/app/get-onus", async ({ json }: any) => {
+app.get("/app/get-onus", async ({ json, get }: any) => {
   try {
-    // const session = await get("session");
+    const session = await get("session");
 
     const verses = await prisma.verses.findMany({
-      // where: {
-      //   userId: session?.user?.id,
-      // },
+      where: {
+        userId: session?.user?.id,
+      },
     });
 
     if (!verses) return json("An Error Occured", 500);
