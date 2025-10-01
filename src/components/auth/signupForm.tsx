@@ -28,6 +28,7 @@ import {
 } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
+import Link from "next/link";
 
 export default function LoginForm({ className }: React.ComponentProps<"form">) {
   type signupSchema = z.infer<typeof signupFormSchema>;
@@ -270,6 +271,13 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
                   Sorry, an error occured.
                 </p>
               )}
+            <p className="text-center text-sm mt-2">
+              Already Have an account? Click{" "}
+              <Link className="text-blue-500" href="/auth/login">
+                Here
+              </Link>{" "}
+              to login
+            </p>
           </div>
         </form>
       )}

@@ -22,6 +22,7 @@ import { FaGoogle } from "react-icons/fa";
 import { BsEye, BsEyeSlash, BsLock, BsPerson } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
+import Link from "next/link";
 
 export default function LoginForm({ className }: React.ComponentProps<"form">) {
   type loginSchema = z.infer<typeof loginFormSchema>;
@@ -182,6 +183,13 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
               Sorry, an error occured.
             </p>
           )}
+        <p className="text-center text-sm mt-2">
+          Dont Have an account? Click{" "}
+          <Link className="text-blue-500" href="/auth/signup">
+            Here
+          </Link>{" "}
+          to Sign Up
+        </p>
       </div>
     </form>
   );
