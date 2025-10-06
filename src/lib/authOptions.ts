@@ -58,42 +58,64 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  session: {
-    strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 30,
-    updateAge: 60 * 5,
-  },
-  jwt: {
-    maxAge: 60 * 60 * 24 * 30,
-  },
   callbacks: {
-    async signIn({ user }: any) {
-      const googleUser = await prisma.user.findFirst({
-        where: {
-          email: user?.email,
-          googleId: { not: null },
-        },
-      });
+    async signIn({ user, account }: any) {
+      if (!user?.email) return false;
 
-      // Handle Google sign-in
-      if (googleUser) {
-        await prisma.user.create({
-          data: {
-            name: user?.name,
-            email: user?.email,
-            username: user?.name,
-            googleId: user?.googleId,
+      if (account?.provider === "google") {
+        // ✅ This is a Google sign-in
+        const googleUser = await prisma.user.findFirst({
+          where: {
+            email: user.email,
+            googleId: { not: null },
           },
         });
+
+        if (googleUser) {
+          // update existing
+          await prisma.user.update({
+            where: { id: googleUser.id },
+            data: {
+              name: user.name ?? googleUser.name,
+              username: user.name ?? googleUser.username,
+              googleId: googleUser.googleId ?? account.providerAccountId,
+            },
+          });
+        } else {
+          // create new Google user
+          await prisma.user.create({
+            data: {
+              name: user.name,
+              email: user.email,
+              username: user.name,
+              googleId: account.providerAccountId, // comes from provider
+            },
+          });
+        }
       }
 
       return true;
     },
+
     async jwt({ token, account, user }) {
       if (account) {
         token.accessToken = account.access_token;
       }
-      if (user) token.id = user.id;
+
+      if (user && account?.provider === "credentials") {
+        token.id = user.id;
+      }
+
+      // Google provider → only look up the DB user
+      if (account?.provider === "google") {
+        const dbUser = await prisma.user.findFirst({
+          where: { email: user?.email as any },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+        }
+      }
+
       return token;
     },
     async session({ session, token }: any) {
@@ -101,6 +123,15 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token;
       return session;
     },
+  },
+
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 30,
+    updateAge: 60 * 5,
+  },
+  jwt: {
+    maxAge: 60 * 60 * 24 * 30,
   },
   pages: {
     signIn: "/login",

@@ -64,8 +64,6 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
     setGoogleSigninState(res);
   };
 
-  console.log(status);
-
   useEffect(() => {
     if (status === "authenticated") {
       setSigninState(null);
@@ -273,7 +271,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
               )}
             <p className="text-center text-sm mt-2">
               Already Have an account? Click{" "}
-              <Link className="text-blue-500" href="/auth/login">
+              <Link className="text-blue-500" href="/login">
                 Here
               </Link>{" "}
               to login

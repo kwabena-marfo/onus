@@ -22,7 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { LuLoader } from "react-icons/lu";
 import BibleBook from "./fields/book";
 import ChapterAndVerse from "./fields/chapterAndVerse";
-import VerseAndNotes from "./fields/verseAndNotes";
+import Notes from "./fields/notes";
 import Tags from "./fields/tags";
 import DeleteVerse from "./deleteVerse";
 
@@ -44,7 +44,14 @@ export default function AddVerseForm({ className, verse }: any) {
 
   const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
 
-  const { handleSubmit, reset, watch, setValue, control } = useForm({
+  const {
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({
     mode: "all",
     shouldFocusError: true,
     ...(verse
@@ -70,6 +77,7 @@ export default function AddVerseForm({ className, verse }: any) {
   const chapter = watch("chapter");
   const verseValue = watch("verse");
   const verseToValue = watch("verseTo");
+  const onusVerse = watch("onusVerse");
 
   const foundBook = bibleData.find((b: any) => b.value === book);
   const foundBookIndex = bibleData.findIndex((b: any) => b.value === book);
@@ -114,6 +122,7 @@ export default function AddVerseForm({ className, verse }: any) {
   if (getOnusIsError) return <BsTriangleFill />;
 
   const onSubmit = async (data: any) => {
+    // return console.log(data);
     await createOnus({
       route: "/api/app/create-onus",
       reqType: "post",
@@ -170,23 +179,21 @@ export default function AddVerseForm({ className, verse }: any) {
               <ChapterAndVerse
                 Controller={Controller}
                 watch={watch}
+                getVerse={getVerse}
+                verseTo={verseToValue}
+                onusVerse={onusVerse}
+                getVerseStates={getVerseStates}
                 control={control}
+                errors={errors}
                 book={book}
                 chapter={chapter}
                 verse={verseValue}
                 foundBook={foundBook}
+                foundBookIndex={foundBookIndex}
               />
             </div>
-            <VerseAndNotes
-              Controller={Controller}
-              getVerse={getVerse}
-              getVerseStates={getVerseStates}
-              control={control}
-              chapter={chapter}
-              verse={verseValue}
-              verseTo={verseToValue}
-              foundBookIndex={foundBookIndex}
-            />
+
+            <Notes Controller={Controller} control={control} />
 
             <Tags
               tags={tags}
@@ -225,7 +232,7 @@ export default function AddVerseForm({ className, verse }: any) {
               )}
             />
             <div className="flex flex-col gap-3">
-              <Button className="rounded-md bg-[#fa9a40]">
+              <Button className="rounded-md bg-[#fa9a40] ">
                 {createOnusStates?.pending && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}

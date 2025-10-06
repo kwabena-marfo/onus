@@ -2,50 +2,35 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import { BsApple, BsGooglePlay } from "react-icons/bs";
-import { Button } from "../ui/button";
 
 export default function LayoutComp({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-
-  const isAuth = pathname === "/auth/login" || pathname === "/auth/signup";
-
   return (
-    <div className="h-[100dvh] grid  grid-cols-6 md:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
-      <div className="col-span-2 md:col-span-2 flex flex-col relative  h-full">
+    <div className="h-[100dvh] grid  lg:grid-cols-6 lg:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
+      <div className="col-span-3 md:col-span-2  flex flex-col relative  h-full">
         <div className="absolute  h-full w-full bg-gradient-to-br from-white/95 via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Show Home Page, Signup Page Or Login Page*/}
           <div className="flex flex-col justify-center items-center w-full pt-6">
-            <Link href="/" className="relative h-12 w-10 ">
+            <Link href="/" className="relative  h-20  w-20">
               <Image
                 fill
+                className="object-contain"
                 priority
                 src="/imgs/logos/onusLogoChosen.png"
                 alt="logo"
               />
             </Link>
             {children}
-
-            {!isAuth ? (
-              <div className="flex gap-3 justify-center items-center z-50 ">
-                <Link href="/auth/login" className="w-full">
-                  <Button className="rounded-full w-full" variant="outline">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            ) : null}
           </div>
 
           {/* Bottom Seesions for Mockup and Knot */}
-          <div className="h-2/5 md:h-1/2 w-4/5 z-5   md:w-4/5 flex absolute bottom-0   justify-center items-center">
+          <div className="h-2/5 lg:h-1/2 w-4/5 z-5   lg:w-4/5 flex absolute bottom-0   justify-center items-center">
             <Image
               fill
               alt="Service Photo"
@@ -57,7 +42,7 @@ export default function LayoutComp({
           </div>
 
           {/* Mobile Mockup */}
-          <div className="h-1/2 w-full flex absolute bottom-0 md:hidden -z-20">
+          <div className="h-1/2 w-full flex absolute bottom-0 lg:hidden -z-20">
             <Image
               fill
               alt="Service Photo"
@@ -70,7 +55,7 @@ export default function LayoutComp({
         </div>
       </div>
 
-      <div className="col-span-4 md:flex   relative hidden">
+      <div className="col-span-3 md:col-span-4 lg:flex   relative hidden">
         <Image
           fill
           alt="Service Photo"

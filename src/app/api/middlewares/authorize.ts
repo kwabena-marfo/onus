@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 import type { Context, Next } from "hono";
 import { authOptions } from "@/lib/authOptions";
 
-export default function createAuthMiddleware() {
+export default function authorizeMiddleware() {
   return async (c: Context, next: Next) => {
     try {
       let user: any = null;

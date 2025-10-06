@@ -5,7 +5,7 @@ export default function createOnusChecker(prisma: any) {
       const session = c.get("session");
 
       const body = await c.req.json();
-      const { book, chapter, verse, verseTo, isUpdate, onusVerse } = body;
+      const { book, chapter, verse, verseTo, isUpdate } = body;
 
       if (isUpdate === "yes") return await next();
 
@@ -15,25 +15,18 @@ export default function createOnusChecker(prisma: any) {
           chapter,
           verse,
           verseTo,
-          onusVerse: {
-            equals: onusVerse,
-            mode: "insensitive",
-          },
           userId: session?.user?.id,
         },
       });
 
       if (existingOnus) {
-        return c.json(
-          { error: "Sorry, this verse has already been added" },
-          400
-        );
+        return c.json("Sorry, this verse has already been added", 400);
       }
 
       await next();
     } catch (error) {
       console.error(error);
-      return c.json({ error: "An Error Occurred" }, 500);
+      return c.json("An Error Occurred", 500);
     }
   };
 }

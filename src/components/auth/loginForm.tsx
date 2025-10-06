@@ -67,6 +67,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
 
     setSigninState(res);
   };
+
   const {
     register,
     handleSubmit,
@@ -180,12 +181,12 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
           !googleSigninState?.pending &&
           googleSigninState?.status !== 200 && (
             <p className="text-red-500 text-sm text-center pt-2">
-              Sorry, an error occured.
+              {googleSigninState?.error}
             </p>
           )}
         <p className="text-center text-sm mt-2">
           Dont Have an account? Click{" "}
-          <Link className="text-blue-500" href="/auth/signup">
+          <Link className="text-blue-500" href="/signup">
             Here
           </Link>{" "}
           to Sign Up

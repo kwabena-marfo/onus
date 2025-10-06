@@ -20,6 +20,7 @@ const app = new Hono().basePath("/api");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use("*", cors());
+
 app.post("/mobile-auth/google", async (c) => {
   try {
     const { id_token } = await c.req.json();
@@ -175,7 +176,7 @@ app.post(
   async ({ req, json, get }: any) => {
     try {
       const session = get("session");
-
+      console.log(session);
       const {
         book,
         chapter,

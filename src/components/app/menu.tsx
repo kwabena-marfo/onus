@@ -39,8 +39,10 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-0">
-          <h1 className="text-lg font-bold">{session?.user?.name}</h1>
-          <p className="text-sm ">{session?.user?.email}</p>
+          <h1 className="text-lg font-bold line-clamp-1">
+            {session?.user?.name}
+          </h1>
+          <p className="text-sm line-clamp-1">{session?.user?.email}</p>
         </div>
       </div>
       <ul className="space-y-3 text-sm mt-24">
@@ -51,7 +53,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             <li onClick={() => setOpenSheet && setOpenSheet(false)} key={index}>
               <Link
                 href={key}
-                className={`flex items-center text-lg p-1 px-2  rounded-lg ${
+                className={`flex items-center text-lg p-1 px-2 rounded-lg ${
                   isActive ? "text-white" : "text-[#01CFFE]/90"
                 } hover:text-[#01CFFE]/90`}
               >
