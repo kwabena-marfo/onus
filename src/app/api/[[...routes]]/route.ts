@@ -5,7 +5,6 @@ import { cors } from "hono/cors";
 import bcrypt from "bcrypt";
 import z from "zod";
 import { SignJWT } from "jose";
-import axios from "axios";
 import { OAuth2Client } from "google-auth-library";
 
 import prisma from "@/config/prisma";
@@ -13,6 +12,7 @@ import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import createUserChecker from "../middlewares/createUserChecker";
 import createAuthMiddleware from "../middlewares/authorize";
+import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 
 export const runtime = "nodejs";
 
@@ -153,20 +153,16 @@ app.post("/app/get-verses", async ({ req, json }: any) => {
   const { book, chapter, translation, verses } = await req.json();
 
   try {
-    const url = `https://bolls.life/get-verses/`;
-    const response = await axios.post(url, [
-      {
-        translation,
-        book: +book + 1,
-        chapter: +chapter,
-        verses,
-      },
-    ]);
-
-    return json(response.data);
+    const fetchedVerses = await getVersesFromExternalApi({
+      book,
+      chapter,
+      translation,
+      verses,
+    });
+    return json(fetchedVerses);
   } catch (err) {
     console.error(err);
-    return json({ error: "Failed to fetch verse" }, 500);
+    return json("Failed to fetch verse", 500);
   }
 });
 
@@ -176,7 +172,9 @@ app.post(
   async ({ req, json, get }: any) => {
     try {
       const session = get("session");
-      console.log(session);
+
+      console.log(get("onusVerse"));
+
       const {
         book,
         chapter,
@@ -191,7 +189,7 @@ app.post(
         book: string;
         chapter: string;
         verse: string;
-        verseTo: string;
+        verseTo?: any;
         version: string;
         onusVerse: string;
         verseNotes?: string;
@@ -201,17 +199,16 @@ app.post(
 
       await prisma.verses.upsert({
         where: {
-          userId_book_chapter_verse_verseTo: {
+          userId_book_chapter_verse: {
             userId: session.user.id,
             book,
             chapter,
             verse,
-            verseTo,
           },
         },
         update: {
           version,
-          onusVerse,
+          onusVerse: onusVerse || get("onusVerse"),
           verseNotes,
           tags,
           memorised,
@@ -220,9 +217,11 @@ app.post(
           book,
           chapter,
           verse,
-          verseTo,
+          ...(verseTo !== null && verseTo !== undefined
+            ? { verseTo }
+            : { verseTo: null }),
           version,
-          onusVerse,
+          onusVerse: onusVerse || get("onusVerse"),
           verseNotes,
           tags,
           memorised,

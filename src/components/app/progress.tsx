@@ -7,19 +7,20 @@ import { Progress } from "@/components/ui/progress";
 
 export default function ProgressComp({ data }: any) {
   return (
-    <div className="flex flex-col w-full gap-1">
-      <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
-        {!data?.length ? (
-          <div className="flex flex-col justify-center items-center">
-            <BsDatabaseSlash className="w-12 h-12" />
-            <p>No Data Found</p>
-            <p>Your Progress will appear here</p>
-          </div>
-        ) : (
-          <>
+    <div className="flex flex-col justify-start items-start col-span-5 md:col-span-2 gap-8 ">
+      {!data ? (
+        <div className=" flex flex-col justify-center items-center">
+          <BsDatabaseSlash className="w-12 h-12" />
+          <p>No Data Found</p>
+          <p>Your Progress will appear here</p>
+        </div>
+      ) : (
+        <div className="flex flex-col w-full gap-1">
+          <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
             <h4 className="text-xl md:text-4xl font-bold text-gray-700">
               Your Progress
             </h4>
+
             {data.map((entry: any) => {
               const bookName = Object.keys(entry)[0];
               const { memorised } = entry[bookName];
@@ -43,9 +44,9 @@ export default function ProgressComp({ data }: any) {
                 </div>
               );
             })}
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -80,7 +81,8 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
       name="book"
       rules={{ required: "Book is required" }}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
-        <div className="w-full">
+        <div className="w-full flex flex-col gap-1">
+          <Label>Book</Label>
           <Select onValueChange={onChange} value={value}>
             <SelectTrigger
               className={`w-full ${error ? "border-red-500" : ""}`}
@@ -90,7 +92,7 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
             <SelectContent className="max-h-[300px]">
               {sortedFilteredBooks.map((book: any, index: number) => {
                 const currentBook = book.value;
-                const prevBook = bibleData[index - 1]?.value;
+                const prevBook = sortedFilteredBooks[index - 1]?.value;
 
                 const isSelectable =
                   index === 0 || (verseMap[prevBook] ?? 0) >= 5;

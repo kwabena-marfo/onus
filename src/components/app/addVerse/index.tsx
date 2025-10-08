@@ -25,7 +25,10 @@ export default function AddVerseModal({ TriggerComp, verse }: any) {
           <DialogTrigger>
             <TriggerComp />
           </DialogTrigger>
-          <DialogContent className="min-w-2xl">
+          <DialogContent
+            onInteractOutside={(event: any) => event.preventDefault()}
+            className="min-w-2xl"
+          >
             <ScrollArea className="max-h-[80vh] py-6 px-4">
               <div className="flex items-center gap-2">
                 <AddVerseForm verse={verse} />

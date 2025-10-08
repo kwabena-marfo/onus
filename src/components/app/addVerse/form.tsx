@@ -25,6 +25,7 @@ import ChapterAndVerse from "./fields/chapterAndVerse";
 import Notes from "./fields/notes";
 import Tags from "./fields/tags";
 import DeleteVerse from "./deleteVerse";
+import formatVersesFromExternalData from "@/lib/formatVersesFromExternalData";
 
 export default function AddVerseForm({ className, verse }: any) {
   const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
@@ -102,18 +103,9 @@ export default function AddVerseForm({ className, verse }: any) {
 
   useEffect(() => {
     if (getVerseStates?.data) {
-      const [verseFetched]: any = getVerseStates?.data;
-      const combinedVerses =
-        verseFetched?.length === 1
-          ? verseFetched[0]?.text.trim()
-          : verseFetched
-              ?.map(
-                (v: { verse: any; text: string }) =>
-                  `${v.verse}. ${v.text.trim()}`
-              )
-              .join(" ");
+      const formattedVerse = formatVersesFromExternalData(getVerseStates?.data);
 
-      setValue("onusVerse", combinedVerses);
+      setValue("onusVerse", formattedVerse);
     }
   }, [getVerseStates]);
 
@@ -128,6 +120,7 @@ export default function AddVerseForm({ className, verse }: any) {
       reqType: "post",
       data: {
         ...data,
+        foundBookIndex,
         ...(verse ? { isUpdate: "yes" } : {}),
       },
     });
@@ -236,7 +229,7 @@ export default function AddVerseForm({ className, verse }: any) {
                 {createOnusStates?.pending && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Add Verse
+                {verse ? "Edit Verse" : "Add Verse"}
               </Button>
               {createOnusStates?.error ? (
                 <p className="text-red-500 text-sm text-center">

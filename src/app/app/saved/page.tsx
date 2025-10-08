@@ -4,12 +4,12 @@
 import Content from "@/components/app/content";
 import { useGetOnus } from "@/hooks/global/useSWRFetch";
 
-import { Progress } from "@/components/ui/progress";
 import VersesTable from "@/components/app/tables/verses";
 
 import { BsBookmark, BsDatabaseSlash, BsTriangleFill } from "react-icons/bs";
 import { LuLoaderCircle } from "react-icons/lu";
 import { useSession } from "next-auth/react";
+import ProgressComp from "@/components/app/progress";
 
 export default function Saved() {
   const { status } = useSession<any>();
@@ -54,47 +54,8 @@ export default function Saved() {
             />
           )}
         </div>
-        <div className="flex flex-col justify-start items-start col-span-5 md:col-span-2 gap-8 ">
-          {!onusData || !onusData.grouped?.length ? (
-            <div className=" flex flex-col justify-center items-center">
-              <BsDatabaseSlash className="w-12 h-12" />
-              <p>No Data Found</p>
-              <p>Your Progress will appear here</p>
-            </div>
-          ) : (
-            <div className="flex flex-col w-full gap-1">
-              <div className="grid gap-6 rounded-lg p-3 bg-gray-50 border h-full">
-                <h4 className="text-xl md:text-4xl font-bold text-gray-700">
-                  Your Progress
-                </h4>
 
-                {onusData.grouped.map((entry: any) => {
-                  const bookName = Object.keys(entry)[0];
-                  const { memorised } = entry[bookName];
-
-                  if (!memorised) return null; // Hide if memorised = 0
-
-                  const percentage = Math.min(
-                    Math.round((memorised / 5) * 100),
-                    100
-                  );
-
-                  return (
-                    <div key={bookName} className="grid gap-1">
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm font-semibold text-gray-600 capitalize">
-                          {bookName}
-                        </p>
-                        <p className="text-sm text-gray-500">{percentage}%</p>
-                      </div>
-                      <Progress value={percentage} />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+        <ProgressComp data={onusData?.grouped || []} />
       </div>
     </Content>
   );

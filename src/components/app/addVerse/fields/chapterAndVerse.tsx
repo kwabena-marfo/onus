@@ -35,7 +35,7 @@ export default function ChapterAndVerse({
         book: foundBookIndex,
         chapter,
         verses: Array.from(
-          { length: +verseTo - +verse + 1 },
+          { length: +verseTo || +verse - +verse + 1 },
           (_, i) => +verse + i
         ),
       },
@@ -117,7 +117,6 @@ export default function ChapterAndVerse({
         <Controller
           control={control}
           name="verseTo"
-          rules={{ required: "Required" }}
           render={({
             field: { onChange, value },
             fieldState: { error },

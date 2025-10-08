@@ -6,6 +6,8 @@ import Flashcard from "../flashCard";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import CarouselComp from "../carousel";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import DOMPurify from "dompurify";
 
 export default function VerseFlashcardCarousel({ verses }: any) {
   return (
@@ -16,7 +18,15 @@ export default function VerseFlashcardCarousel({ verses }: any) {
         <>
           {verses?.map(
             (
-              { book, verse, chapter, onusVerse, verseNotes, tags }: any,
+              {
+                book,
+                verse,
+                verseTo,
+                chapter,
+                onusVerse,
+                verseNotes,
+                tags,
+              }: any,
               index: any
             ) => (
               <CarouselItem key={index}>
@@ -25,14 +35,19 @@ export default function VerseFlashcardCarousel({ verses }: any) {
                     <div className="grid gap-3">
                       <p className="md:text-4xl text-2xl text-gray-700 font-bold uppercase">
                         {book} {chapter}:{verse}
+                        {verseTo ? `-${verseTo}` : ""}
                       </p>
                     </div>
                   )}
                   BackComp={() => (
-                    <div className="flex flex-col justify-center items-center gap-3">
-                      <p className="text-2xl text-gray-700 text-center">
-                        {onusVerse}
-                      </p>
+                    <ScrollArea className="min-h-[200px] py-6 px-4 flex flex-col justify-center items-center gap-3">
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(onusVerse),
+                        }}
+                        className="md:text-2xl text-gray-700 text-center"
+                      />
+
                       <div className="flex gap-1 justify-center">
                         {tags?.map(({ tag, color }: any, index: any) => (
                           <Badge
@@ -54,7 +69,7 @@ export default function VerseFlashcardCarousel({ verses }: any) {
                           </div>
                         </>
                       ) : null}
-                    </div>
+                    </ScrollArea>
                   )}
                 />
               </CarouselItem>

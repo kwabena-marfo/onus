@@ -25,7 +25,10 @@ export default function Search({ TriggerComp }: any) {
           <DialogTrigger className="cursor-pointer">
             <TriggerComp />
           </DialogTrigger>
-          <DialogContent className="min-w-2xl">
+          <DialogContent
+            onInteractOutside={(event: any) => event.preventDefault()}
+            className="min-w-2xl"
+          >
             <div className="flex items-center gap-2">
               <SearchForm />
             </div>
