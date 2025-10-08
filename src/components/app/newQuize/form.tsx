@@ -8,7 +8,7 @@ import { CarouselItem } from "@/components/ui/carousel";
 import Flashcard from "./flashCard";
 import Congratulations from "./congratulations";
 import useTriggerRequest from "@/hooks/global/useTriggerRequest";
-import { LuLoaderCircle } from "react-icons/lu";
+import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
 
@@ -16,9 +16,12 @@ export default function QuizeFlashcardCarousel({
   book,
   mutateGetOnusQuize,
 }: any) {
-  const matthewQuizzes = quizzes
-    .filter((q) => q.reference.toLowerCase().startsWith(book.toLowerCase()))
-    .slice(0, 6);
+  // ✅ Extract questions for the current book
+  const selectedBook = quizzes.find(
+    (q) => q.book.toLowerCase() === book.toLowerCase()
+  );
+
+  const bookQuestions = selectedBook ? selectedBook.questions : [];
 
   const {
     reqFunction: createOnusQuize,
@@ -30,7 +33,7 @@ export default function QuizeFlashcardCarousel({
   const [finished, setFinished] = useState(false);
 
   const [quizStates, setQuizStates] = useState(
-    matthewQuizzes.map(() => ({
+    bookQuestions.map(() => ({
       selected: "",
       hasFlipped: false,
       wasCorrect: undefined,
@@ -49,9 +52,8 @@ export default function QuizeFlashcardCarousel({
     let newScore = 0;
 
     const updatedStates: any = quizStates.map((state, index) => {
-      const correctAnswer =
-        matthewQuizzes[index].options[matthewQuizzes[index].correctAnswerIndex];
-
+      const question = bookQuestions[index];
+      const correctAnswer = question.options[question.correctAnswerIndex];
       const isCorrect = state.selected === correctAnswer;
 
       if (state.selected && isCorrect) newScore += 1;
@@ -72,7 +74,7 @@ export default function QuizeFlashcardCarousel({
       data: {
         quizName: book,
         score: newScore,
-        total: matthewQuizzes.length,
+        total: bookQuestions.length,
       },
     });
   };
@@ -85,6 +87,17 @@ export default function QuizeFlashcardCarousel({
     }
   }, [createOnusQuizeStates]);
 
+  if (!selectedBook) {
+    return (
+      <div className="mt-6 text-center flex flex-col justify-center items-center capitalize">
+        <LuClock className="h-12 w-12 " />
+        <p className="text-3xl font-bold">STAY TUNED!</p>
+        Quizzes for {book} are being added.
+      </div>
+    );
+  }
+
+  // ✅ Show result screen
   if (!createOnusQuizeStates?.error && finished) {
     return (
       <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start">
@@ -92,17 +105,17 @@ export default function QuizeFlashcardCarousel({
 
         <p className="text-lg">
           You got <strong>{score}</strong> out of{" "}
-          <strong>{matthewQuizzes.length}</strong>
+          <strong>{bookQuestions.length}</strong>
         </p>
 
         {/* Not Attempted */}
-        {quizStates.some((q) => !q.selected) && (
+        {/* {quizStates.some((q) => !q.selected) && (
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-red-500">
               Not Attempted
             </h3>
             <ul className="list-disc list-inside">
-              {matthewQuizzes.map((quiz, index) => {
+              {bookQuestions.map((quiz, index) => {
                 if (!quizStates[index].selected) {
                   return <li key={quiz.reference}>{quiz.reference}</li>;
                 }
@@ -110,12 +123,12 @@ export default function QuizeFlashcardCarousel({
               })}
             </ul>
           </div>
-        )}
+        )} */}
 
         <Button
           onClick={() => {
             setQuizStates(
-              matthewQuizzes.map(() => ({
+              bookQuestions.map(() => ({
                 selected: "",
                 hasFlipped: false,
                 wasCorrect: undefined,
@@ -126,20 +139,26 @@ export default function QuizeFlashcardCarousel({
           }}
           className="mt-4 bg-green-600 hover:bg-green-700 text-white"
         >
-          Go Again <LucideRotateCw />
+          Go Again <LucideRotateCw className="ml-2" />
         </Button>
       </div>
     );
   }
 
-  return createOnusQuizeStates?.pending ? (
-    <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
-  ) : (
+  // ✅ Loading state
+  if (createOnusQuizeStates?.pending) {
+    return (
+      <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
+    );
+  }
+
+  // ✅ Quiz carousel
+  return (
     <CarouselComp
-      tittle="Quiz on Matthew"
-      subTittle={`Answer all questions and click Finish`}
+      tittle={`Quiz on ${book}`}
+      subTittle="Answer all questions and click Finish"
       Content={() =>
-        matthewQuizzes.map((quiz, index) => (
+        bookQuestions.map((quiz, index) => (
           <CarouselItem key={quiz.reference}>
             <Flashcard
               {...quiz}
