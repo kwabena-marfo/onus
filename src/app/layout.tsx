@@ -7,6 +7,7 @@ import "@/styles/globals.css";
 
 const montserrat = Poppins({
   weight: ["100"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
