@@ -52,7 +52,7 @@ export default function Home() {
         <div className="flex gap-3 justify-center items-center   max-w-sm w-full">
           <Link href="/login" className="w-full">
             <Button
-              className="rounded-full w-full bg-[#e77306]  cursor-pointer"
+              className="rounded-md w-full bg-[#e77306]  cursor-pointer"
               size="lg"
             >
               Get Started

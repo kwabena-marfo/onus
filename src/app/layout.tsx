@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import Provider from "@/components/home/provider";
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 
-const montserrat = Roboto({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const montserrat = Poppins({
+  weight: ["100"],
 });
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} antialiased`}>
+      <body className={`${montserrat} antialiased`}>
         <NextTopLoader />
         <Provider>{children}</Provider>
         <Toaster />
