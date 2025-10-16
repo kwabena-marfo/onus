@@ -46,8 +46,8 @@ export default function LayoutComp({
             <Image
               fill
               alt="Service Photo"
-              src="/imgs/bgs/holdingPhoneMockupTT2.png"
-              blurDataURL="/imgs/bgs/holdingPhoneMockupTT2.png"
+              src="/imgs/bgs/mockupmAINMO.png"
+              blurDataURL="/imgs/bgs/mockupmAINMO.png"
               placeholder="blur"
               className="object-cover object-top-left"
             />
@@ -63,8 +63,8 @@ export default function LayoutComp({
             objectFit: "cover",
             objectPosition: "center",
           }}
-          src="/imgs/bgs/holdingPhoneMockup2.png"
-          blurDataURL="/imgs/bgs/holdingPhoneMockup2.png"
+          src="/imgs/bgs/mockupmAIN.png"
+          blurDataURL="/imgs/bgs/mockupmAIN.png"
           placeholder="blur"
         />
       </div>

@@ -19,25 +19,25 @@ export default function Home() {
       </p>
       <div className="flex flex-col items-center  gap-3  w-full text-white mt-16">
         <div className="flex  divide-x-1 ">
-          <div className="text-[#FFAB5B]   pr-2 w-full  flex flex-col justify-center items-center font-bold text-lg md:text-lg rounded-bl-2xl ">
+          <div className="text-[#e77306]   pr-2 w-full  flex flex-col justify-center items-center   md:text-lg rounded-bl-2xl ">
             <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
               <p className="font-bold text-2xl">O</p>
             </div>
             Observing
           </div>
-          <div className="text-[#FFAB5B] px-2  w-full flex  flex-col justify-center items-center font-bold text-lg md:text-lg  rounded-bl-2xl">
+          <div className="text-[#e77306] px-2  w-full flex  flex-col justify-center items-center   md:text-lg  rounded-bl-2xl">
             <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
               <p className="font-bold text-2xl">N</p>
             </div>
             Navigating
           </div>
-          <div className="text-[#FFAB5B] px-2 w-full flex flex-col justify-center items-center font-bold text-lg md:text-lg  rounded-bl-2xl">
+          <div className="text-[#e77306] px-2 w-full flex flex-col justify-center items-center   md:text-lg  rounded-bl-2xl">
             <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
               <p className="font-bold text-2xl">U</p>
             </div>
             Understanding
           </div>{" "}
-          <div className="text-[#FFAB5B] px-2    w-full flex flex-col justify-center items-center font-bold text-lg md:text-lg  rounded-bl-2xl">
+          <div className="text-[#e77306] px-2    w-full flex flex-col justify-center items-center  md:text-lg  rounded-bl-2xl">
             <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
               <p className="font-bold text-2xl">S</p>
             </div>
@@ -48,7 +48,7 @@ export default function Home() {
         <Separator orientation="horizontal" />
 
         <div className="flex flex-col justify-center items-center">
-          <p className="bg-gradient-to-r from-[#0F3187] via-[#FFAB5B] to-[#01CFFE] bg-clip-text text-5xl md:text-5xl   font-extrabold text-transparent flex items-center ">
+          <p className="uppercase bg-gradient-to-r from-[#0F3187] via-[#e77306] to-[#01CFFE] bg-clip-text text-5xl md:text-5xl   font-extrabold text-transparent flex items-center ">
             Memorize{" "}
           </p>
           <p className="text-gray-800 font-bold text-2xl">Verses With Ease</p>
@@ -56,7 +56,7 @@ export default function Home() {
         <div className="flex gap-3 justify-center items-center   max-w-sm w-full">
           <Link href="/login" className="w-full">
             <Button
-              className="rounded-full w-full bg-[#FFAB5B]  cursor-pointer"
+              className="rounded-full w-full bg-[#e77306]  cursor-pointer"
               size="lg"
             >
               Get Started

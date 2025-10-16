@@ -233,7 +233,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
           </div>
 
           <div className="mt-2">
-            <Button className="w-full bg-[#FFAB5B]">
+            <Button className="w-full bg-[#e77306]">
               {createUserStates?.pending && (
                 <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
