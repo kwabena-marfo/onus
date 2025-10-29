@@ -8,6 +8,8 @@ import { SignJWT } from "jose";
 import { OAuth2Client } from "google-auth-library";
 
 import prisma from "@/config/prisma";
+import transporter from "@/config/nodemailer";
+import { randomInt } from "crypto";
 
 import createOnusChecker from "../middlewares/createOnusChecker";
 import createUserChecker from "../middlewares/createUserChecker";
@@ -20,6 +22,165 @@ const app = new Hono().basePath("/api");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use("*", cors());
+
+app.post("/mobile-auth/credentials", async (c) => {
+  try {
+    const { email, password } = await c.req.json();
+
+    if (!email || !password) {
+      return c.json({ error: "Email and password are required" }, 400);
+    }
+
+    // Find user by email
+    const user = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (!user) {
+      return c.json({ error: "Invalid email or password" }, 401);
+    }
+
+    // Check if user registered via Google only
+    if (user.googleId && !user.password) {
+      return c.json(
+        { error: "Please log in using Google for this account." },
+        403
+      );
+    }
+
+    // Verify password hash
+    const valid = await bcrypt.compare(password, user.password as any);
+
+    if (!valid) return c.json({ error: "Invalid email or password" }, 401);
+
+    // Create JWT
+    const appUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    const secret = process.env.CLIENT_SECRETE;
+    if (!secret)
+      throw new Error("CLIENT_SECRETE environment variable is missing!");
+
+    const token = await new SignJWT(appUser)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("30d")
+      .sign(new TextEncoder().encode(secret));
+
+    return c.json({
+      token,
+      user: appUser,
+    });
+  } catch (err) {
+    console.error("Credentials auth error:", err);
+    return c.json({ error: "Auth failed" }, 500);
+  }
+});
+
+app.post("/send-reset-code", async (c) => {
+  try {
+    const { email } = await c.req.json();
+
+    if (!email) {
+      return c.json({ error: "Email is required" }, 400);
+    }
+
+    // Find user
+    const user = await prisma.user.findFirst({ where: { email } });
+
+    if (!user) {
+      return c.json(
+        { error: "Sorry, this email is not associated with any account" },
+        404
+      );
+    }
+
+    if (user.googleId && !user.password) {
+      return c.json(
+        {
+          error: "This account uses Google Sign-In. Please log in with Google.",
+        },
+        403
+      );
+    }
+
+    // Generate 6-digit code
+    const code = String(randomInt(100000, 999999));
+
+    // Store code and expiry (e.g. 10 minutes)
+    await prisma.passwordReset.upsert({
+      where: { email },
+      update: {
+        code,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      },
+      create: {
+        email,
+        code,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"ONUS" <"noreply@onus">`,
+      to: email,
+      subject: "Your Password Reset Code",
+      text: `Your password reset code is: ${code}. It expires in 10 minutes.`,
+    });
+
+    return c.json({ message: "Reset code sent successfully", email });
+  } catch (err) {
+    console.error("Send reset code error:", err);
+    return c.json({ error: "Failed to send reset code" }, 500);
+  }
+});
+
+app.post("/reset-password", async (c) => {
+  try {
+    const { email, code, newPassword } = await c.req.json();
+
+    console.log({ email, code, newPassword });
+
+    if (!email || !code || !newPassword) {
+      return c.json(
+        { error: "Email, code, and new password are required" },
+        400
+      );
+    }
+
+    // Find reset entry
+    const reset = await prisma.passwordReset.findFirst({ where: { email } });
+
+    if (!reset || reset.code !== code) {
+      return c.json({ error: "Invalid or expired code" }, 400);
+    }
+
+    if (reset.expiresAt < new Date()) {
+      return c.json({ error: "Code has expired" }, 400);
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user password
+    await prisma.user.update({
+      where: { email },
+      data: { password: hashedPassword },
+    });
+
+    // Delete used code
+    await prisma.passwordReset.delete({ where: { email } });
+
+    return c.json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    return c.json({ error: "Password reset failed" }, 500);
+  }
+});
 
 app.post("/mobile-auth/google", async (c) => {
   try {

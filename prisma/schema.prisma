@@ -11,14 +11,29 @@ model user {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   googleId    String?  @unique // Store Google ID here
   name        String
-  email       String
+  email       String    @unique
   username    String?
   password    String?
   image       String?
   lastLogin   String? // fixed typo: "last_loggin" → "lastLogin"
   verses      verses[] // correct relation (no @relation needed here)
+  passwordReset passwordReset[]
   scores      quizScore[]
 }
+
+
+model passwordReset {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  email      String   @unique
+  code       String
+  expiresAt  DateTime
+  userId     String   @db.ObjectId
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
 
 model verses {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
