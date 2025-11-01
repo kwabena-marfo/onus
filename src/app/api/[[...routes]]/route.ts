@@ -326,15 +326,12 @@ app.post("/app/get-verses", async ({ req, json }: any) => {
     return json("Failed to fetch verse", 500);
   }
 });
-
 app.post(
   "/app/create-onus",
   createOnusChecker(prisma),
   async ({ req, json, get }: any) => {
     try {
       const session = get("session");
-
-      console.log(get("onusVerse"));
 
       const {
         book,
@@ -354,27 +351,16 @@ app.post(
         version: string;
         onusVerse: string;
         verseNotes?: string;
+        isUpdate?: string;
         tags?: any;
         memorised: "memorised" | "saved";
+        id?: string;
       } = await req.json();
 
-      await prisma.verses.upsert({
-        where: {
-          userId_book_chapter_verse: {
-            userId: session.user.id,
-            book,
-            chapter,
-            verse,
-          },
-        },
-        update: {
-          version,
-          onusVerse: onusVerse || get("onusVerse"),
-          verseNotes,
-          tags,
-          memorised,
-        },
-        create: {
+      const OnusVerse = get("onusVerse") ?? onusVerse;
+
+      await prisma.verses.create({
+        data: {
           book,
           chapter,
           verse,
@@ -382,7 +368,7 @@ app.post(
             ? { verseTo }
             : { verseTo: null }),
           version,
-          onusVerse: onusVerse || get("onusVerse"),
+          onusVerse: OnusVerse,
           verseNotes,
           tags,
           memorised,
@@ -392,10 +378,10 @@ app.post(
         },
       });
 
-      return json("Done");
+      return json({ message: "Verse created successfully" });
     } catch (error) {
       console.error(error);
-      return json("An Error Occurred", 500);
+      return json({ error: "An Error Occurred" }, 400);
     }
   }
 );
@@ -448,8 +434,6 @@ app.get("/app/get-onus", async ({ json, get }: any) => {
 
 app.delete("/app/delete-onus", async (c) => {
   const idsParam: any = c.req.query("ids");
-
-  console.log(idsParam);
 
   // Validate and parse JSON array from query string
   try {

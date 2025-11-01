@@ -6,16 +6,31 @@ export default function createOnusChecker(prisma: any) {
   return async (c: any, next: any) => {
     try {
       const session = c.get("session");
+
       const body = await c.req.json();
       const {
+        id,
         foundBookIndex,
         chapter,
         verse,
         verseTo,
         onusVerse,
-        book,
-        isUpdate,
+        verseNotes,
+        tags,
+        memorised,
       } = body;
+
+      if (id) {
+        await prisma.verses.update({
+          where: { userId: session.user.id, id },
+          data: {
+            verseNotes,
+            tags,
+            memorised,
+          },
+        });
+        return c.json({ message: "Verse edited successfully" });
+      }
 
       if (!onusVerse) {
         // Fetch verses from API
@@ -34,30 +49,10 @@ export default function createOnusChecker(prisma: any) {
         c.set("onusVerse", formattedVerse);
       }
 
-      if (isUpdate === "yes") return await next();
-
-      // Check for existing verse
-      const existingOnus = await prisma.verses.findFirst({
-        where: {
-          book,
-          chapter,
-          verse,
-          userId: session?.user?.id,
-          ...(verseTo !== null && verseTo !== undefined
-            ? { verseTo }
-            : { verseTo: null }),
-        },
-      });
-
-      if (existingOnus) {
-        return c.json("Sorry, this verse has already been added", 400);
-      }
-
-      // Continue to next middleware or handler
       await next();
     } catch (error) {
       console.error(error);
-      return c.json("An Error Occurred", 500);
+      return c.json({ error: "An Error Occurred" }, 400);
     }
   };
 }
