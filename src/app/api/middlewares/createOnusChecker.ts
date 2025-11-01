@@ -11,6 +11,7 @@ export default function createOnusChecker(prisma: any) {
       const {
         id,
         foundBookIndex,
+        book,
         chapter,
         verse,
         verseTo,
@@ -30,6 +31,22 @@ export default function createOnusChecker(prisma: any) {
           },
         });
         return c.json({ message: "Verse edited successfully" });
+      }
+
+      console.log({ userId: session.user.id, book, chapter, verse, verseTo });
+
+      const existingVerse = await prisma.verses.findFirst({
+        where: {
+          userId: session.user.id,
+          book,
+          chapter,
+          verse,
+          ...(verseTo ? { verseTo } : { verseTo: null }),
+        },
+      });
+
+      if (existingVerse) {
+        return c.json({ error: "Verse already exists" }, 400);
       }
 
       if (!onusVerse) {

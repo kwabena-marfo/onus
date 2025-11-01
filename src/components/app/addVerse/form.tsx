@@ -38,6 +38,8 @@ export default function AddVerseForm({ className, verse }: any) {
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
 
+  console.log(createOnusStates);
+
   const {
     reqFunction: getVerse,
     reqState: getVerseStates,
@@ -244,7 +246,10 @@ export default function AddVerseForm({ className, verse }: any) {
               )}
             />
             <div className="flex flex-col gap-3">
-              <Button className="rounded-md bg-[#fa9a40] ">
+              <Button
+                disabled={createOnusStates?.pending}
+                className="rounded-md bg-[#fa9a40] "
+              >
                 {createOnusStates?.pending && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -252,7 +257,7 @@ export default function AddVerseForm({ className, verse }: any) {
               </Button>
               {createOnusStates?.error ? (
                 <p className="text-red-500 text-sm text-center">
-                  {createOnusStates?.error as any}
+                  {createOnusStates?.error?.error as any}
                 </p>
               ) : null}
             </div>
