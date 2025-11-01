@@ -41,7 +41,7 @@ export default function MyOnusBible() {
     >
       <div className="grid h-full md:grid-cols-5  grid-cols-1 gap-2 w-full ">
         {!filteredBooks?.length ? (
-          <div className="flex flex-col md:col-span-3 justify-center items-center   w-full ">
+          <div className="flex flex-col col-span-5 md:col-span-3 justify-center  p-3 border rounded-lg items-center   w-full ">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>
             <p>Your completed books will appear here</p>
@@ -72,7 +72,9 @@ export default function MyOnusBible() {
             })}
           </div>
         )}
-        <ProgressComp data={onusData?.grouped || []} />
+        <div className="col-span-5 md:col-span-2 flex flex-col gap-1 w-full  ">
+          <ProgressComp data={onusData?.grouped || []} />
+        </div>
       </div>
     </Content>
   );

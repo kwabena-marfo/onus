@@ -45,9 +45,28 @@ const getNextUnusedColor = (usedColors: string[]) => {
   const available = defaultTags
     .map((t) => t.color)
     .find((c) => !usedColors.includes(c));
-  return available || "bg-gray-300";
-};
 
+  if (available) return available;
+
+  // Generate a random Tailwind-like bg color
+  const colors = [
+    "bg-rose-400",
+    "bg-lime-200",
+    "bg-violet-400",
+    "bg-amber-400",
+    "bg-cyan-200",
+    "bg-emerald-200",
+    "bg-teal-200",
+    "bg-fuchsia-400",
+    "bg-blue-200",
+    "bg-zinc-400",
+    "bg-stone-300",
+    "bg-sky-200",
+  ];
+
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  return randomColor;
+};
 export default function Tags({ tags, addTag, removeTag }: any) {
   const [customInput, setCustomInput] = useState("");
   const [allTags, setAllTags] = useState([...defaultTags]);
@@ -95,39 +114,45 @@ export default function Tags({ tags, addTag, removeTag }: any) {
 
   return (
     <div className="space-y-2">
-      {/* Select predefined or custom tags */}
-      <Select
-        onValueChange={(value) => {
-          const found = allTags.find((pt) => pt.tag === value);
-          if (found && !tags.some((t: any) => t.tag === value)) {
-            addTag(found);
-          }
-        }}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a tag" />
-        </SelectTrigger>
-        <SelectContent className="max-h-[200px] overflow-y-auto">
-          {allTags.map((t) => (
-            <SelectItem key={t.tag} value={t.tag}>
-              {t.tag}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="flex flex-row gap-2">
+        <div className="space-y-1">
+          <p className="text-sm font-bold">Select Tags</p>
+          <Select
+            onValueChange={(value) => {
+              const found = allTags.find((pt) => pt.tag === value);
+              if (found && !tags.some((t: any) => t.tag === value)) {
+                addTag(found);
+              }
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a tag" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[200px] overflow-y-auto">
+              {allTags.map((t) => (
+                <SelectItem key={t.tag} value={t.tag}>
+                  {t.tag}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Custom tag input */}
-      <Input
-        placeholder="Type and press Enter or comma to add custom tags"
-        value={customInput}
-        onChange={(e) => setCustomInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === ",") {
-            e.preventDefault();
-            handleCustomInput();
-          }
-        }}
-      />
+        <div className="space-y-1 w-full">
+          <p className="text-sm font-bold">Or Add Custom Tags</p>
+          <Input
+            placeholder="Type and press Enter or comma"
+            value={customInput}
+            onChange={(e) => setCustomInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === ",") {
+                e.preventDefault();
+                handleCustomInput();
+              }
+            }}
+          />
+        </div>
+      </div>
 
       {/* Tag list */}
       {tags?.length > 0 && (
@@ -137,7 +162,7 @@ export default function Tags({ tags, addTag, removeTag }: any) {
               key={index}
               className={cn(
                 "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2",
-                color || "bg-gray-200"
+                color
               )}
             >
               <span>{tag}</span>
