@@ -26,6 +26,7 @@ import Notes from "./fields/notes";
 import Tags from "./fields/tags";
 import DeleteVerse from "./deleteVerse";
 import formatVersesFromExternalData from "@/lib/formatVersesFromExternalData";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AddVerseForm({ className, verse }: any) {
   const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
@@ -36,6 +37,8 @@ export default function AddVerseForm({ className, verse }: any) {
     reqState: createOnusStates,
     setReqState: resetCreateOnusStates,
   } = useTriggerRequest();
+
+  console.log(createOnusStates);
 
   const {
     reqFunction: getVerse,
@@ -121,7 +124,7 @@ export default function AddVerseForm({ className, verse }: any) {
       data: {
         ...data,
         foundBookIndex,
-        ...(verse ? { isUpdate: "yes" } : {}),
+        ...(verse ? { id: verse?.id } : {}),
       },
     });
   };
@@ -151,7 +154,7 @@ export default function AddVerseForm({ className, verse }: any) {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={cn(
-              "grid w-full gap-4 z-50 bg-white p-4 rounded-md",
+              "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
               className
             )}
           >
@@ -161,29 +164,47 @@ export default function AddVerseForm({ className, verse }: any) {
                 Your Journey to Spritual Growth Begins here
               </p>
             </div>
+            <div className="flex flex-col gap-1">
+              {!verse ? (
+                <div className="flex  gap-3 w-full justify-between flex-wrap">
+                  <BibleBook
+                    Controller={Controller}
+                    bibleData={bibleData}
+                    control={control}
+                    onusData={onusData}
+                  />
+                  <ChapterAndVerse
+                    Controller={Controller}
+                    watch={watch}
+                    getVerse={getVerse}
+                    verseTo={verseToValue}
+                    onusVerse={onusVerse}
+                    getVerseStates={getVerseStates}
+                    control={control}
+                    errors={errors}
+                    book={book}
+                    chapter={chapter}
+                    verse={verseValue}
+                    foundBook={foundBook}
+                    foundBookIndex={foundBookIndex}
+                  />
+                </div>
+              ) : (
+                <p className="md:text-lg font-bold uppercase">
+                  {book} {chapter}:{verseValue}
+                  {verseToValue ? `-${verseToValue}` : null}
+                </p>
+              )}
 
-            <div className="flex  gap-3 w-full justify-between flex-wrap">
-              <BibleBook
-                Controller={Controller}
-                bibleData={bibleData}
-                control={control}
-                onusData={onusData}
-              />
-              <ChapterAndVerse
-                Controller={Controller}
-                watch={watch}
-                getVerse={getVerse}
-                verseTo={verseToValue}
-                onusVerse={onusVerse}
-                getVerseStates={getVerseStates}
-                control={control}
-                errors={errors}
-                book={book}
-                chapter={chapter}
-                verse={verseValue}
-                foundBook={foundBook}
-                foundBookIndex={foundBookIndex}
-              />
+              {onusVerse ? (
+                <Textarea
+                  rows={3}
+                  readOnly
+                  value={onusVerse?.replace(/<[^>]*>?/gm, "")}
+                  placeholder="Verse Appears Here"
+                  className="text-[16px]"
+                />
+              ) : null}
             </div>
 
             <Notes Controller={Controller} control={control} />
@@ -225,7 +246,10 @@ export default function AddVerseForm({ className, verse }: any) {
               )}
             />
             <div className="flex flex-col gap-3">
-              <Button className="rounded-md bg-[#fa9a40] ">
+              <Button
+                disabled={createOnusStates?.pending}
+                className="rounded-md bg-[#fa9a40] "
+              >
                 {createOnusStates?.pending && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -233,7 +257,7 @@ export default function AddVerseForm({ className, verse }: any) {
               </Button>
               {createOnusStates?.error ? (
                 <p className="text-red-500 text-sm text-center">
-                  {createOnusStates?.error as any}
+                  {createOnusStates?.error?.error as any}
                 </p>
               ) : null}
             </div>

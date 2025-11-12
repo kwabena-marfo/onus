@@ -11,27 +11,15 @@ export default function Home() {
     <div className="flex items-center flex-col w-full p-3 px-8 z-10 gap-6">
       <div className="flex justify-center items-center  divide-x-1 ">
         <div className="text-[#e77306]   pr-2 w-full  flex flex-col justify-center items-center   md:text-lg rounded-bl-2xl ">
-          {/* <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
-            <p className="font-bold text-2xl">O</p>
-          </div> */}
           Observe
         </div>
         <div className="text-[#e77306] px-2  w-full flex  flex-col justify-center items-center   md:text-lg  rounded-bl-2xl">
-          {/* <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
-            <p className="font-bold text-2xl">N</p>
-          </div> */}
           Navigate
         </div>
         <div className="text-[#e77306] px-2 w-full flex flex-col justify-center items-center   md:text-lg  rounded-bl-2xl">
-          {/* <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
-            <p className="font-bold text-2xl">U</p>
-          </div> */}
           Understand
         </div>{" "}
         <div className="text-[#e77306] px-2    w-full flex flex-col justify-center items-center  md:text-lg  rounded-bl-2xl">
-          {/* <div className="flex justify-center items-center rounded-full w-12 h-12 bg-gray-900 p-2">
-            <p className="font-bold text-2xl">S</p>
-          </div> */}
           Store
         </div>
       </div>

@@ -61,9 +61,8 @@ export default function Header() {
           </div>
           <SearchModal
             TriggerComp={() => (
-              <div className="  flex items-center justify-center    rounded-full border-2  md:p-2 p-1.5 cursor-pointer  ">
+              <div className="  flex items-center justify-center    md:p-2 p-1.5 cursor-pointer  ">
                 <BsSearch className="w-6 h-6" />
-                <p className="text-xs  ">Search</p>
               </div>
             )}
           />

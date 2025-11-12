@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { LuLoaderCircle, LuSearch } from "react-icons/lu";
 
 export default function ChapterAndVerse({
@@ -19,7 +18,6 @@ export default function ChapterAndVerse({
   foundBook,
   chapter,
   verse,
-  onusVerse,
   verseTo,
   foundBookIndex,
   getVerseStates,
@@ -176,18 +174,6 @@ export default function ChapterAndVerse({
           <p className="text-red-500 text-sm">{errors?.onusVerse?.message}</p>
         )}
       </div>
-      {onusVerse ? (
-        <Textarea
-          rows={3}
-          readOnly
-          value={onusVerse?.replace(/<[^>]*>?/gm, "")}
-          placeholder="Verse Appears Here"
-          className="text-[16px]"
-        />
-      ) : null}
-      {errors?.onusVerse && (
-        <p className="text-red-500 text-sm">{errors?.onusVerse?.message}</p>
-      )}
     </div>
   );
 }
