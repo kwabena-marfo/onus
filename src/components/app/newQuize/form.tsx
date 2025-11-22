@@ -108,23 +108,6 @@ export default function QuizeFlashcardCarousel({
           <strong>{bookQuestions.length}</strong>
         </p>
 
-        {/* Not Attempted */}
-        {/* {quizStates.some((q) => !q.selected) && (
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold text-red-500">
-              Not Attempted
-            </h3>
-            <ul className="list-disc list-inside">
-              {bookQuestions.map((quiz, index) => {
-                if (!quizStates[index].selected) {
-                  return <li key={quiz.reference}>{quiz.reference}</li>;
-                }
-                return null;
-              })}
-            </ul>
-          </div>
-        )} */}
-
         <Button
           onClick={() => {
             setQuizStates(
@@ -145,14 +128,12 @@ export default function QuizeFlashcardCarousel({
     );
   }
 
-  // ✅ Loading state
   if (createOnusQuizeStates?.pending) {
     return (
       <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
     );
   }
 
-  // ✅ Quiz carousel
   return (
     <CarouselComp
       tittle={`Quiz on ${book}`}
