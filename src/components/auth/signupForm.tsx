@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +16,6 @@ import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FaGoogle } from "react-icons/fa";
 import {
   BsCheck2Circle,
   BsEnvelope,
@@ -29,16 +27,10 @@ import {
 import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
+import GoogleSignInButton from "./googleButton";
 
 export default function LoginForm({ className }: React.ComponentProps<"form">) {
   type signupSchema = z.infer<typeof signupFormSchema>;
-
-  type signinStateProps = {
-    pending?: boolean;
-    ok?: boolean;
-    status?: any;
-    error?: string | undefined;
-  };
 
   const {
     reqFunction: createUser,
@@ -47,38 +39,13 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
   } = useTriggerRequest();
 
   const router = useRouter();
+
   const [isHidePass, setIsHidePass] = useState(true);
-  const [googleSigninState, setGoogleSigninState] =
-    useState<signinStateProps | null>();
-  const [signinState, setSigninState] = useState<signinStateProps | null>();
-
-  const { status } = useSession();
-
-  const googleLogin = async () => {
-    setGoogleSigninState({ pending: true });
-
-    const res: signinStateProps | any = await signIn("google", {
-      redirect: false,
-    });
-
-    setGoogleSigninState(res);
-  };
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      setSigninState(null);
-      setGoogleSigninState(null);
-      reset();
-      resetCreatUserStates(null);
-      router.push("/app/dashboard");
-    }
-  }, [status]);
 
   const {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm<signupSchema>({
     resolver: zodResolver(signupFormSchema),
@@ -96,38 +63,31 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
 
   return (
     <>
-      {createUserStates?.data || status === "authenticated" ? (
+      {createUserStates?.data ? (
         <div className="flex flex-col justify-center items-center gap-3 p-4">
           <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
           <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
             All Done! <br /> Welcome to the ONUS family!
           </h1>
-          <p className="text-center text-lg">
+          <p className="text-center  ">
             Get started on your jounery to spiritual growth
           </p>
           <Button
             onClick={async () => {
-              setSigninState({ pending: true });
-              const result = await signIn("credentials", {
-                redirect: false, // prevent redirect so you can handle manually
-                email: watch("email"),
-                password: watch("confirmPassword"),
-              });
-              setSigninState(result as any);
+              reset();
+              resetCreatUserStates(null);
+              router.push("/app/dashboard");
             }}
-            className="w-full bg-[#fa9a40] font-medium"
+            className="w-full bg-[#e77306] font-medium rounded-full"
           >
             Sure! Log me in{" "}
-            {signinState?.pending && (
-              <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
           </Button>
         </div>
       ) : (
         <form
           onSubmit={handleSubmit(onSubmitSignupForm)}
           className={cn(
-            "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
+            "grid w-full gap-3 z-50 bg-white p-4 rounded-md border mt-4",
             className
           )}
         >
@@ -251,24 +211,9 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
 
           <div className="flex flex-col p-1">
             <p className="text-center">Or</p>
-            <Button
-              onClick={() => googleLogin()}
-              type="button"
-              variant="outline"
-              className="rounded-md cursor-pointer"
-            >
-              {googleSigninState?.pending && (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              <FaGoogle /> Continue With Google
-            </Button>
-            {googleSigninState &&
-              !googleSigninState?.pending &&
-              googleSigninState?.status !== 200 && (
-                <p className="text-red-500 text-sm text-center pt-2">
-                  Sorry, an error occured.
-                </p>
-              )}
+
+            <GoogleSignInButton />
+
             <p className="text-center text-sm mt-2">
               Already Have an account? Click{" "}
               <Link className="text-blue-500" href="/login">

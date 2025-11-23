@@ -1,72 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { z } from "zod";
 
 import loginFormSchema from "@/schemas/loginSchema";
-
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { FaGoogle } from "react-icons/fa";
 import { BsEye, BsEyeSlash, BsLock, BsPerson } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 
+import { useSignIn, useUser } from "@clerk/nextjs";
+import GoogleSignInButton from "./googleButton";
+
 export default function LoginForm({ className }: React.ComponentProps<"form">) {
   type loginSchema = z.infer<typeof loginFormSchema>;
 
-  type signinStateProps = {
-    pending?: boolean;
-    ok?: boolean;
-    status?: any;
-    error?: string | undefined;
-  };
-
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const { isSignedIn } = useUser();
+
   const [isHidePass, setIsHidePass] = useState(true);
-  const [signinState, setSigninState] = useState<signinStateProps | null>();
-  const [googleSigninState, setGoogleSigninState] =
-    useState<signinStateProps | null>();
-
-  const { status } = useSession();
-
-  const googleLogin = async () => {
-    setGoogleSigninState({ pending: true });
-
-    const res: signinStateProps | any = await signIn("google", {
-      redirect: false,
-    });
-
-    setGoogleSigninState(res);
-  };
-
-  const onSubmitLoginForm: SubmitHandler<loginSchema> = async (data) => {
-    // return console.log(data);
-
-    setSigninState({ pending: true });
-
-    const res: signinStateProps | any = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
-
-    setSigninState(res);
-  };
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const {
     register,
@@ -76,17 +44,37 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
   } = useForm<loginSchema>({
     resolver: zodResolver(loginFormSchema),
     mode: "all",
-    shouldFocusError: true,
   });
 
   useEffect(() => {
-    if (status === "authenticated") {
-      const takeMeTo = callbackUrl || "/app/dashboard";
-      setSigninState(null);
-      reset();
-      router.push(takeMeTo);
+    if (isSignedIn) router.push(callbackUrl);
+  }, [isSignedIn]);
+
+  const onSubmitLoginForm: SubmitHandler<loginSchema> = async (data) => {
+    if (!isLoaded) return;
+
+    try {
+      setLoading(true);
+      setErrorMsg("");
+
+      const result = await signIn.create({
+        identifier: data.email,
+        password: data.password,
+      });
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        reset();
+        router.push(callbackUrl);
+      } else {
+        setErrorMsg("Login failed. Check credentials.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err?.errors?.[0]?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
-  }, [status]);
+  };
 
   return (
     <form
@@ -98,14 +86,16 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
     >
       <div className="flex flex-col gap-1 justify-center items-center">
         <p className="text-3xl md:text-6xl font-bold">Login</p>
-        <p className="text-center">Continue Your Journey to Spritual Growth.</p>
+        <p className="text-center">
+          Continue Your Journey to Spiritual Growth.
+        </p>
       </div>
 
       <div className="grid gap-4">
         <div className="grid gap-1">
           <Label htmlFor="email">Email</Label>
           <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
               <BsPerson />
             </span>
             <Input
@@ -115,77 +105,61 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
               {...register("email")}
             />
           </div>
+
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
           )}
         </div>
-        <div className="flex flex-col space-y-1.5">
+
+        <div className="grid gap-1">
           <Label htmlFor="password">Password</Label>
           <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400 ">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
               <BsLock />
             </span>
+
             <Input
               id="password"
               className="pl-8"
-              autoComplete="password"
               placeholder="Enter your password"
+              type={isHidePass ? "password" : "text"}
+              autoComplete="current-password"
               {...register("password")}
-              type={`${isHidePass ? "password" : "text"}`}
             />
 
             <span
               onClick={() => setIsHidePass(!isHidePass)}
-              className="absolute right-2.5 bottom-2.5"
+              className="absolute right-2.5 bottom-2.5 cursor-pointer"
             >
               {isHidePass ? <BsEyeSlash /> : <BsEye />}
             </span>
           </div>
+
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}
         </div>
       </div>
 
+      {/* Submit */}
       <div className="mt-2">
-        <Button className="w-full bg-[#e77306]">
-          {signinState?.pending && (
-            <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          Login
-          <LuLogIn className="h-4 w-4 " />
+        <Button className="w-full bg-[#e77306]" disabled={loading}>
+          {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Login <LuLogIn className="h-4 w-4 ml-2" />
         </Button>
-        {signinState &&
-          !signinState?.pending &&
-          signinState?.status !== 200 && (
-            <p className="text-red-500 text-sm text-center pt-2">
-              {signinState?.error}
-            </p>
-          )}
+
+        {errorMsg && (
+          <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
+        )}
       </div>
 
+      {/* Google Login */}
       <div className="flex flex-col p-1">
         <p className="text-center">Or</p>
-        <Button
-          onClick={() => googleLogin()}
-          type="button"
-          variant="outline"
-          className="rounded-md cursor-pointer"
-        >
-          {googleSigninState?.pending && (
-            <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          <FaGoogle /> Continue With Google
-        </Button>
-        {googleSigninState &&
-          !googleSigninState?.pending &&
-          googleSigninState?.status !== 200 && (
-            <p className="text-red-500 text-sm text-center pt-2">
-              {googleSigninState?.error}
-            </p>
-          )}
+
+        <GoogleSignInButton />
         <p className="text-center text-sm mt-2">
-          Dont Have an account? Click{" "}
+          Don&apos;t have an account? Click
           <Link className="text-blue-500" href="/signup">
             Here
           </Link>{" "}

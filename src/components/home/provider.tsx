@@ -1,11 +1,18 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function ProviderComp({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <ClerkProvider publishableKey="pk_test_bm92ZWwtcHJhd24tOS5jbGVyay5hY2NvdW50cy5kZXYk">
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </ClerkProvider>
+  );
 }

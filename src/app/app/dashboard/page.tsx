@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useGetOnus } from "@/hooks/global/useSWRFetch";
-
 import Content from "@/components/app/content";
 import StatCard from "@/components/app/statCard";
 
@@ -20,13 +17,14 @@ import Image from "next/image";
 import { LuLoaderCircle } from "react-icons/lu";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProgressComp from "@/components/app/progress";
+import { useFetchVersesApi } from "@/hooks/useQuery";
+import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
-  const { status, data: session } = useSession<any>();
+  const { user } = useUser();
+  const { isPending, isError, data } = useFetchVersesApi();
 
-  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
-
-  if (status == "loading" || getOnusIsLoading)
+  if (isPending)
     return (
       <div className="h-dvh grid justify-center items-center-center  ">
         <p>Loading</p>
@@ -34,7 +32,7 @@ export default function Dashboard() {
       </div>
     );
 
-  if (getOnusIsError)
+  if (isError)
     return (
       <div className="h-dvh grid justify-center items-center-center  ">
         <p>Sorry An error Occured, Could not fetch data</p>
@@ -44,7 +42,7 @@ export default function Dashboard() {
 
   return (
     <Content
-      tittle={`Hello ${session?.user?.name?.split(" ")[0]}!`}
+      tittle={`Hello ${user?.firstName?.split(" ")[0]}!`}
       Icon={BsEmojiSmile}
     >
       <div className="grid grid-cols-1 md:grid-cols-6 md:gap-4 gap-6">
@@ -53,7 +51,7 @@ export default function Dashboard() {
           className="col-span-12 md:col-span-2 flex flex-col gap-4 w-full"
         >
           <div className="grid grid-cols-2  gap-4 w-full">
-            {getOnusIsLoading ? (
+            {isPending ? (
               new Array(4)
                 .fill(" ")
                 .map((_, index) => (
@@ -66,7 +64,7 @@ export default function Dashboard() {
                     label: "Memorised Verses",
                     link: "/myonusbible",
                     value:
-                      onusData?.verses?.filter(
+                      data?.verses?.filter(
                         ({ memorised }: any) => memorised === "memorised"
                       )?.length || 0,
                     colorB: "border-l-[#0F3187]",
@@ -88,7 +86,7 @@ export default function Dashboard() {
                     label: "Saved Verses",
                     link: "/saved",
                     value:
-                      onusData?.verses?.filter(
+                      data?.verses?.filter(
                         ({ memorised }: any) => memorised === "saved"
                       )?.length || 0,
                     colorB: "border-l-[#8C15E8]",
@@ -100,7 +98,7 @@ export default function Dashboard() {
                   {
                     label: "Completed Books",
                     value:
-                      onusData?.grouped?.reduce((count: any, entry: any) => {
+                      data?.grouped?.reduce((count: any, entry: any) => {
                         const bookName = Object.keys(entry)[0];
                         const bookData = entry[bookName];
 
@@ -142,17 +140,17 @@ export default function Dashboard() {
               </>
             )}
           </div>
-          <ProgressComp data={onusData?.grouped || []} />
+          <ProgressComp data={data?.grouped || []} />
         </div>
         <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
-          {!onusData?.verses?.length ? (
+          {!data?.verses?.length ? (
             <div className="flex flex-col justify-center items-center h-full">
               <BsDatabaseSlash className="w-12 h-12" />
               <p>No Data Found</p>
               <p>Your added verses will appear here</p>
             </div>
           ) : (
-            <VersesTable data={onusData?.verses || []} />
+            <VersesTable data={data?.verses || []} />
           )}
         </div>
       </div>

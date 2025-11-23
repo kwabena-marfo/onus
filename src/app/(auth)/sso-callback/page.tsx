@@ -1,0 +1,54 @@
+"use client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from "@/components/ui/button";
+import { useCreateUserApi } from "@/hooks/useQuery";
+import { useUser } from "@clerk/clerk-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { LuLoaderCircle } from "react-icons/lu";
+
+export default function SSOCallback() {
+  const { user } = useUser(); // <-- this is the full signed-in user
+  const router = useRouter();
+
+  const { trigger, isError, data } = useCreateUserApi();
+
+  useEffect(() => {
+    const syncUser = async () => {
+      try {
+        if (!user) return;
+
+        // Prepare payload
+        const payload = {
+          name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+          email: user.emailAddresses[0]?.emailAddress ?? "",
+          clerkId: user.id,
+        };
+
+        await trigger(payload);
+        if (data) router.push("/app/dashboard");
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
+
+    syncUser();
+  }, [user, router, data]);
+
+  return (
+    <div className="flex flex-col justify-center items-center mt-5">
+      {isError ? (
+        <>
+          <p className="text-red-400">Sorry An Error Occured</p>{" "}
+          <Button>Try Login Again</Button>
+        </>
+      ) : (
+        <>
+          <p className="text-gray-950">Signing you in...</p>
+          <LuLoaderCircle className="animate-spin text-black h-10 w-10 mt-2" />
+        </>
+      )}
+    </div>
+  );
+}

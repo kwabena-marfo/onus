@@ -3,8 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { use } from "@clerk/nextjs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -27,7 +26,6 @@ import { BsPerson } from "react-icons/bs";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
-  const { data: session } = useSession<any>();
 
   return (
     <div className="grid gap-4 text-white">
@@ -39,10 +37,10 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-0">
-          <h1 className="text-lg font-bold line-clamp-1">
+          {/* <h1 className="text-lg font-bold line-clamp-1">
             {session?.user?.name}
           </h1>
-          <p className="text-sm line-clamp-1">{session?.user?.email}</p>
+          <p className="text-sm line-clamp-1">{session?.user?.email}</p> */}
         </div>
       </div>
       <ul className="space-y-3 text-sm mt-24">

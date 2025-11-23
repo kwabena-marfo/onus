@@ -2,336 +2,71 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
-import bcrypt from "bcrypt";
 import z from "zod";
-import { SignJWT } from "jose";
-import { OAuth2Client } from "google-auth-library";
 
+import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/config/prisma";
-import transporter from "@/config/nodemailer";
-import { randomInt } from "crypto";
-
+import { createUserLogic } from "../lib/create-user";
 import createOnusChecker from "../middlewares/createOnusChecker";
-import createUserChecker from "../middlewares/createUserChecker";
-import createAuthMiddleware from "../middlewares/authorize";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use("*", cors());
 
-app.post("/mobile-auth/credentials", async (c) => {
+// -------------------- CREATE USER --------------------
+app.post("/create-user", async (c) => {
   try {
-    const { email, password } = await c.req.json();
+    const body = await c.req.json();
 
-    if (!email || !password) {
-      return c.json({ error: "Email and password are required" }, 400);
-    }
-
-    // Find user by email
-    const user = await prisma.user.findFirst({
-      where: { email },
+    const result = await createUserLogic({
+      name: body.name,
+      email: body.email,
+      password: body.password,
+      clerkId: body.clerkId,
     });
 
-    if (!user) {
-      return c.json({ error: "Invalid email or password" }, 401);
-    }
-
-    // Check if user registered via Google only
-    if (user.googleId && !user.password) {
-      return c.json(
-        { error: "Please log in using Google for this account." },
-        403
-      );
-    }
-
-    // Verify password hash
-    const valid = await bcrypt.compare(password, user.password as any);
-
-    if (!valid) return c.json({ error: "Invalid email or password" }, 401);
-
-    // Create JWT
-    const appUser = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
-
-    const secret = process.env.CLIENT_SECRETE;
-    if (!secret)
-      throw new Error("CLIENT_SECRETE environment variable is missing!");
-
-    const token = await new SignJWT(appUser)
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("30d")
-      .sign(new TextEncoder().encode(secret));
-
-    return c.json({
-      token,
-      user: appUser,
-    });
-  } catch (err) {
-    console.error("Credentials auth error:", err);
-    return c.json({ error: "Auth failed" }, 500);
+    return c.json(result, result.success ? 200 : 500);
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "Failed to create user" }, 500);
   }
 });
 
-app.post("/send-reset-code", async (c) => {
-  try {
-    const { email } = await c.req.json();
-
-    if (!email) {
-      return c.json({ error: "Email is required" }, 400);
-    }
-
-    // Find user
-    const user = await prisma.user.findFirst({ where: { email } });
-
-    if (!user) {
-      return c.json(
-        { error: "Sorry, this email is not associated with any account" },
-        404
-      );
-    }
-
-    if (user.googleId && !user.password) {
-      return c.json(
-        {
-          error: "This account uses Google Sign-In. Please log in with Google.",
-        },
-        403
-      );
-    }
-
-    // Generate 6-digit code
-    const code = String(randomInt(100000, 999999));
-
-    // Store code and expiry (e.g. 10 minutes)
-    await prisma.passwordReset.upsert({
-      where: { email },
-      update: {
-        code,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-      create: {
-        email,
-        code,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"ONUS" <"noreply@onus">`,
-      to: email,
-      subject: "Your Password Reset Code",
-      text: `Your password reset code is: ${code}. It expires in 10 minutes.`,
-    });
-
-    return c.json({ message: "Reset code sent successfully", email });
-  } catch (err) {
-    console.error("Send reset code error:", err);
-    return c.json({ error: "Failed to send reset code" }, 500);
-  }
-});
-
-app.post("/reset-password", async (c) => {
-  try {
-    const { email, code, newPassword } = await c.req.json();
-
-    console.log({ email, code, newPassword });
-
-    if (!email || !code || !newPassword) {
-      return c.json(
-        { error: "Email, code, and new password are required" },
-        400
-      );
-    }
-
-    // Find reset entry
-    const reset = await prisma.passwordReset.findFirst({ where: { email } });
-
-    if (!reset || reset.code !== code) {
-      return c.json({ error: "Invalid or expired code" }, 400);
-    }
-
-    if (reset.expiresAt < new Date()) {
-      return c.json({ error: "Code has expired" }, 400);
-    }
-
-    // Hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update user password
-    await prisma.user.update({
-      where: { email },
-      data: { password: hashedPassword },
-    });
-
-    // Delete used code
-    await prisma.passwordReset.delete({ where: { email } });
-
-    return c.json({ message: "Password reset successfully" });
-  } catch (err) {
-    console.error("Reset password error:", err);
-    return c.json({ error: "Password reset failed" }, 500);
-  }
-});
-
-app.post("/mobile-auth/google", async (c) => {
-  try {
-    const { id_token } = await c.req.json();
-    if (!id_token) return c.json({ error: "Missing id_token" }, 400);
-
-    // Verify Google token
-    const ticket = await googleClient.verifyIdToken({
-      idToken: id_token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload: any = ticket.getPayload();
-    if (!payload) return c.json({ error: "Invalid token" }, 401);
-
-    // Check if user exists by email
-    let user = await prisma.user.findFirst({
-      where: { email: payload.email },
-    });
-
-    if (user) {
-      // User exists but has no Google linked → require credentials login
-      if (!user.googleId) {
-        return c.json(
-          {
-            error:
-              "This email is registered with a password. Please log in with credentials.",
-          },
-          403
-        );
-      }
-
-      // User exists and Google ID matches → return existing DB _id
-      if (user.googleId === payload.sub) {
-        const appUser = {
-          id: user.id, // database ID
-          email: user.email,
-          name: user.name,
-        };
-
-        const secret = process.env.CLIENT_SECRETE;
-        if (!secret) throw new Error("CLIENT_SECRET env variable is missing!");
-
-        const token = await new SignJWT(appUser)
-          .setProtectedHeader({ alg: "HS256" })
-          .setIssuedAt()
-          .setExpirationTime("30d")
-          .sign(new TextEncoder().encode(secret));
-
-        return c.json({ token, user: appUser });
-      }
-
-      // Email exists but linked to a different Google account → block
-      return c.json(
-        { error: "This email is already linked to another Google account." },
-        403
-      );
-    }
-
-    // User does not exist → create new
-    user = await prisma.user.create({
-      data: {
-        name: payload.name,
-        email: payload.email,
-        username: payload.name,
-        googleId: payload.sub,
-      },
-    });
-
-    const appUser = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
-
-    const secret = process.env.CLIENT_SECRETE;
-    if (!secret) throw new Error("CLIENT_SECRET env variable is missing!");
-
-    const token = await new SignJWT(appUser)
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("30d")
-      .sign(new TextEncoder().encode(secret));
-
-    return c.json({ token, user: appUser });
-  } catch (err) {
-    console.log(err);
-    return c.json({ error: "Auth failed" }, 500);
-  }
-});
-
-app.post(
-  "/create-user",
-  createUserChecker(prisma),
-  async ({ req, json }: any) => {
-    try {
-      const data = await req.json();
-
-      const {
-        name,
-        email,
-        username,
-        password,
-      }: {
-        name: string;
-        email: string;
-        username: string;
-        password: string;
-      } = data;
-
-      await prisma.user.create({
-        data: {
-          name,
-          email,
-          username,
-          password: await bcrypt.hash(password || "", 10),
-        },
-      });
-
-      return json("Done");
-    } catch (error) {
-      console.log({ error });
-      return json("An Error Occured", 500);
-    }
-  }
-);
-
-app.use("/app/*", createAuthMiddleware());
-
+// -------------------- GET VERSES FROM EXTERNAL API --------------------
 app.post("/app/get-verses", async ({ req, json }: any) => {
-  const { book, chapter, translation, verses } = await req.json();
-
   try {
+    const { book, chapter, translation, verses } = await req.json();
+
     const fetchedVerses = await getVersesFromExternalApi({
       book,
       chapter,
       translation,
       verses,
     });
+
     return json(fetchedVerses);
   } catch (err) {
     console.error(err);
-    return json("Failed to fetch verse", 500);
+    return json({ error: "Failed to fetch verse" }, 500);
   }
 });
+
+// -------------------- CREATE ONUS VERSE --------------------
 app.post(
   "/app/create-onus",
   createOnusChecker(prisma),
-  async ({ req, json, get }: any) => {
+  async ({ req, json }: any) => {
     try {
-      const session = get("session");
+      // Get Clerk user from request
+      const { userId } = getAuth(req.raw);
+      if (!userId) return json({ error: "Unauthorized" }, 401);
+
+      const client = await clerkClient();
+
+      const user = await client.users.getUser(userId);
 
       const {
         book,
@@ -343,37 +78,21 @@ app.post(
         verseNotes,
         tags,
         memorised,
-      }: {
-        book: string;
-        chapter: string;
-        verse: string;
-        verseTo?: any;
-        version: string;
-        onusVerse: string;
-        verseNotes?: string;
-        isUpdate?: string;
-        tags?: any;
-        memorised: "memorised" | "saved";
-        id?: string;
       } = await req.json();
-
-      const OnusVerse = get("onusVerse") ?? onusVerse;
 
       await prisma.verses.create({
         data: {
           book,
           chapter,
           verse,
-          ...(verseTo !== null && verseTo !== undefined
-            ? { verseTo }
-            : { verseTo: null }),
+          verseTo: verseTo ?? null,
           version,
-          onusVerse: OnusVerse,
+          onusVerse,
           verseNotes,
           tags,
           memorised,
           user: {
-            connect: { id: session.user.id },
+            connect: { id: user.id },
           },
         },
       });
@@ -386,70 +105,58 @@ app.post(
   }
 );
 
-app.get("/app/get-onus", async ({ json, get }: any) => {
+// -------------------- GET USER VERSES --------------------
+app.get("/app/get-onus", async (c: any) => {
   try {
-    const session = await get("session");
+    const { userId } = getAuth(c.req.raw);
+
+    const user = await prisma.user.findFirst({
+      where: { clerkId: userId },
+    });
+    if (!userId) return c.json({ error: "Unauthorized" }, 401);
 
     const verses = await prisma.verses.findMany({
-      where: {
-        userId: session?.user?.id,
-      },
+      where: { userId: user?.id },
     });
 
-    if (!verses) return json("An Error Occured", 500);
+    if (!verses || verses.length === 0)
+      return c.json({ error: "No verses found" }, 404);
 
     const grouped = verses.reduce((acc, verse) => {
       const bookKey = verse.book.toLowerCase();
+      if (!acc[bookKey]) acc[bookKey] = { memorised: 0, saved: 0, verses: [] };
 
-      if (!acc[bookKey]) {
-        acc[bookKey] = {
-          memorised: 0,
-          saved: 0,
-          verses: [],
-        };
-      }
-
-      if (verse.memorised === "memorised") {
-        acc[bookKey].memorised++;
-      } else if (verse.memorised === "saved") {
-        acc[bookKey].saved++;
-      }
+      if (verse.memorised === "memorised") acc[bookKey].memorised++;
+      if (verse.memorised === "saved") acc[bookKey].saved++;
 
       acc[bookKey].verses.push(verse);
-
       return acc;
     }, {} as Record<string, { memorised: number; saved: number; verses: any[] }>);
 
-    // Convert to array of objects with book name as key
     const result = Object.entries(grouped).map(([book, data]) => ({
       [book]: data,
     }));
 
-    return json({ verses, grouped: result });
+    return c.json({ verses, grouped: result });
   } catch (error) {
-    console.log({ error });
-    return json("An Error Occured", 500);
+    console.error(error);
+    return c.json({ error: "An error occurred" }, 500);
   }
 });
 
+// -------------------- DELETE ONUS VERSES --------------------
 app.delete("/app/delete-onus", async (c) => {
   const idsParam: any = c.req.query("ids");
 
-  // Validate and parse JSON array from query string
   try {
     const parsed = z.array(z.string()).parse(JSON.parse(idsParam));
 
     const result = await prisma.verses.deleteMany({
-      where: {
-        id: { in: parsed }, // assuming 'id' is your primary key
-      },
+      where: { id: { in: parsed } },
     });
 
     return c.json(
-      {
-        message: "Verse deleted successfully",
-        count: result.count,
-      },
+      { message: "Verse deleted successfully", count: result.count },
       200
     );
   } catch (error) {
@@ -463,54 +170,49 @@ app.delete("/app/delete-onus", async (c) => {
   }
 });
 
-app.post("/app/create-onus-quize", async ({ json, get, req }: any) => {
+// -------------------- CREATE ONUS QUIZ --------------------
+app.post("/app/create-onus-quize", async ({ req, json }: any) => {
   try {
-    const session = await get("session");
+    const { userId } = getAuth(req.raw);
+    if (!userId) return json({ error: "Unauthorized" }, 401);
+
+    const client = await clerkClient();
+
+    const user = await client.users.getUser(userId);
+
     const { quizName, score, total } = await req.json();
 
     await prisma.quizScore.upsert({
       where: {
-        userId_quizName: {
-          userId: session?.user?.id,
-          quizName,
-        },
+        userId_quizName: { userId: user.id, quizName },
       },
-      update: {
-        score,
-        total,
-        takenAt: new Date(),
-      },
-      create: {
-        userId: session?.user?.id,
-        quizName,
-        score,
-        total,
-      },
+      update: { score, total, takenAt: new Date() },
+      create: { userId: user.id, quizName, score, total },
     });
-    return json("Done");
+
+    return json({ message: "Quiz saved successfully" });
   } catch (error) {
-    console.log(error);
-    return json("An Error Occured", 500);
+    console.error(error);
+    return json({ error: "An Error Occurred" }, 500);
   }
 });
 
-app.get("/app/get-onus-quize", async ({ json, get }: any) => {
+// -------------------- GET USER QUIZZES --------------------
+app.get("/app/get-onus-quize", async ({ json, req }: any) => {
   try {
-    const session = await get("session");
+    const { userId } = getAuth(req.raw);
+    if (!userId) return json({ error: "Unauthorized" }, 401);
 
-    const latestQuizzes = await prisma.quizScore.findMany({
-      where: {
-        userId: session?.user?.id,
-      },
-    });
+    const quizzes = await prisma.quizScore.findMany({ where: { userId } });
 
-    return json(latestQuizzes);
+    return json(quizzes);
   } catch (error) {
-    console.error("Error fetching latest quiz scores:", error);
-    return json("An error occurred", 500);
+    console.error(error);
+    return json({ error: "An error occurred" }, 500);
   }
 });
 
+// -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
 export const POST = handle(app);
 export const DELETE = handle(app);
