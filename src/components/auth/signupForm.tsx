@@ -108,6 +108,25 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
     }
   };
 
+  const handleResendCode = async () => {
+    if (!isLoaded) return;
+    setIsPending(true);
+    setErrorMsg("");
+
+    try {
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      alert("Verification code resent! Check your email.");
+    } catch (error: any) {
+      setErrorMsg(
+        error.errors?.[0]?.longMessage ||
+          error.message ||
+          "Failed to resend code"
+      );
+    } finally {
+      setIsPending(false);
+    }
+  };
+
   if (isSuccess) {
     return (
       <div className="justify-self-center items-center z-50 w-full pt-5">
@@ -144,16 +163,25 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
           onChange={(e) => setVerificationCode(e.target.value)}
         />
         {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
-        <Button
-          onClick={handleVerifyCode}
-          className="w-full bg-[#e77306] font-medium "
-        >
-          {isPending ? (
-            <LucideLoader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            "Verify Email"
-          )}
-        </Button>
+        <div className="flex flex-col gap-2 mt-2 w-full">
+          <Button
+            onClick={handleVerifyCode}
+            className="flex-1 bg-[#e77306] font-medium"
+          >
+            {isPending ? (
+              <LucideLoader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Verify Email"
+            )}
+          </Button>
+          <Button
+            onClick={handleResendCode}
+            variant="outline"
+            className="flex-1 border border-gray-300 font-medium"
+          >
+            Resend Code
+          </Button>
+        </div>
       </div>
     );
   }
