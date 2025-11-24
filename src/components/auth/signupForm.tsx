@@ -38,6 +38,8 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [verificationStep, setVerificationStep] = useState(false);
+  const [resentCode, setResentCode] = useState(false);
+
   const [verificationCode, setVerificationCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -112,10 +114,11 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
     if (!isLoaded) return;
     setIsPending(true);
     setErrorMsg("");
+    setResentCode(false);
 
     try {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      alert("Verification code resent! Check your email.");
+      setResentCode(true);
     } catch (error: any) {
       setErrorMsg(
         error.errors?.[0]?.longMessage ||
@@ -133,7 +136,7 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
         <div className="flex flex-col justify-center items-center gap-3 ">
           <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
           <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
-            All Done! <br /> Welcome to the ONUS family!
+            All Done! <br /> Welcome to the ONUS!
           </h1>
           <p className="text-center">
             Get started on your journey to spiritual growth
@@ -181,6 +184,11 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
           >
             Resend Code
           </Button>
+          {resentCode ? (
+            <p className="md:text-xl text-sm text-center">
+              Code has been resent
+            </p>
+          ) : null}
         </div>
       </div>
     );

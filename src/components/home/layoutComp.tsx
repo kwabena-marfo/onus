@@ -26,9 +26,7 @@ export default function LayoutComp({
                 alt="logo"
               />
             </Link>
-            <div className="justify-self-center items-center z-50 w-full  bg-white p-4 rounded-md border mt-4">
-              {children}
-            </div>
+            {children}
           </div>
 
           {/* Bottom Seesions for Mockup and Knot */}

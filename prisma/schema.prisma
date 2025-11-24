@@ -17,7 +17,7 @@ model user {
   password    String?
   image       String?
   lastLogin   String? // fixed typo: "last_loggin" → "lastLogin"
-  verses      verses[] // correct relation (no @relation needed here)
+  verses        verses[] // correct relation (no @relation needed here)
   passwordReset passwordReset[]
   scores      quizScore[]
 }

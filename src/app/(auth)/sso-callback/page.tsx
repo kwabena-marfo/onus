@@ -38,7 +38,7 @@ export default function SSOCallback() {
   }, [user, router, data]);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-5">
+    <div className="justify-self-center items-center z-50 w-full  bg-white p-4 rounded-md border mt-4">
       {isError ? (
         <>
           <p className="text-red-400 z-50">Sorry An Error Occured</p>{" "}
