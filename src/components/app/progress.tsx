@@ -7,8 +7,8 @@ import { Progress } from "@/components/ui/progress";
 
 export default function ProgressComp({ data }: any) {
   return (
-    <>
-      <h4 className="text-xl md:text-4xl font-bold text-gray-700">
+    <div className="flex flex-col gap-1">
+      <h4 className="text-2xl md:text-4xl font-bold text-gray-700">
         Your Progress
       </h4>
       <div className=" flex flex-col gap-4 w-full p-3 border rounded-lg">
@@ -48,6 +48,6 @@ export default function ProgressComp({ data }: any) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

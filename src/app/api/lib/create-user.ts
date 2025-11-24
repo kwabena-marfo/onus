@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/config/prisma";
 
@@ -24,7 +25,7 @@ export async function createUserLogic({
       const newClerkUser = await client.users.createUser({
         firstName: name,
         emailAddress: [email],
-        password: password!,
+        password,
       });
 
       finalClerkId = newClerkUser.id;
@@ -50,23 +51,13 @@ export async function createUserLogic({
         clerkId: finalClerkId,
         name,
         email,
+        confirmed: false,
       },
     });
 
-    return {
-      success: true,
-      created: true,
-      clerkId: finalClerkId,
-      message: "User created successfully",
-    };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return "User created successfully";
   } catch (err: any) {
     console.error("CreateUser Error:", err);
-    return {
-      success: false,
-      created: false,
-      message: "Failed to create user",
-      error: err.message,
-    };
+    throw new Error("Failed to create user");
   }
 }

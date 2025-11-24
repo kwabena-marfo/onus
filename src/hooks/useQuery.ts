@@ -12,11 +12,11 @@ export function useCreateUserApi() {
 
   const mutation = useMutation({
     mutationFn: async (userData: {
-      name: string;
-      email: string;
-      clerkId: string;
+      name: string | any;
+      email: string | any;
+      clerkId: string | any;
     }) => {
-      const res = await api.post("/api/create-user", userData);
+      const res = await api.post("/api/auth/create-user", userData);
       return res.data;
     },
   });

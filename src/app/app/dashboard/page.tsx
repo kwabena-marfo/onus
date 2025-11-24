@@ -10,7 +10,6 @@ import {
   BsBookmarkFill,
   BsLightbulbFill,
   BsTriangleFill,
-  BsDatabaseSlash,
 } from "react-icons/bs";
 import VersesTable from "@/components/app/tables/verses";
 import Image from "next/image";
@@ -21,10 +20,10 @@ import { useFetchVersesApi } from "@/hooks/useQuery";
 import { useUser } from "@clerk/nextjs";
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const { isPending, isError, data } = useFetchVersesApi();
 
-  if (isPending)
+  if (isPending || !isLoaded)
     return (
       <div className="h-dvh grid justify-center items-center-center  ">
         <p>Loading</p>
@@ -142,16 +141,8 @@ export default function Dashboard() {
           </div>
           <ProgressComp data={data?.grouped || []} />
         </div>
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full p-3 border rounded-lg">
-          {!data?.verses?.length ? (
-            <div className="flex flex-col justify-center items-center h-full">
-              <BsDatabaseSlash className="w-12 h-12" />
-              <p>No Data Found</p>
-              <p>Your added verses will appear here</p>
-            </div>
-          ) : (
-            <VersesTable data={data?.verses || []} />
-          )}
+        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full rounded-lg">
+          <VersesTable data={data?.verses || []} />
         </div>
       </div>
     </Content>

@@ -16,7 +16,7 @@ export default function LayoutComp({
         <div className="absolute  h-full w-full bg-gradient-to-br from-white/95 via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
         <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
           {/* Show Home Page, Signup Page Or Login Page*/}
-          <div className="flex flex-col justify-center items-center w-full pt-6">
+          <div className="flex flex-col justify-center items-center w-full pt-6 p-4">
             <Link href="/" className="relative  h-20  w-20">
               <Image
                 fill

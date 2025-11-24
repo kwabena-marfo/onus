@@ -80,7 +80,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
     <form
       onSubmit={handleSubmit(onSubmitLoginForm)}
       className={cn(
-        "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
+        "grid w-full gap-3 z-50 bg-white p-4 rounded-md border mt-5",
         className
       )}
     >
@@ -112,7 +112,12 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
         </div>
 
         <div className="grid gap-1">
-          <Label htmlFor="password">Password</Label>
+          <div className="flex justify-between">
+            <Label htmlFor="password">Password</Label>
+            <Link className="text-sm" href="/forgot-password">
+              Forgot Password?
+            </Link>
+          </div>
           <div className="relative w-full">
             <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
               <BsLock />
@@ -160,7 +165,7 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
         <GoogleSignInButton />
         <p className="text-center text-sm mt-2">
           Don&apos;t have an account? Click
-          <Link className="text-blue-500" href="/signup">
+          <Link className="text-blue-500 pl-1" href="/signup">
             Here
           </Link>{" "}
           to Sign Up

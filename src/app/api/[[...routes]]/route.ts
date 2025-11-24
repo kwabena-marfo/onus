@@ -6,7 +6,6 @@ import z from "zod";
 
 import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/config/prisma";
-import { createUserLogic } from "../lib/create-user";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 
@@ -15,25 +14,6 @@ export const runtime = "nodejs";
 const app = new Hono().basePath("/api");
 
 app.use("*", cors());
-
-// -------------------- CREATE USER --------------------
-app.post("/create-user", async (c) => {
-  try {
-    const body = await c.req.json();
-
-    const result = await createUserLogic({
-      name: body.name,
-      email: body.email,
-      password: body.password,
-      clerkId: body.clerkId,
-    });
-
-    return c.json(result, result.success ? 200 : 500);
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "Failed to create user" }, 500);
-  }
-});
 
 // -------------------- GET VERSES FROM EXTERNAL API --------------------
 app.post("/app/get-verses", async ({ req, json }: any) => {

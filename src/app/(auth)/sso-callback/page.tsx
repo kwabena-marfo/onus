@@ -4,12 +4,13 @@
 import { Button } from "@/components/ui/button";
 import { useCreateUserApi } from "@/hooks/useQuery";
 import { useUser } from "@clerk/clerk-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 
 export default function SSOCallback() {
-  const { user } = useUser(); // <-- this is the full signed-in user
+  const { user } = useUser();
   const router = useRouter();
 
   const { trigger, isError, data } = useCreateUserApi();
@@ -40,12 +41,14 @@ export default function SSOCallback() {
     <div className="flex flex-col justify-center items-center mt-5">
       {isError ? (
         <>
-          <p className="text-red-400">Sorry An Error Occured</p>{" "}
-          <Button>Try Login Again</Button>
+          <p className="text-red-400 z-50">Sorry An Error Occured</p>{" "}
+          <Link href="/login">
+            <Button className="w-full bg-[#e77306]">Login Again</Button>
+          </Link>
         </>
       ) : (
         <>
-          <p className="text-gray-950">Signing you in...</p>
+          <p className="text-gray-950 z-50">Signing you in...</p>
           <LuLoaderCircle className="animate-spin text-black h-10 w-10 mt-2" />
         </>
       )}

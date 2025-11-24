@@ -9,9 +9,10 @@ datasource db {
 
 model user {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  clerkId    String?  @unique // Store Google ID here
-  name        String
+  clerkId     String?  @unique // Store Google ID here
   email       String    @unique
+  confirmed   Boolean
+  name        String
   username    String?
   password    String?
   image       String?
