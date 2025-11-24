@@ -3,7 +3,6 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { use } from "@clerk/nextjs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -23,6 +22,7 @@ import { LuLogOut } from "react-icons/lu";
 import menuData from "@/data/loggedInMenu";
 
 import { BsPerson } from "react-icons/bs";
+import { signOut } from "next-auth/react";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();

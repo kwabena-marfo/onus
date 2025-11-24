@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import signupFormSchema from "@/schemas/signupSchema";
-import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,9 +28,7 @@ import GoogleSignInButton from "@/components/auth/googleButton";
 import { useSignUp } from "@clerk/nextjs";
 import { useCreateUserApi } from "@/hooks/useQuery";
 
-export default function SignupForm({
-  className,
-}: React.ComponentProps<"form">) {
+export default function SignupForm({}: React.ComponentProps<"form">) {
   type signupSchema = z.infer<typeof signupFormSchema>;
   const router = useRouter();
 
@@ -136,142 +133,131 @@ export default function SignupForm({
   // Verification Step Form
   if (verificationStep) {
     return (
-      <div className="justify-self-center items-center z-50 w-full">
-        <div className="flex flex-col justify-center items-center gap-3 p-4">
-          <p className="md:text-xl text-sm">
-            Enter the verification code sent to your email
-          </p>
-          <Input
-            placeholder="Enter code"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-          />
-          {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
-          <Button
-            onClick={handleVerifyCode}
-            className="w-full bg-[#e77306] font-medium "
-          >
-            {isPending ? (
-              <LucideLoader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Verify Email"
-            )}
-          </Button>
-        </div>
+      <div className="flex flex-col gap-2 justify-self-center items-center z-50 w-full">
+        <p className="text-xl font-bold ">Verify Your Email</p>
+        <p className="md:text-xl text-sm">
+          Enter the verification code sent to your email
+        </p>
+        <Input
+          placeholder="Enter code"
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value)}
+        />
+        {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+        <Button
+          onClick={handleVerifyCode}
+          className="w-full bg-[#e77306] font-medium "
+        >
+          {isPending ? (
+            <LucideLoader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            "Verify Email"
+          )}
+        </Button>
       </div>
     );
   }
 
   // Signup Form
   return (
-    <div className="justify-self-center items-center z-50 w-full">
-      <form
-        onSubmit={handleSubmit(onSubmitSignupForm)}
-        className={cn(
-          "grid w-full gap-3 z-50 bg-white p-4 rounded-md border mt-4",
-          className
-        )}
-      >
-        {/* Heading */}
-        <div className="flex flex-col gap-1 justify-center items-center">
-          <p className="text-3xl md:text-6xl font-bold">Get Started</p>
-          <p className="text-center">
-            Your Journey to Spiritual Growth Starts Here.
-          </p>
+    <form onSubmit={handleSubmit(onSubmitSignupForm)}>
+      {/* Heading */}
+      <div className="flex flex-col gap-0 justify-center items-center mb-4">
+        <p className="text-3xl md:text-6xl font-bold">Get Started</p>
+        <p className="text-center">
+          Your Journey to Spiritual Growth Starts Here.
+        </p>
+      </div>
+
+      {/* Form Inputs */}
+      <div className="grid gap-4">
+        {/* Name */}
+        <div className="grid gap-1">
+          <Label>Your Name</Label>
+          <div className="relative w-full">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
+              <BsPerson />
+            </span>
+            <Input
+              className="pl-8"
+              placeholder="Enter your name"
+              {...register("name")}
+            />
+          </div>
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
         </div>
 
-        {/* Form Inputs */}
-        <div className="grid gap-4">
-          {/* Name */}
-          <div className="grid gap-1">
-            <Label>Your Name</Label>
-            <div className="relative w-full">
-              <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-                <BsPerson />
-              </span>
-              <Input
-                className="pl-8"
-                placeholder="Enter your name"
-                {...register("name")}
-              />
-            </div>
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )}
+        {/* Email */}
+        <div className="grid gap-1">
+          <Label>Your Email</Label>
+          <div className="relative w-full">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
+              <BsEnvelope />
+            </span>
+            <Input
+              className="pl-8"
+              placeholder="Enter your email"
+              {...register("email")}
+            />
           </div>
-
-          {/* Email */}
-          <div className="grid gap-1">
-            <Label>Your Email</Label>
-            <div className="relative w-full">
-              <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-                <BsEnvelope />
-              </span>
-              <Input
-                className="pl-8"
-                placeholder="Enter your email"
-                {...register("email")}
-              />
-            </div>
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="flex flex-col space-y-1.5">
-            <Label>Password</Label>
-            <div className="relative w-full">
-              <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-                <BsLock />
-              </span>
-              <Input
-                className="pl-8"
-                type={isHidePass ? "password" : "text"}
-                placeholder="Enter your password"
-                {...register("password")}
-              />
-              <span
-                onClick={() => setIsHidePass(!isHidePass)}
-                className="absolute right-2.5 bottom-2.5 cursor-pointer"
-              >
-                {isHidePass ? <BsEyeSlash /> : <BsEye />}
-              </span>
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div>
-
-          {/* Confirm Password */}
-          <div className="flex flex-col space-y-1.5">
-            <Label>Confirm Password</Label>
-            <div className="relative w-full">
-              <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-                <BsLock />
-              </span>
-              <Input
-                className="pl-8"
-                type={isHidePass ? "password" : "text"}
-                placeholder="Confirm your password"
-                {...register("confirmPassword")}
-              />
-              <span
-                onClick={() => setIsHidePass(!isHidePass)}
-                className="absolute right-2.5 bottom-2.5 cursor-pointer"
-              >
-                {isHidePass ? <BsEyeSlash /> : <BsEye />}
-              </span>
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
         </div>
 
-        {/* Sign Up Button */}
+        {/* Password */}
+        <div className="flex flex-col space-y-1.5">
+          <Label>Password</Label>
+          <div className="relative w-full">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
+              <BsLock />
+            </span>
+            <Input
+              className="pl-8"
+              type={isHidePass ? "password" : "text"}
+              placeholder="Enter your password"
+              {...register("password")}
+            />
+            <span
+              onClick={() => setIsHidePass(!isHidePass)}
+              className="absolute right-2.5 bottom-2.5 cursor-pointer"
+            >
+              {isHidePass ? <BsEyeSlash /> : <BsEye />}
+            </span>
+          </div>
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
+        </div>
+
+        {/* Confirm Password */}
+        <div className="flex flex-col space-y-1.5">
+          <Label>Confirm Password</Label>
+          <div className="relative w-full">
+            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
+              <BsLock />
+            </span>
+            <Input
+              className="pl-8"
+              type={isHidePass ? "password" : "text"}
+              placeholder="Confirm your password"
+              {...register("confirmPassword")}
+            />
+            <span
+              onClick={() => setIsHidePass(!isHidePass)}
+              className="absolute right-2.5 bottom-2.5 cursor-pointer"
+            >
+              {isHidePass ? <BsEyeSlash /> : <BsEye />}
+            </span>
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm">
+              {errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
         <div className="mt-2">
           <Button className="w-full bg-[#e77306] flex justify-center items-center gap-2">
             {isPending && <LucideLoader2 className="h-4 w-4 animate-spin" />}
@@ -282,20 +268,21 @@ export default function SignupForm({
             <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
           )}
         </div>
+      </div>
 
-        {/* Google Sign In */}
-        <div className="flex flex-col p-1">
-          <p className="text-center">Or</p>
-          <GoogleSignInButton />
-          <p className="text-center text-sm mt-2">
-            Already have an account?{" "}
-            <Link className="text-blue-500" href="/login">
-              Login
-            </Link>
-          </p>
-        </div>
-      </form>
-      {/* <div id="clerk-captcha"></div> */}
-    </div>
+      {/* Sign Up Button */}
+
+      {/* Google Sign In */}
+      <div className="flex flex-col p-1">
+        <p className="text-center">Or</p>
+        <GoogleSignInButton />
+        <p className="text-center text-sm mt-2">
+          Already have an account?{" "}
+          <Link className="text-blue-500" href="/login">
+            Login
+          </Link>
+        </p>
+      </div>
+    </form>
   );
 }

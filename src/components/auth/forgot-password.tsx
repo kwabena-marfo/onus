@@ -65,7 +65,7 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4  rounded-md   mt-10">
+    <div className="w-full rounded-md mt-10">
       {step === "request" && (
         <>
           <h2 className="text-2xl font-bold text-center ">Forgot Password</h2>

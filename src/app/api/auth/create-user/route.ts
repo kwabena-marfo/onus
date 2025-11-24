@@ -11,14 +11,7 @@ export async function POST(req: NextRequest) {
       where: { email },
     });
 
-    if (existingUser) {
-      return {
-        success: true,
-        created: false,
-        clerkId,
-        message: "User already exists",
-      };
-    }
+    if (existingUser) return NextResponse.json("Done");
 
     // 3. Create new user in Prisma
     await prisma.user.create({

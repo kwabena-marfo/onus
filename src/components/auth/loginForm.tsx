@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import loginFormSchema from "@/schemas/loginSchema";
-import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,7 @@ import Link from "next/link";
 import { useSignIn, useUser } from "@clerk/nextjs";
 import GoogleSignInButton from "./googleButton";
 
-export default function LoginForm({ className }: React.ComponentProps<"form">) {
+export default function LoginForm() {
   type loginSchema = z.infer<typeof loginFormSchema>;
 
   const router = useRouter();
@@ -77,14 +76,8 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmitLoginForm)}
-      className={cn(
-        "grid w-full gap-3 z-50 bg-white p-4 rounded-md border mt-5",
-        className
-      )}
-    >
-      <div className="flex flex-col gap-1 justify-center items-center">
+    <form onSubmit={handleSubmit(onSubmitLoginForm)}>
+      <div className="flex flex-col gap-0 justify-center items-center mb-4">
         <p className="text-3xl md:text-6xl font-bold">Login</p>
         <p className="text-center">
           Continue Your Journey to Spiritual Growth.
@@ -144,33 +137,33 @@ export default function LoginForm({ className }: React.ComponentProps<"form">) {
             <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}
         </div>
+        <div className="mt-2">
+          <Button className="w-full bg-[#e77306]" disabled={loading}>
+            {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Login <LuLogIn className="h-4 w-4 ml-2" />
+          </Button>
+
+          {errorMsg && (
+            <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
+          )}
+        </div>
+
+        {/* Google Login */}
+        <div className="flex flex-col p-1">
+          <p className="text-center">Or</p>
+
+          <GoogleSignInButton />
+          <p className="text-center text-sm mt-2">
+            Don&apos;t have an account? Click
+            <Link className="text-blue-500 pl-1" href="/signup">
+              Here
+            </Link>{" "}
+            to Sign Up
+          </p>
+        </div>
       </div>
 
       {/* Submit */}
-      <div className="mt-2">
-        <Button className="w-full bg-[#e77306]" disabled={loading}>
-          {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Login <LuLogIn className="h-4 w-4 ml-2" />
-        </Button>
-
-        {errorMsg && (
-          <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
-        )}
-      </div>
-
-      {/* Google Login */}
-      <div className="flex flex-col p-1">
-        <p className="text-center">Or</p>
-
-        <GoogleSignInButton />
-        <p className="text-center text-sm mt-2">
-          Don&apos;t have an account? Click
-          <Link className="text-blue-500 pl-1" href="/signup">
-            Here
-          </Link>{" "}
-          to Sign Up
-        </p>
-      </div>
     </form>
   );
 }
