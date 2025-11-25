@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import formatVersesFromExternalData from "@/lib/formatVersesFromExternalData";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function createOnusChecker(prisma: any) {
   return async (c: any, next: any) => {
     try {
-      const session = c.get("session");
+      const user = c.get("user");
+      console.log(user);
 
       const body = await c.req.json();
+
       const {
         id,
         foundBookIndex,
@@ -23,7 +26,7 @@ export default function createOnusChecker(prisma: any) {
 
       if (id) {
         await prisma.verses.update({
-          where: { userId: session.user.id, id },
+          where: { userId: user.id, id },
           data: {
             verseNotes,
             tags,
@@ -33,11 +36,9 @@ export default function createOnusChecker(prisma: any) {
         return c.json({ message: "Verse edited successfully" });
       }
 
-      console.log({ userId: session.user.id, book, chapter, verse, verseTo });
-
       const existingVerse = await prisma.verses.findFirst({
         where: {
-          userId: session.user.id,
+          userId: user.id,
           book,
           chapter,
           verse,
@@ -45,9 +46,7 @@ export default function createOnusChecker(prisma: any) {
         },
       });
 
-      if (existingVerse) {
-        return c.json({ error: "Verse already exists" }, 400);
-      }
+      if (existingVerse) return c.json({ error: "Verse already exists" }, 400);
 
       if (!onusVerse) {
         // Fetch verses from API

@@ -8,6 +8,7 @@ import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
+import authMiddleware from "../middlewares/authorize";
 
 export const runtime = "nodejs";
 
@@ -15,16 +16,19 @@ const app = new Hono().basePath("/api");
 
 app.use("*", cors());
 
+app.use("/api/app/*", authMiddleware(prisma));
+
 // -------------------- GET VERSES FROM EXTERNAL API --------------------
 app.post("/app/get-verses", async ({ req, json }: any) => {
   try {
-    const { book, chapter, translation, verses } = await req.json();
+    const { book, chapter, translation, verse, verseTo } = await req.json();
 
     const fetchedVerses = await getVersesFromExternalApi({
       book,
       chapter,
       translation,
-      verses,
+      verse,
+      verseTo,
     });
 
     return json(fetchedVerses);
@@ -37,16 +41,14 @@ app.post("/app/get-verses", async ({ req, json }: any) => {
 // -------------------- CREATE ONUS VERSE --------------------
 app.post(
   "/app/create-onus",
-  createOnusChecker(prisma),
-  async ({ req, json }: any) => {
+  // createOnusChecker(prisma),
+  async (c: any) => {
     try {
-      // Get Clerk user from request
-      const { userId } = getAuth(req.raw);
-      if (!userId) return json({ error: "Unauthorized" }, 401);
+      const user = c.get("user");
 
-      const client = await clerkClient();
+      console.log(user);
 
-      const user = await client.users.getUser(userId);
+      return c.json({ message: "Verse created successfully" });
 
       const {
         book,
@@ -58,7 +60,7 @@ app.post(
         verseNotes,
         tags,
         memorised,
-      } = await req.json();
+      } = await c.req.json();
 
       await prisma.verses.create({
         data: {
@@ -77,10 +79,10 @@ app.post(
         },
       });
 
-      return json({ message: "Verse created successfully" });
+      return c.json({ message: "Verse created successfully" });
     } catch (error) {
       console.error(error);
-      return json({ error: "An Error Occurred" }, 400);
+      return c.json({ error: "An Error Occurred" }, 400);
     }
   }
 );
@@ -88,12 +90,7 @@ app.post(
 // -------------------- GET USER VERSES --------------------
 app.get("/app/get-onus", async (c: any) => {
   try {
-    const { userId } = getAuth(c.req.raw);
-
-    const user = await prisma.user.findFirst({
-      where: { clerkId: userId },
-    });
-    if (!userId) return c.json({ error: "Unauthorized" }, 401);
+    const user = c.get("user");
 
     const verses = await prisma.verses.findMany({
       where: { userId: user?.id },

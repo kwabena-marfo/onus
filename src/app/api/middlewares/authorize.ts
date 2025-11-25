@@ -1,51 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getServerSession } from "next-auth";
-import { jwtVerify } from "jose";
-import type { Context, Next } from "hono";
-import { authOptions } from "@/lib/authOptions";
 
-export default function authorizeMiddleware() {
-  return async (c: Context, next: Next) => {
+import { getAuth } from "@clerk/nextjs/server";
+
+export default function authMiddleware(prisma: any) {
+  return async (c: any, next: any) => {
     try {
-      let user: any = null;
+      const { userId: clerkId } = getAuth(c.req.raw);
 
-      try {
-        const session = await getServerSession(authOptions);
-        if (session?.user) {
-          user = session.user;
-        }
-      } catch {
-        // Not running in Next.js, skip
-      }
+      // No Clerk session?
+      if (!clerkId) return c.json({ error: "Unauthorized" }, 401);
 
-      // 2. Try Mobile auth (JWT)
-      if (!user) {
-        const authHeader = c.req.header("Authorization");
+      // Check if user exists in your DB
+      const user = await prisma.user.findFirst({
+        where: { clerkId },
+      });
 
-        if (authHeader?.startsWith("Bearer ")) {
-          const token = authHeader.split(" ")[1];
-          try {
-            const secret = new TextEncoder().encode(
-              process.env.CLIENT_SECRETE as string
-            );
-            const { payload } = await jwtVerify(token, secret);
-            user = payload;
-          } catch (err) {
-            console.error("JWT verification failed:", err);
-          }
-        }
-      }
+      if (!user) return c.json({ error: "User not found in database" }, 404);
 
-      if (!user) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
+      // Attach DB user to context
+      c.set("user", user);
 
-      // Attach to context
-      c.set("session", { user });
       await next();
-    } catch (err) {
-      console.log("Auth middleware error:", err);
-      return c.json({ error: "Unauthorized" }, 401);
+    } catch (error) {
+      console.error("Auth Middleware Error:", error);
+      return c.json({ error: "Authentication failed" }, 401);
     }
   };
 }

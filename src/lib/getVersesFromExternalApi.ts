@@ -5,9 +5,15 @@ export default async function getVersesFromExternalApi({
   book,
   chapter,
   translation,
-  verses,
+  verse,
+  verseTo,
 }: any) {
   try {
+    const start = Number(verse);
+    const end = verseTo ? Number(verseTo) : start;
+
+    const verses = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
     const url = `https://bolls.life/get-verses/`;
     const response = await axios.post(url, [
       {
