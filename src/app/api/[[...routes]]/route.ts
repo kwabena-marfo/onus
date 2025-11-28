@@ -4,7 +4,6 @@ import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
 import z from "zod";
 
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
@@ -16,39 +15,38 @@ const app = new Hono().basePath("/api");
 
 app.use("*", cors());
 
-app.use("/api/app/*", authMiddleware(prisma));
-
 // -------------------- GET VERSES FROM EXTERNAL API --------------------
-app.post("/app/get-verses", async ({ req, json }: any) => {
-  try {
-    const { book, chapter, translation, verse, verseTo } = await req.json();
+app.post(
+  "/app/get-verses",
+  authMiddleware(prisma),
+  async ({ req, json }: any) => {
+    try {
+      const { book, chapter, translation, verse, verseTo } = await req.json();
 
-    const fetchedVerses = await getVersesFromExternalApi({
-      book,
-      chapter,
-      translation,
-      verse,
-      verseTo,
-    });
+      const fetchedVerses = await getVersesFromExternalApi({
+        book,
+        chapter,
+        translation,
+        verse,
+        verseTo,
+      });
 
-    return json(fetchedVerses);
-  } catch (err) {
-    console.error(err);
-    return json({ error: "Failed to fetch verse" }, 500);
+      return json(fetchedVerses);
+    } catch (err) {
+      console.error(err);
+      return json({ error: "Failed to fetch verse" }, 500);
+    }
   }
-});
+);
 
 // -------------------- CREATE ONUS VERSE --------------------
 app.post(
   "/app/create-onus",
-  // createOnusChecker(prisma),
+  authMiddleware(prisma),
+  createOnusChecker(prisma),
   async (c: any) => {
     try {
       const user = c.get("user");
-
-      console.log(user);
-
-      return c.json({ message: "Verse created successfully" });
 
       const {
         book,
@@ -69,7 +67,7 @@ app.post(
           verse,
           verseTo: verseTo ?? null,
           version,
-          onusVerse,
+          onusVerse: onusVerse || c.get("onusVerse"),
           verseNotes,
           tags,
           memorised,
@@ -88,7 +86,7 @@ app.post(
 );
 
 // -------------------- GET USER VERSES --------------------
-app.get("/app/get-onus", async (c: any) => {
+app.get("/app/get-onus", authMiddleware(prisma), async (c: any) => {
   try {
     const user = c.get("user");
 
@@ -148,16 +146,11 @@ app.delete("/app/delete-onus", async (c) => {
 });
 
 // -------------------- CREATE ONUS QUIZ --------------------
-app.post("/app/create-onus-quize", async ({ req, json }: any) => {
+app.post("/app/create-onus-quize", authMiddleware(prisma), async (c: any) => {
   try {
-    const { userId } = getAuth(req.raw);
-    if (!userId) return json({ error: "Unauthorized" }, 401);
+    const user = c.get("user");
 
-    const client = await clerkClient();
-
-    const user = await client.users.getUser(userId);
-
-    const { quizName, score, total } = await req.json();
+    const { quizName, score, total } = await c.req.json();
 
     await prisma.quizScore.upsert({
       where: {
@@ -167,25 +160,26 @@ app.post("/app/create-onus-quize", async ({ req, json }: any) => {
       create: { userId: user.id, quizName, score, total },
     });
 
-    return json({ message: "Quiz saved successfully" });
+    return c.json({ message: "Quiz saved successfully" });
   } catch (error) {
     console.error(error);
-    return json({ error: "An Error Occurred" }, 500);
+    return c.json({ error: "An Error Occurred" }, 500);
   }
 });
 
 // -------------------- GET USER QUIZZES --------------------
-app.get("/app/get-onus-quize", async ({ json, req }: any) => {
+app.get("/app/get-onus-quize", authMiddleware(prisma), async (c: any) => {
   try {
-    const { userId } = getAuth(req.raw);
-    if (!userId) return json({ error: "Unauthorized" }, 401);
+    const user = c.get("user");
 
-    const quizzes = await prisma.quizScore.findMany({ where: { userId } });
+    const quizzes = await prisma.quizScore.findMany({
+      where: { userId: user?.id },
+    });
 
-    return json(quizzes);
+    return c.json(quizzes);
   } catch (error) {
     console.error(error);
-    return json({ error: "An error occurred" }, 500);
+    return c.json({ error: "An error occurred" }, 500);
   }
 });
 

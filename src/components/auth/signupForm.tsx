@@ -37,10 +37,10 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   const [isHidePass, setIsHidePass] = useState(true);
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [verificationStep, setVerificationStep] = useState(false);
-  const [resentCode, setResentCode] = useState(false);
+  // const [verificationStep, setVerificationStep] = useState(false);
+  // const [resentCode, setResentCode] = useState(false);
 
-  const [verificationCode, setVerificationCode] = useState("");
+  // const [verificationCode, setVerificationCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const {
@@ -58,7 +58,7 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
     if (!isLoaded) return;
     setIsPending(true);
-    setErrorMsg("");
+    // setErrorMsg("");
 
     try {
       // 1. Create Clerk user
@@ -74,10 +74,14 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
         name: user?.firstName,
       });
 
-      // 2. Send email verification code
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      await setActive({ session: signUp.createdSessionId });
 
-      setVerificationStep(true);
+      setIsSuccess(true);
+
+      // 2. Send email verification code
+      // await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+
+      // setVerificationStep(true);
     } catch (error: any) {
       setErrorMsg(
         error.errors?.[0]?.longMessage || error.message || "Signup failed"
@@ -88,47 +92,47 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   };
 
   // Step 2: Verify email code
-  const handleVerifyCode = async () => {
-    if (!isLoaded) return;
-    setIsPending(true);
-    setErrorMsg("");
+  // const handleVerifyCode = async () => {
+  //   if (!isLoaded) return;
+  //   setIsPending(true);
+  //   setErrorMsg("");
 
-    try {
-      await signUp.attemptEmailAddressVerification({ code: verificationCode });
+  //   try {
+  //     await signUp.attemptEmailAddressVerification({ code: verificationCode });
 
-      if (signUp.createdSessionId) {
-        await setActive({ session: signUp.createdSessionId });
-      }
+  //     if (signUp.createdSessionId) {
+  //       await setActive({ session: signUp.createdSessionId });
+  //     }
 
-      setIsSuccess(true);
-    } catch (error: any) {
-      setErrorMsg(
-        error.errors?.[0]?.longMessage || error.message || "Verification failed"
-      );
-    } finally {
-      setIsPending(false);
-    }
-  };
+  //     setIsSuccess(true);
+  //   } catch (error: any) {
+  //     setErrorMsg(
+  //       error.errors?.[0]?.longMessage || error.message || "Verification failed"
+  //     );
+  //   } finally {
+  //     setIsPending(false);
+  //   }
+  // };
 
-  const handleResendCode = async () => {
-    if (!isLoaded) return;
-    setIsPending(true);
-    setErrorMsg("");
-    setResentCode(false);
+  // const handleResendCode = async () => {
+  //   if (!isLoaded) return;
+  //   setIsPending(true);
+  //   setErrorMsg("");
+  //   setResentCode(false);
 
-    try {
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      setResentCode(true);
-    } catch (error: any) {
-      setErrorMsg(
-        error.errors?.[0]?.longMessage ||
-          error.message ||
-          "Failed to resend code"
-      );
-    } finally {
-      setIsPending(false);
-    }
-  };
+  //   try {
+  //     await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+  //     setResentCode(true);
+  //   } catch (error: any) {
+  //     setErrorMsg(
+  //       error.errors?.[0]?.longMessage ||
+  //         error.message ||
+  //         "Failed to resend code"
+  //     );
+  //   } finally {
+  //     setIsPending(false);
+  //   }
+  // };
 
   if (isSuccess) {
     return (
@@ -153,46 +157,46 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   }
 
   // Verification Step Form
-  if (verificationStep) {
-    return (
-      <div className="flex flex-col gap-2 justify-self-center items-center z-50 w-full">
-        <p className="text-xl font-bold ">Verify Your Email</p>
-        <p className="md:text-xl text-sm">
-          Enter the verification code sent to your email
-        </p>
-        <Input
-          placeholder="Enter code"
-          value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
-        />
-        {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
-        <div className="flex flex-col gap-2 mt-2 w-full">
-          <Button
-            onClick={handleVerifyCode}
-            className="flex-1 bg-[#e77306] font-medium"
-          >
-            {isPending ? (
-              <LucideLoader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Verify Email"
-            )}
-          </Button>
-          <Button
-            onClick={handleResendCode}
-            variant="outline"
-            className="flex-1 border border-gray-300 font-medium"
-          >
-            Resend Code
-          </Button>
-          {resentCode ? (
-            <p className="md:text-xl text-sm text-center">
-              Code has been resent
-            </p>
-          ) : null}
-        </div>
-      </div>
-    );
-  }
+  // if (verificationStep) {
+  //   return (
+  //     <div className="flex flex-col gap-2 justify-self-center items-center z-50 w-full">
+  //       <p className="text-xl font-bold ">Verify Your Email</p>
+  //       <p className="md:text-xl text-sm">
+  //         Enter the verification code sent to your email
+  //       </p>
+  //       <Input
+  //         placeholder="Enter code"
+  //         value={verificationCode}
+  //         onChange={(e) => setVerificationCode(e.target.value)}
+  //       />
+  //       {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+  //       <div className="flex flex-col gap-2 mt-2 w-full">
+  //         <Button
+  //           onClick={handleVerifyCode}
+  //           className="flex-1 bg-[#e77306] font-medium"
+  //         >
+  //           {isPending ? (
+  //             <LucideLoader2 className="h-4 w-4 animate-spin" />
+  //           ) : (
+  //             "Verify Email"
+  //           )}
+  //         </Button>
+  //         <Button
+  //           onClick={handleResendCode}
+  //           variant="outline"
+  //           className="flex-1 border border-gray-300 font-medium"
+  //         >
+  //           Resend Code
+  //         </Button>
+  //         {resentCode ? (
+  //           <p className="md:text-xl text-sm text-center">
+  //             Code has been resent
+  //           </p>
+  //         ) : null}
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // Signup Form
   return (

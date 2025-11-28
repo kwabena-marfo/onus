@@ -7,10 +7,11 @@ export default function authMiddleware(prisma: any) {
     try {
       const { userId: clerkId } = getAuth(c.req.raw);
 
+      console.log(clerkId);
+
       // No Clerk session?
       if (!clerkId) return c.json({ error: "Unauthorized" }, 401);
 
-      // Check if user exists in your DB
       const user = await prisma.user.findFirst({
         where: { clerkId },
       });

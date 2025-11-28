@@ -77,8 +77,8 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm)}>
-      <div className="flex flex-col gap-0 justify-center items-center mb-4">
-        <p className="text-3xl md:text-6xl font-bold">Login</p>
+      <div className="flex flex-col gap-1 justify-center items-center mb-4">
+        <p className="text-3xl md:text-4xl font-bold">Login</p>
         <p className="text-center">
           Continue Your Journey to Spiritual Growth.
         </p>

@@ -54,10 +54,8 @@ export default function createOnusChecker(prisma: any) {
           book: foundBookIndex,
           chapter,
           translation: "NKJV",
-          verses: Array.from(
-            { length: +verseTo || +verse - +verse + 1 },
-            (_, i) => +verse + i
-          ),
+          verse,
+          verseTo,
         });
 
         const formattedVerse = formatVersesFromExternalData(fetchedVerses);
