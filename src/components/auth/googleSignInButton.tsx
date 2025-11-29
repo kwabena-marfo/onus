@@ -5,6 +5,7 @@ import { useSignIn } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
 import { LucideLoader2 } from "lucide-react";
+import { LuLoaderCircle } from "react-icons/lu";
 
 type GoogleSignInButtonProps = {
   className?: string;
@@ -13,7 +14,7 @@ type GoogleSignInButtonProps = {
 export default function GoogleSignInButton({
   className,
 }: GoogleSignInButtonProps) {
-  const { signIn } = useSignIn();
+  const { isLoaded, signIn } = useSignIn();
 
   const [uiError, setUiError] = useState<string | null>(null);
 
@@ -39,6 +40,12 @@ export default function GoogleSignInButton({
       setIsLoading(false);
     }
   };
+  if (!isLoaded)
+    return (
+      <div className="flex flex-1 items-center justify-center py-4">
+        <LuLoaderCircle className="animate-spin w-4 h-4" />
+      </div>
+    );
 
   return (
     <>

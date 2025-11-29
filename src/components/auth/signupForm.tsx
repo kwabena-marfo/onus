@@ -52,8 +52,8 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
 
   const { trigger } = useCreateUserApi();
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
-    if (!isLoaded) return;
     setIsPending(true);
+    if (!isLoaded) return null;
 
     try {
       // 1. Create Clerk user

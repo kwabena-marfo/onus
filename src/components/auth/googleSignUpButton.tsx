@@ -5,6 +5,7 @@ import { useSignUp } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
 import { LucideLoader2 } from "lucide-react";
+import { LuLoaderCircle } from "react-icons/lu";
 
 type GooglesignUpButtonProps = {
   className?: string;
@@ -13,7 +14,7 @@ type GooglesignUpButtonProps = {
 export default function GoogleSignUpButton({
   className,
 }: GooglesignUpButtonProps) {
-  const { signUp } = useSignUp();
+  const { signUp, isLoaded } = useSignUp();
 
   const [uiError, setUiError] = useState<string | null>(null);
 
@@ -26,19 +27,24 @@ export default function GoogleSignUpButton({
     try {
       if (!signUp) throw new Error("Clerk signUp is not initialized");
 
-      const createdUser = await signUp.authenticateWithRedirect({
+      await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: `${window.location.origin}/sso-callback`,
         redirectUrlComplete: `${window.location.origin}/app/dashboard`,
       });
-
-      console.log(createdUser);
     } catch (error) {
       console.error("Google Auth Error:", error);
       setUiError("Something went wrong. Please try again.");
       setIsLoading(false);
     }
   };
+
+  if (!isLoaded)
+    return (
+      <div className="flex flex-1 items-center justify-center py-4">
+        <LuLoaderCircle className="animate-spin w-4 h-4" />
+      </div>
+    );
 
   return (
     <>

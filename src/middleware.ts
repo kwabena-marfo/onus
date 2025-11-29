@@ -4,12 +4,9 @@ export default clerkMiddleware();
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-
-    // Apply to all API routes *except* the Google callback
-    "/api/(.*)",
-
-    "/((?!api/auth/create-user).*)",
+    // Run on all routes except static files and Next internals
+    "/((?!.+\\.[\\w]+$|_next).*)",
+    "/",
+    "/(api|trpc)(.*)",
   ],
 };
