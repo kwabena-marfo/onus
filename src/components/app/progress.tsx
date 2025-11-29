@@ -8,15 +8,14 @@ import { Progress } from "@/components/ui/progress";
 export default function ProgressComp({ data }: any) {
   return (
     <div className="flex flex-col gap-1">
-      <h4 className="text-2xl md:text-4xl font-bold text-gray-700">
-        Your Progress
-      </h4>
       <div className=" flex flex-col gap-4 w-full p-3 border rounded-lg">
         {!data?.length ? (
           <div className="flex flex-col justify-center items-center h-full">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>
-            <p>Your Progress will appear here</p>
+            <p>
+              Your <strong> Progress </strong> will appear here
+            </p>
           </div>
         ) : (
           <div className="flex flex-col w-full gap-1">

@@ -33,7 +33,7 @@ import {
 } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 
-export default function DataTable({ data }: any) {
+export default function DataTable({ data, isTittle }: any) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ["select"]: false,
   });
@@ -63,23 +63,26 @@ export default function DataTable({ data }: any) {
     pageCount: -1,
     state: { columnVisibility, sorting },
     initialState: { columnVisibility, sorting },
-    // autoResetAll: true,
   });
 
   return (
     <div className="flex flex-col gap-1">
-      <h4 className="text-2xl md:text-4xl font-bold text-gray-700">
-        Added Verses
-      </h4>
       <div className=" flex flex-col gap-4 w-full p-3 border rounded-lg">
         {!data?.length ? (
           <div className="flex flex-col justify-center items-center h-full">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>
-            <p>Your Added Verses will appear here</p>
+            <p>
+              Your <strong> Added Verses </strong> will appear here
+            </p>
           </div>
         ) : (
-          <div className="w-full" id="table">
+          <div className="flex flex-col w-full gap-1">
+            {isTittle ? (
+              <h4 className="text-2xl md:text-4xl font-bold text-gray-700">
+                Added Verses
+              </h4>
+            ) : null}
             <Table className="grid gap-3">
               <TableHeader>
                 <div className="relative col-span-6  ">

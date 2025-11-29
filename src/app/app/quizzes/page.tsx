@@ -1,30 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useGetOnus, useGetOnusQuize } from "@/hooks/global/useSWRFetch";
-
 import Content from "@/components/app/content";
 
-import { LuLoaderCircle } from "react-icons/lu";
-import { BsDatabaseSlash, BsLightbulb, BsTriangleFill } from "react-icons/bs";
+import { BsDatabaseSlash, BsLightbulb } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import NewQuizeModal from "@/components/app/newQuize";
+import { useGetQuizzes, useGetVerses } from "@/hooks/useQuery";
+import IsLoadingError from "@/components/app/isLoadingError";
 
 export default function Quizzes() {
-  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
+  const { isPending, isError, error, data: onusData } = useGetVerses();
 
   const {
-    getOnusQuizeIsLoading,
-    onusQuizeData,
-    getOnusQuizeIsError,
-    mutateGetOnusQuize,
-  } = useGetOnusQuize();
+    isPending: getOnusQuizeIsLoading,
+    data: onusQuizeData,
+    isError: getOnusQuizeIsError,
+  } = useGetQuizzes();
 
-  if (getOnusIsLoading || getOnusQuizeIsLoading)
-    return <LuLoaderCircle className="animate-spin" />;
-
-  if (getOnusIsError || getOnusQuizeIsError) return <BsTriangleFill />;
+  <IsLoadingError
+    isLoading={isPending || getOnusQuizeIsLoading}
+    error={error}
+    isError={isError || getOnusQuizeIsError}
+  />;
 
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];
@@ -40,7 +39,10 @@ export default function Quizzes() {
             <div className="flex flex-col md:col-span-3 justify-center items-center  p-3 border rounded-lg   w-full ">
               <BsDatabaseSlash className="w-12 h-12" />
               <p>No Quizzes Found</p>
-              <p>Memorise a book (5 verses) to activate a quize</p>
+              <p className="text-center">
+                Memorise at least <strong>(5 verses)</strong> of a book to
+                activate a quize
+              </p>
             </div>
           ) : (
             <div className="md:col-span-3 grid h-fit justify-center items-center md:grid-cols-4 grid-cols-2  gap-3 md:pr-2 pb-2">
@@ -71,7 +73,6 @@ export default function Quizzes() {
                     <div className="flex  gap-1 mt-2">
                       <NewQuizeModal
                         book={book}
-                        mutateGetOnusQuize={mutateGetOnusQuize}
                         TriggerComp={() => (
                           <Button
                             size="sm"

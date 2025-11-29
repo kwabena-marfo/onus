@@ -14,7 +14,7 @@ export default function CarouselComp({
   tittle,
   subTittle,
   onFinish,
-  createOnusQuizeStates,
+  isError,
 }: any) {
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -76,7 +76,7 @@ export default function CarouselComp({
               >
                 Finish Quiz
               </Button>
-              {createOnusQuizeStates ? (
+              {isError ? (
                 <p className="text-red-400">
                   Sorry, could not save quize. Please try again
                 </p>

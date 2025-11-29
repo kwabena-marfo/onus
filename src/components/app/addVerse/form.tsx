@@ -4,19 +4,14 @@
 import { useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
-import { useGetOnus } from "@/hooks/global/useSWRFetch";
-
 import bibleData from "@/data/bibleFull.json";
 
 import { cn } from "@/lib/utils";
 
-import useTriggerRequest from "@/hooks/global/useTriggerRequest";
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { BsCheck2Circle, BsHandThumbsUp } from "react-icons/bs";
-import { LuLoaderCircle } from "react-icons/lu";
-import { BsTriangleFill } from "react-icons/bs";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { LuLoader } from "react-icons/lu";
@@ -27,26 +22,46 @@ import Tags from "./fields/tags";
 import DeleteVerse from "./deleteVerse";
 import formatVersesFromExternalData from "@/lib/formatVersesFromExternalData";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  useDeleteVerse,
+  useFetchVersesApi,
+  useGetVerses,
+  usePostVerse,
+} from "@/hooks/useQuery";
+import IsLoadingError from "../isLoadingError";
+import { AxiosError } from "axios";
 
 export default function AddVerseForm({ className, verse }: any) {
-  const { onusData, getOnusIsLoading, getOnusIsError, mutateGetOnus } =
-    useGetOnus();
+  const {
+    data: onusData,
+    isLoading: getOnusIsLoading,
+    isError: getOnusIsError,
+    error: getOnusError,
+  } = useGetVerses();
 
   const {
-    reqFunction: createOnus,
-    reqState: createOnusStates,
-    setReqState: resetCreateOnusStates,
-  } = useTriggerRequest();
-
-  console.log(createOnusStates);
+    trigger: fetchVerses,
+    isPending: fetchVersesLoading,
+    data: fetchVersesData,
+    isError: isFetchVersesError,
+    error: fetchVersesError,
+  } = useFetchVersesApi();
 
   const {
-    reqFunction: getVerse,
-    reqState: getVerseStates,
-    setReqState: resetGetVerseState,
-  } = useTriggerRequest();
+    trigger: postVerse,
+    reset: resetPostVers,
+    isPending: postVerseLoading,
+    error: postVerseError,
+    isError: postVerseIsError,
+    isSuccess,
+  } = usePostVerse();
 
-  const { reqFunction: delOnus, reqState: delOnusState } = useTriggerRequest();
+  const {
+    trigger: deletePost,
+    isPending: deletePostLoading,
+    error: deletePostError,
+    isError: isDeletePostError,
+  } = useDeleteVerse();
 
   const {
     handleSubmit,
@@ -87,7 +102,7 @@ export default function AddVerseForm({ className, verse }: any) {
   const foundBookIndex = bibleData.findIndex((b: any) => b.value === book);
 
   useEffect(() => {
-    if (createOnusStates?.data) {
+    if (isSuccess) {
       reset({
         book: null,
         chapter: "",
@@ -99,39 +114,36 @@ export default function AddVerseForm({ className, verse }: any) {
         memorised: "",
         color: "blue",
       });
-      mutateGetOnus();
-      resetGetVerseState(null);
     }
-  }, [createOnusStates]);
+  }, [isSuccess]);
 
   useEffect(() => {
-    if (getVerseStates?.data) {
-      const formattedVerse = formatVersesFromExternalData(getVerseStates?.data);
+    if (fetchVersesData) {
+      const formattedVerse = formatVersesFromExternalData(
+        fetchVersesData?.data
+      );
 
       setValue("onusVerse", formattedVerse);
     }
-  }, [getVerseStates]);
-
-  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
-
-  if (getOnusIsError) return <BsTriangleFill />;
+  }, [fetchVersesData]);
 
   const onSubmit = async (data: any) => {
-    // return console.log(data);
-    await createOnus({
-      route: "/api/app/create-onus",
-      reqType: "post",
-      data: {
-        ...data,
-        foundBookIndex,
-        ...(verse ? { id: verse?.id } : {}),
-      },
+    await postVerse({
+      ...data,
+      foundBookIndex,
+      ...(verse ? { id: verse?.id } : {}),
     });
   };
 
+  <IsLoadingError
+    isLoading={getOnusIsLoading}
+    error={getOnusError}
+    isError={getOnusIsError}
+  />;
+
   return (
     <>
-      {createOnusStates?.data ? (
+      {isSuccess ? (
         <div className="flex flex-col justify-center items-center gap-3 p-4">
           <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
           <h1 className="text-center text-xl md:text-3xl font-bold text-gray-700">
@@ -142,7 +154,7 @@ export default function AddVerseForm({ className, verse }: any) {
           </p>
           <Button
             onClick={() => {
-              resetCreateOnusStates(null);
+              resetPostVers();
             }}
             className="w-full bg-[#fa9a40] text-gray-800"
           >
@@ -176,10 +188,12 @@ export default function AddVerseForm({ className, verse }: any) {
                   <ChapterAndVerse
                     Controller={Controller}
                     watch={watch}
-                    getVerse={getVerse}
+                    fetchVerses={fetchVerses}
+                    fetchVersesLoading={fetchVersesLoading}
+                    isFetchVersesError={isFetchVersesError}
+                    fetchVersesError={fetchVersesError}
                     verseTo={verseToValue}
                     onusVerse={onusVerse}
-                    getVerseStates={getVerseStates}
                     control={control}
                     errors={errors}
                     book={book}
@@ -247,17 +261,18 @@ export default function AddVerseForm({ className, verse }: any) {
             />
             <div className="flex flex-col gap-3">
               <Button
-                disabled={createOnusStates?.pending}
+                disabled={postVerseLoading}
                 className="rounded-md bg-[#fa9a40] "
               >
-                {createOnusStates?.pending && (
+                {postVerseLoading && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 {verse ? "Edit Verse" : "Add Verse"}
               </Button>
-              {createOnusStates?.error ? (
-                <p className="text-red-500 text-sm text-center">
-                  {createOnusStates?.error?.error as any}
+              {postVerseIsError ? (
+                <p className="text-left text-red-500">
+                  {(postVerseError as AxiosError<{ error: string }>)?.response
+                    ?.data?.error || "Something went wrong"}
                 </p>
               ) : null}
             </div>
@@ -266,9 +281,10 @@ export default function AddVerseForm({ className, verse }: any) {
           {verse ? (
             <DeleteVerse
               ids={[verse?.id]}
-              mutateGetOnus={mutateGetOnus}
-              delOnusState={delOnusState}
-              delOnus={delOnus}
+              deletePostLoading={deletePostLoading}
+              deletePost={deletePost}
+              deletePostError={deletePostError}
+              isDeletePostError={isDeletePostError}
             />
           ) : null}
         </>

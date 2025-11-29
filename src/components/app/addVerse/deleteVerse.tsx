@@ -15,22 +15,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { BsTrash } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
+import { AxiosError } from "axios";
 
 export default function DeleteVerse({
   ids,
-  mutateGetOnus,
-  delOnus,
-  delOnusState,
+  deletePost,
+  deletePostLoading,
+  deletePostError,
+  isDeletePostError,
 }: any) {
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
     try {
-      await delOnus({
-        route: `/api/app/delete-onus/?ids=${JSON.stringify(ids)}`,
-        reqType: "delete",
-      });
-      await mutateGetOnus();
+      await deletePost([ids]);
       toast("Verse Deleted succesfully");
       // setOpen(false); // ✅ only close after success
     } catch (error) {
@@ -65,10 +63,10 @@ export default function DeleteVerse({
             </AlertDialogCancel>
             <Button
               className="bg-red-600 text-white hover:bg-red-700"
-              disabled={delOnusState?.pending}
+              disabled={deletePostLoading}
               onClick={handleDelete}
             >
-              {delOnusState?.pending ? (
+              {deletePostLoading ? (
                 <>
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                   Deleting...
@@ -77,7 +75,12 @@ export default function DeleteVerse({
                 "Continue"
               )}
             </Button>
-            {delOnusState?.erro ? <p>An Error Occured</p> : null}
+            {isDeletePostError ? (
+              <p className="text-left text-red-500">
+                {(deletePostError as AxiosError<{ error: string }>)?.response
+                  ?.data?.error || "Something went wrong"}
+              </p>
+            ) : null}{" "}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

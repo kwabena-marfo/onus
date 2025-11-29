@@ -7,16 +7,12 @@ import CarouselComp from "./carousel";
 import { CarouselItem } from "@/components/ui/carousel";
 import Flashcard from "./flashCard";
 import Congratulations from "./congratulations";
-import useTriggerRequest from "@/hooks/global/useTriggerRequest";
 import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
+import { usePostOnusQuize } from "@/hooks/useQuery";
 
-export default function QuizeFlashcardCarousel({
-  book,
-  mutateGetOnusQuize,
-}: any) {
-  // ✅ Extract questions for the current book
+export default function QuizeFlashcardCarousel({ book }: any) {
   const selectedBook = quizzes.find(
     (q) => q.book.toLowerCase() === book.toLowerCase()
   );
@@ -24,10 +20,12 @@ export default function QuizeFlashcardCarousel({
   const bookQuestions = selectedBook ? selectedBook.questions : [];
 
   const {
-    reqFunction: createOnusQuize,
-    reqState: createOnusQuizeStates,
-    setReqState: resetCreateOnusQuizeStates,
-  } = useTriggerRequest();
+    trigger: createOnusQuize,
+    isPending,
+    isError,
+    reset,
+    isSuccess,
+  } = usePostOnusQuize();
 
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -69,23 +67,18 @@ export default function QuizeFlashcardCarousel({
     setScore(newScore);
 
     await createOnusQuize({
-      route: "/api/app/create-onus-quize",
-      reqType: "post",
-      data: {
-        quizName: book,
-        score: newScore,
-        total: bookQuestions.length,
-      },
+      quizName: book,
+      score: newScore,
+      total: bookQuestions.length,
     });
   };
 
   useEffect(() => {
-    if (createOnusQuizeStates?.data) {
-      mutateGetOnusQuize();
+    if (isSuccess) {
       setFinished(true);
-      resetCreateOnusQuizeStates(null);
+      reset();
     }
-  }, [createOnusQuizeStates]);
+  }, [isSuccess]);
 
   if (!selectedBook) {
     return (
@@ -98,7 +91,7 @@ export default function QuizeFlashcardCarousel({
   }
 
   // ✅ Show result screen
-  if (!createOnusQuizeStates?.error && finished) {
+  if (!isError && finished) {
     return (
       <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start">
         <Congratulations />
@@ -128,7 +121,7 @@ export default function QuizeFlashcardCarousel({
     );
   }
 
-  if (createOnusQuizeStates?.pending) {
+  if (isPending) {
     return (
       <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
     );
@@ -150,7 +143,7 @@ export default function QuizeFlashcardCarousel({
         ))
       }
       onFinish={handleFinish}
-      createOnusQuizeStates={createOnusQuizeStates}
+      isError={isError}
     />
   );
 }

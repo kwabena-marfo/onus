@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AxiosError } from "axios";
 import { LuLoaderCircle, LuSearch } from "react-icons/lu";
 
 export default function ChapterAndVerse({
@@ -20,21 +21,19 @@ export default function ChapterAndVerse({
   verse,
   verseTo,
   foundBookIndex,
-  getVerseStates,
-  getVerse,
+  fetchVerses,
+  fetchVersesLoading,
+  isFetchVersesError,
+  fetchVersesError,
   errors,
 }: any) {
   const handeGetVerse = async () => {
-    await getVerse({
-      route: `/api/app/get-verses`,
-      reqType: "post",
-      data: {
-        translation: "NKJV",
-        book: foundBookIndex,
-        chapter,
-        verse,
-        verseTo,
-      },
+    await fetchVerses({
+      translation: "NKJV",
+      book: foundBookIndex,
+      chapter,
+      verse,
+      verseTo,
     });
   };
   return (
@@ -160,7 +159,7 @@ export default function ChapterAndVerse({
             className="flex-1 mt-5 w-full"
           >
             {" "}
-            {getVerseStates?.pending ? (
+            {fetchVersesLoading ? (
               <LuLoaderCircle className="animate-spin" />
             ) : (
               <LuSearch />
@@ -172,6 +171,12 @@ export default function ChapterAndVerse({
           <p className="text-red-500 text-sm">{errors?.onusVerse?.message}</p>
         )}
       </div>
+      {isFetchVersesError && (
+        <p className="text-left text-red-500">
+          {(fetchVersesError as AxiosError<{ error: string }>)?.response?.data
+            ?.error || "Something went wrong"}
+        </p>
+      )}
     </div>
   );
 }

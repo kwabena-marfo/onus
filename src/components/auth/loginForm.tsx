@@ -19,13 +19,14 @@ import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 
 import { useSignIn, useUser } from "@clerk/nextjs";
-import GoogleSignInButton from "./googleButton";
+import GoogleSignInButton from "./googleSignInButton";
 
 export default function LoginForm() {
   type loginSchema = z.infer<typeof loginFormSchema>;
 
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
 
   const { isLoaded, signIn, setActive } = useSignIn();

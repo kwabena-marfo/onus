@@ -3,28 +3,34 @@
 
 import Image from "next/image";
 
-import { useGetOnus } from "@/hooks/global/useSWRFetch";
-
 import Content from "@/components/app/content";
 import VerseFlashCardModal from "@/components/app/verseFlashcard";
 
-import { LuLoaderCircle } from "react-icons/lu";
-import { BsDatabaseSlash, BsTriangleFill } from "react-icons/bs";
+import { BsDatabaseSlash } from "react-icons/bs";
 
 import ProgressComp from "@/components/app/progress";
+import { useGetVerses } from "@/hooks/useQuery";
+import IsLoadingError from "@/components/app/isLoadingError";
 
 export default function MyOnusBible() {
-  const { onusData, getOnusIsLoading, getOnusIsError } = useGetOnus();
-
-  if (getOnusIsLoading) return <LuLoaderCircle className="animate-spin" />;
-
-  if (getOnusIsError) return <BsTriangleFill />;
+  const {
+    data: onusData,
+    isLoading: getOnusIsLoading,
+    isError: getOnusIsError,
+    error: getOnusError,
+  } = useGetVerses();
 
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];
     const bookData = entry[book];
     return bookData.verses.length >= 5; // ✅ only books with 5 or more verses
   });
+
+  <IsLoadingError
+    isLoading={getOnusIsLoading}
+    error={getOnusError}
+    isError={getOnusIsError}
+  />;
 
   return (
     <Content
@@ -44,7 +50,9 @@ export default function MyOnusBible() {
           <div className="flex flex-col col-span-5 md:col-span-3 justify-center  p-3 border rounded-lg items-center   w-full ">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>
-            <p>Your completed books will appear here</p>
+            <p>
+              Your <strong> completed books </strong> will appear here
+            </p>
           </div>
         ) : (
           <div className="md:col-span-3 col-span-5 grid h-fit justify-center items-center md:grid-cols-4 grid-cols-2   gap-3 md:pr-2 pb-2 w-full">

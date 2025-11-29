@@ -9,35 +9,24 @@ import {
   BsBookHalf,
   BsBookmarkFill,
   BsLightbulbFill,
-  BsTriangleFill,
 } from "react-icons/bs";
 import VersesTable from "@/components/app/tables/verses";
 import Image from "next/image";
-import { LuLoaderCircle } from "react-icons/lu";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProgressComp from "@/components/app/progress";
-import { useFetchVersesApi } from "@/hooks/useQuery";
+import { useGetVerses } from "@/hooks/useQuery";
 import { useUser } from "@clerk/nextjs";
+import IsLoadingError from "@/components/app/isLoadingError";
 
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
-  const { isPending, isError, data } = useFetchVersesApi();
+  const { isPending, isError, error, data } = useGetVerses();
 
-  if (isPending || !isLoaded)
-    return (
-      <div className="h-dvh grid justify-center items-center-center  ">
-        <p>Loading</p>
-        <LuLoaderCircle className="animate-spin text-black h-10 w-7" />
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="h-dvh grid justify-center items-center-center  ">
-        <p>Sorry An error Occured, Could not fetch data</p>
-        <BsTriangleFill />
-      </div>
-    );
+  <IsLoadingError
+    isLoading={isPending || !isLoaded}
+    error={error}
+    isError={isError}
+  />;
 
   return (
     <Content

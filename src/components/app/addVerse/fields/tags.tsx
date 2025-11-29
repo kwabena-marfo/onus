@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { BsX } from "react-icons/bs";
 import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 
 const defaultTags = [
   { tag: "peace", color: "bg-blue-400" },
@@ -115,8 +116,8 @@ export default function Tags({ tags, addTag, removeTag }: any) {
   return (
     <div className="space-y-2">
       <div className="flex flex-row gap-2">
-        <div className="space-y-1">
-          <p className="text-sm font-bold">Select Tags</p>
+        <div>
+          <Label className="text-sm ">Select Tags</Label>
           <Select
             onValueChange={(value) => {
               const found = allTags.find((pt) => pt.tag === value);
@@ -138,8 +139,8 @@ export default function Tags({ tags, addTag, removeTag }: any) {
           </Select>
         </div>
 
-        <div className="space-y-1 w-full">
-          <p className="text-sm font-bold">Or Add Custom Tags</p>
+        <div className=" w-full">
+          <Label className="text-sm  ">Or Add Custom Tags</Label>
           <Input
             placeholder="Type and press Enter or comma"
             value={customInput}

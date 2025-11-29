@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useRouter } from "next/router";
 import useFetchApi from "@/hooks/useFetchApi";
 import { queryClient } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 // ---------------- PUBLIC HOOKS ----------------
 
