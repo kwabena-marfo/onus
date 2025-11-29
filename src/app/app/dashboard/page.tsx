@@ -23,14 +23,14 @@ export default function Dashboard() {
   const { isPending, isError, error, data } = useGetVerses();
 
   <IsLoadingError
-    isLoading={isPending || !isLoaded}
+    isLoading={isPending || !isLoaded || !user}
     error={error}
     isError={isError}
   />;
 
   return (
     <Content
-      tittle={`Hello ${user?.firstName?.split(" ")[0]}!`}
+      tittle={`Hello ${user ? user?.firstName?.split(" ")[0] : ""}!`}
       Icon={BsEmojiSmile}
     >
       <div className="grid grid-cols-1 md:grid-cols-6 md:gap-4 gap-6">

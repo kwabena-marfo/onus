@@ -17,32 +17,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import { LuLogOut } from "react-icons/lu";
+import { BsPerson } from "react-icons/bs";
 
 import menuData from "@/data/loggedInMenu";
 
-import { BsPerson } from "react-icons/bs";
-import { signOut } from "next-auth/react";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
+
+  const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
 
   return (
     <div className="grid gap-4 text-white">
       <div className="flex gap-2 justify-start items-center">
         <Avatar className="w-14 h-14">
-          <AvatarImage src="/" alt="admin" />
+          <AvatarImage src={user?.imageUrl || "/"} alt="admin" />
           <AvatarFallback>
             <BsPerson className="text-black w-10 h-10" />
           </AvatarFallback>
         </Avatar>
+
         <div className="flex flex-col gap-0">
-          {/* <h1 className="text-lg font-bold line-clamp-1">
-            {session?.user?.name}
-          </h1>
-          <p className="text-sm line-clamp-1">{session?.user?.email}</p> */}
+          {isLoaded && (
+            <>
+              <h1 className="text-lg font-bold line-clamp-1">
+                {user?.fullName}
+              </h1>
+              <p className="text-sm line-clamp-1">
+                {user?.primaryEmailAddress?.emailAddress}
+              </p>
+            </>
+          )}
         </div>
       </div>
+
       <ul className="space-y-3 text-sm mt-24">
         {menuData.map(({ icon, label, hasBadge, key }: any, index: any) => {
           const isActive = pathname?.startsWith(key);
@@ -57,6 +69,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
               >
                 {icon}
                 <span className="flex-1 ml-3 whitespace-nowrap">{label}</span>
+
                 {hasBadge && (
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
                     {hasBadge}
@@ -69,11 +82,12 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div className=" flex text-red-200  items-center gap-3 ml-2 cursor-pointer">
+            <div className="flex text-red-200 items-center gap-3 ml-2 cursor-pointer">
               <LuLogOut className="w-5 h-5" />
               <p className="text-lg">Logout</p>
             </div>
           </AlertDialogTrigger>
+
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -81,11 +95,13 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
                 This will log you out of the app
               </AlertDialogDescription>
             </AlertDialogHeader>
+
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
+
               <AlertDialogAction
-                onClick={() => signOut({ callbackUrl: "/login" })}
                 className="bg-destructive"
+                onClick={() => signOut()}
               >
                 <div className="flex items-center space-x-1">
                   <LuLogOut className="w-8 h-8" />
