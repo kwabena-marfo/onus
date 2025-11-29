@@ -16,7 +16,6 @@ export async function createUserLogic({
   clerkId,
 }: CreateUserInput) {
   try {
-    console.log("Heeeeeeeeeee");
     let finalClerkId = clerkId;
 
     // 1. Create user in Clerk if clerkId is missing

@@ -7,8 +7,6 @@ export default function authMiddleware(prisma: any) {
     try {
       const { userId: clerkId } = getAuth(c.req.raw);
 
-      console.log(clerkId);
-
       // No Clerk session?
       if (!clerkId) return c.json({ error: "Unauthorized" }, 401);
 
