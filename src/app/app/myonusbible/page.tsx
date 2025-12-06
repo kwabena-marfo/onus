@@ -25,12 +25,14 @@ export default function MyOnusBible() {
     const bookData = entry[book];
     return bookData.verses.length >= 5; // ✅ only books with 5 or more verses
   });
-
-  <IsLoadingError
-    isLoading={getOnusIsLoading}
-    error={getOnusError}
-    isError={getOnusIsError}
-  />;
+  if (getOnusIsLoading || getOnusError)
+    return (
+      <IsLoadingError
+        isLoading={getOnusIsLoading}
+        error={getOnusError}
+        isError={getOnusIsError}
+      />
+    );
 
   return (
     <Content

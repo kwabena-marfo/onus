@@ -13,7 +13,10 @@ import IsLoadingError from "@/components/app/isLoadingError";
 export default function Saved() {
   const { isPending, isError, error, data } = useGetVerses();
 
-  <IsLoadingError isLoading={isPending} error={error} isError={isError} />;
+  if (isPending || isError)
+    return (
+      <IsLoadingError isLoading={isPending} error={error} isError={isError} />
+    );
 
   return (
     <Content tittle="Saved" Icon={BsBookmark}>

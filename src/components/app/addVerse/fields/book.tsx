@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Controller } from "react-hook-form";
-import WhyNKJV from "@/components/app/whyNKJV/index.tsx";
 
 export default function BibleBook({ control, bibleData, onusData }: any) {
   // Map book name -> verse count
@@ -85,11 +84,6 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
         <div className="w-full flex flex-col gap-1">
           <div className="flex justify-between">
             <Label>Book </Label>
-            <WhyNKJV
-              TriggerComp={() => (
-                <p className="text-sm text-gray-400">See why we use NKJ ?</p>
-              )}
-            />
           </div>
           <Select onValueChange={onChange} value={value}>
             <SelectTrigger

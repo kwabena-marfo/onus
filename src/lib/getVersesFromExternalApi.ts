@@ -4,7 +4,6 @@ import axios from "axios";
 export default async function getVersesFromExternalApi({
   book,
   chapter,
-  translation,
   verse,
   verseTo,
 }: any) {
@@ -17,7 +16,7 @@ export default async function getVersesFromExternalApi({
     const url = `https://bolls.life/get-verses/`;
     const response = await axios.post(url, [
       {
-        translation,
+        translation: "NIV",
         book: +book + 1,
         chapter: +chapter,
         verses,

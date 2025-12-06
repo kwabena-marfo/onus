@@ -19,17 +19,20 @@ export default function Quizzes() {
     isError: getOnusQuizeIsError,
   } = useGetQuizzes();
 
-  <IsLoadingError
-    isLoading={isPending || getOnusQuizeIsLoading}
-    error={error}
-    isError={isError || getOnusQuizeIsError}
-  />;
-
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];
     const bookData = entry[book];
     return bookData.verses.length >= 5; // ✅ only books with 5 or more verses
   });
+
+  if (isPending || getOnusQuizeIsLoading || isError)
+    return (
+      <IsLoadingError
+        isLoading={isPending || getOnusQuizeIsLoading}
+        error={error}
+        isError={isError || getOnusQuizeIsError}
+      />
+    );
 
   return (
     <Content tittle="Quizzes" Icon={BsLightbulb}>

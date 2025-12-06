@@ -119,9 +119,7 @@ export default function AddVerseForm({ className, verse }: any) {
 
   useEffect(() => {
     if (fetchVersesData) {
-      const formattedVerse = formatVersesFromExternalData(
-        fetchVersesData?.data
-      );
+      const formattedVerse = formatVersesFromExternalData(fetchVersesData);
 
       setValue("onusVerse", formattedVerse);
     }
@@ -135,11 +133,14 @@ export default function AddVerseForm({ className, verse }: any) {
     });
   };
 
-  <IsLoadingError
-    isLoading={getOnusIsLoading}
-    error={getOnusError}
-    isError={getOnusIsError}
-  />;
+  if (getOnusIsLoading || getOnusIsError)
+    return (
+      <IsLoadingError
+        isLoading={getOnusIsLoading}
+        error={getOnusError}
+        isError={getOnusIsError}
+      />
+    );
 
   return (
     <>
@@ -211,13 +212,15 @@ export default function AddVerseForm({ className, verse }: any) {
               )}
 
               {onusVerse ? (
-                <Textarea
-                  rows={3}
-                  readOnly
-                  value={onusVerse?.replace(/<[^>]*>?/gm, "")}
-                  placeholder="Verse Appears Here"
-                  className="text-[16px]"
-                />
+                <>
+                  <Textarea
+                    rows={3}
+                    readOnly
+                    value={onusVerse?.replace(/<[^>]*>?/gm, "")}
+                    placeholder="Verse Appears Here"
+                    className="text-[16px]"
+                  />
+                </>
               ) : null}
             </div>
 
