@@ -17,7 +17,7 @@ export default function IsLoadingError({ isLoading, isError, error }: any) {
       "Something went wrong";
 
     return (
-      <div className="flex flex-col items-center justify-center gap-3 py-10">
+      <div className="flex flex-1 items-center justify-center  h-screen py-10">
         <p className="text-lg text-red-500">{errMessage}</p>
       </div>
     );
