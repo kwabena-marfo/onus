@@ -8,41 +8,52 @@ import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 import authMiddleware from "../middlewares/authorize";
+import { auth } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-const app = new Hono().basePath("/api");
+const app = new Hono().basePath("/api/app");
 
 app.use("*", cors());
 
-// -------------------- GET VERSES FROM EXTERNAL API --------------------
-app.post(
-  "/app/get-verses",
-  authMiddleware(prisma),
-  async ({ req, json }: any) => {
-    try {
-      const { book, chapter, translation, verse, verseTo } = await req.json();
+app.use("*", async (c: any, next) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
-      const fetchedVerses = await getVersesFromExternalApi({
-        book,
-        chapter,
-        translation,
-        verse,
-        verseTo,
-      });
-
-      return json(fetchedVerses);
-    } catch (err) {
-      console.error(err);
-      return json({ error: "Failed to fetch verse" }, 500);
-    }
+  if (!session) {
+    c.set("user", null);
+    c.set("session", null);
+    await next();
+    return;
   }
-);
+  c.set("user", session.user);
+  c.set("session", session.session);
+  await next();
+});
+
+// -------------------- GET VERSES FROM EXTERNAL API --------------------
+app.post("/get-verses", authMiddleware(), async ({ req, json }: any) => {
+  try {
+    const { book, chapter, translation, verse, verseTo } = await req.json();
+
+    const fetchedVerses = await getVersesFromExternalApi({
+      book,
+      chapter,
+      translation,
+      verse,
+      verseTo,
+    });
+
+    return json(fetchedVerses);
+  } catch (err) {
+    console.error(err);
+    return json({ error: "Failed to fetch verse" }, 500);
+  }
+});
 
 // -------------------- CREATE ONUS VERSE --------------------
 app.post(
-  "/app/create-onus",
-  authMiddleware(prisma),
+  "/create-onus",
+  authMiddleware(),
   createOnusChecker(prisma),
   async (c: any) => {
     try {
@@ -60,7 +71,7 @@ app.post(
         memorised,
       } = await c.req.json();
 
-      await prisma.verses.create({
+      await prisma.verse.create({
         data: {
           book,
           chapter,
@@ -86,11 +97,11 @@ app.post(
 );
 
 // -------------------- GET USER VERSES --------------------
-app.get("/app/get-onus", authMiddleware(prisma), async (c: any) => {
+app.get("/get-onus", async (c: any) => {
   try {
     const user = c.get("user");
 
-    const verses = await prisma.verses.findMany({
+    const verses = await prisma.verse.findMany({
       where: { userId: user?.id },
     });
 
@@ -120,13 +131,13 @@ app.get("/app/get-onus", authMiddleware(prisma), async (c: any) => {
 });
 
 // -------------------- DELETE ONUS VERSES --------------------
-app.delete("/app/delete-onus", async (c) => {
+app.delete("/delete-onus", async (c) => {
   const idsParam: any = c.req.query("ids");
 
   try {
     const parsed = z.array(z.string()).parse(JSON.parse(idsParam));
 
-    const result = await prisma.verses.deleteMany({
+    const result = await prisma.verse.deleteMany({
       where: { id: { in: parsed } },
     });
 
@@ -146,13 +157,13 @@ app.delete("/app/delete-onus", async (c) => {
 });
 
 // -------------------- CREATE ONUS QUIZ --------------------
-app.post("/app/create-onus-quize", authMiddleware(prisma), async (c: any) => {
+app.post("/create-onus-quize", authMiddleware(), async (c: any) => {
   try {
     const user = c.get("user");
 
     const { quizName, score, total } = await c.req.json();
 
-    await prisma.quizScore.upsert({
+    await prisma.quizscore.upsert({
       where: {
         userId_quizName: { userId: user.id, quizName },
       },
@@ -168,11 +179,11 @@ app.post("/app/create-onus-quize", authMiddleware(prisma), async (c: any) => {
 });
 
 // -------------------- GET USER QUIZZES --------------------
-app.get("/app/get-onus-quize", authMiddleware(prisma), async (c: any) => {
+app.get("/get-onus-quize", authMiddleware(), async (c: any) => {
   try {
     const user = c.get("user");
 
-    const quizzes = await prisma.quizScore.findMany({
+    const quizzes = await prisma.quizscore.findMany({
       where: { userId: user?.id },
     });
 

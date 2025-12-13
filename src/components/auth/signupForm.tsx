@@ -24,7 +24,7 @@ import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 
-import GoogleSignUpButton from "@/components/auth/googleSignUpButton";
+import GoogleButton from "@/components/auth/googleButton";
 import { useSignUp } from "@clerk/nextjs";
 import { useCreateUserApi } from "@/hooks/useQuery";
 
@@ -219,7 +219,7 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
       {/* Google Sign In */}
       <div className="flex flex-col p-1">
         <p className="text-center">Or</p>
-        <GoogleSignUpButton />
+        <GoogleButton />
         <p className="text-center text-sm mt-2">
           Already have an account?{" "}
           <Link className="text-blue-500" href="/login">

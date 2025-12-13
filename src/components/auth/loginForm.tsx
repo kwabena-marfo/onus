@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import loginFormSchema from "@/schemas/loginSchema";
+import { authClient } from "@/lib/authClient";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,60 +18,55 @@ import { BsEye, BsEyeSlash, BsLock, BsPerson } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
 import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
-
-import { useSignIn, useUser } from "@clerk/nextjs";
-import GoogleSignInButton from "./googleSignInButton";
+import GoogleAuthButton from "./googleButton";
 
 export default function LoginForm() {
-  type loginSchema = z.infer<typeof loginFormSchema>;
+  type LoginSchema = z.infer<typeof loginFormSchema>;
 
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
-
-  const { isLoaded, signIn, setActive } = useSignIn();
-  const { isSignedIn } = useUser();
 
   const [isHidePass, setIsHidePass] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState<any>("");
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<loginSchema>({
+  } = useForm<LoginSchema>({
     resolver: zodResolver(loginFormSchema),
     mode: "all",
   });
 
-  useEffect(() => {
-    if (isSignedIn) router.push(callbackUrl);
-  }, [isSignedIn]);
+  /** Redirect if already signed in */
+  // useEffect(() => {
+  //   authClient.getSession().then((session) => {
+  //     if (session) router.push(callbackUrl);
+  //   });
+  // }, [callbackUrl, router]);
 
-  const onSubmitLoginForm: SubmitHandler<loginSchema> = async (data) => {
-    if (!isLoaded) return;
-
+  const onSubmitLoginForm: SubmitHandler<LoginSchema> = async (data) => {
     try {
       setLoading(true);
       setErrorMsg("");
 
-      const result = await signIn.create({
-        identifier: data.email,
+      const result = await authClient.signIn.email({
+        email: data.email,
         password: data.password,
       });
 
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        reset();
-        router.push(callbackUrl);
-      } else {
-        setErrorMsg("Login failed. Check credentials.");
+      if (result?.error) {
+        setErrorMsg(result.error.message);
+        return;
       }
-    } catch (err: any) {
-      setErrorMsg(err?.errors?.[0]?.message || "Invalid email or password");
+
+      reset();
+      router.push(callbackUrl);
+    } catch {
+      setErrorMsg("Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -86,6 +82,7 @@ export default function LoginForm() {
       </div>
 
       <div className="grid gap-4">
+        {/* Email */}
         <div className="grid gap-1">
           <Label htmlFor="email">Email</Label>
           <div className="relative w-full">
@@ -99,12 +96,12 @@ export default function LoginForm() {
               {...register("email")}
             />
           </div>
-
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
           )}
         </div>
 
+        {/* Password */}
         <div className="grid gap-1">
           <div className="flex justify-between">
             <Label htmlFor="password">Password</Label>
@@ -112,6 +109,7 @@ export default function LoginForm() {
               Forgot Password?
             </Link>
           </div>
+
           <div className="relative w-full">
             <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
               <BsLock />
@@ -138,33 +136,29 @@ export default function LoginForm() {
             <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}
         </div>
-        <div className="mt-2">
-          <Button className="w-full bg-[#e77306]" disabled={loading}>
-            {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Login <LuLogIn className="h-4 w-4 ml-2" />
-          </Button>
 
-          {errorMsg && (
-            <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
-          )}
-        </div>
+        {/* Submit */}
+        <Button className="w-full bg-[#e77306]" disabled={loading}>
+          {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Login <LuLogIn className="ml-2 h-4 w-4" />
+        </Button>
 
-        {/* Google Login */}
+        {errorMsg && (
+          <p className="text-red-500 text-sm text-center">{errorMsg}</p>
+        )}
+
+        {/* Google */}
         <div className="flex flex-col p-1">
           <p className="text-center">Or</p>
-
-          <GoogleSignInButton />
+          <GoogleAuthButton />
           <p className="text-center text-sm mt-2">
-            Don&apos;t have an account? Click
+            Don&apos;t have an account? Sign Up
             <Link className="text-blue-500 pl-1" href="/signup">
               Here
-            </Link>{" "}
-            to Sign Up
+            </Link>
           </p>
         </div>
       </div>
-
-      {/* Submit */}
     </form>
   );
 }

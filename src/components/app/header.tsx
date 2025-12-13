@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
-import { useUser, useClerk } from "@clerk/nextjs";
+import Link from "next/link";
+import { authClient } from "@/lib/authClient"; // your Better Auth client
 
 import {
   AlertDialog,
@@ -25,21 +25,27 @@ import {
   BsPlusCircleFill,
   BsSearch,
 } from "react-icons/bs";
+import { LuLogOut } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AddVerseModal from "./addVerse";
-import SearchModal from "./search";
-import Link from "next/link";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { LuLogOut } from "react-icons/lu";
 import { Separator } from "@/components/ui/separator";
 
+import AddVerseModal from "./addVerse";
+import SearchModal from "./search";
+
 export default function Header() {
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { data: userSession, isPending: userIsLoading } =
+    authClient.useSession();
+
+  const signOut = () => authClient.signOut();
+
+  if (userIsLoading) return null; // or a loader if you prefer
+
+  const user = userSession?.user;
 
   return (
     <>
@@ -52,6 +58,7 @@ export default function Header() {
           src="/imgs/logos/onusLogoChosen.png"
           alt="logo"
         />
+
         <div className="flex items-center gap-3 p-2">
           <div className="md:flex hidden">
             <AddVerseModal
@@ -78,8 +85,8 @@ export default function Header() {
               <PopoverTrigger>
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={user?.imageUrl || ""}
-                    alt={user?.firstName || "User"}
+                    src={user?.image || ""}
+                    alt={user?.name || "User"}
                   />
                   <AvatarFallback>
                     <BsPerson className="h-6 w-6" />
@@ -91,17 +98,15 @@ export default function Header() {
                   <div className="flex flex-col justify-center items-center">
                     <Avatar className="w-16 h-16">
                       <AvatarImage
-                        src={user?.imageUrl || ""}
-                        alt={user?.firstName || "User"}
+                        src={user?.image || ""}
+                        alt={user?.name || "User"}
                       />
                       <AvatarFallback>
                         <BsPerson className="text-black w-16 h-16" />
                       </AvatarFallback>
                     </Avatar>
-                    <h1 className="text-xl font-bold">{user?.firstName}</h1>
-                    <p className="text-sm p-1">
-                      {user?.emailAddresses?.[0]?.emailAddress}
-                    </p>
+                    <h1 className="text-xl font-bold">{user?.name}</h1>
+                    <p className="text-sm p-1">{user?.email}</p>
                   </div>
 
                   <div className="grid gap-2">
@@ -134,7 +139,7 @@ export default function Header() {
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => signOut({ redirectUrl: "/login" })}
+                            onClick={signOut}
                             className="bg-red-900"
                           >
                             <div className="flex items-center space-x-1">

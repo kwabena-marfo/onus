@@ -1,71 +1,119 @@
-generator client {
-  provider = "prisma-client-js"
-}
+// prisma/schema.prisma
 
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  clerkId     String?  @unique // Store Google ID here
-  email       String    @unique
-  confirmed   Boolean
-  name        String
-  username    String?
-  password    String?
-  image       String?
-  lastLogin   String? // fixed typo: "last_loggin" → "lastLogin"
-  verses        verses[] // correct relation (no @relation needed here)
-  passwordReset passwordReset[]
-  scores      quizScore[]
+generator client {
+  provider = "prisma-client-js"
+}
+
+model verse {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  book      String
+  chapter   Int
+  verse     Int
+  verseTo   Int?      // optional
+  version   String
+  onusVerse String?
+  verseNotes String?
+  tags       String[]  // array of strings
+  memorised  String   
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("verses")
 }
 
 
-model passwordReset {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  email      String   @unique
-  code       String
+model passwordreset {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String
+  token  String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("passwordReset")
+}
+
+model quizscore {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String
+  quizName String
+  score    Int
+  total    Int
+  takenAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("quizScore")
+  @@unique([userId, quizName])
+}
+
+model User {
+  id            String          @id @map("_id")
+  name          String
+  email         String
+  emailVerified Boolean         @default(false)
+  image         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  verse         verse[]
+  passwordreset passwordreset[]
+  quizscore     quizscore[]
+
+  @@unique([email])
+  @@map("User")
+}
+
+model Session {
+  id        String   @id @map("_id")
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @map("_id")
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @map("_id")
+  identifier String
+  value      String
   expiresAt  DateTime
-  userId     String   @db.ObjectId
-  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-}
 
-
-
-model verses {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  book         String    
-  chapter      String
-  verse        String
-  verseTo      String?
-  version      String?   
-  onusVerse    String    
-  verseNotes   String?   
-  tags         Json?
-  memorised    MemorisedStatus
-  userId       String   @db.ObjectId
-  user         user     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
- }
-
-enum MemorisedStatus {
-  memorised
-  saved
-}
-
-model quizScore {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @db.ObjectId
-  quizName   String   // e.g. "Matthew", "Mark", or "Quiz on Matthew"
-  score      Int
-  total      Int      // Total number of questions
-  takenAt    DateTime @default(now())
-  user       user   @relation(fields: [userId], references: [id])
-
-  @@unique([userId, quizName])
+  @@index([identifier])
+  @@map("verification")
 }

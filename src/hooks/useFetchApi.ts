@@ -1,18 +1,16 @@
 // hooks/useApi.ts
 import axios, { AxiosInstance } from "axios";
-import { useAuth } from "@clerk/nextjs";
 import { useMemo } from "react";
+import { authClient } from "@/lib/authClient"; // your Better Auth client
 
 export default function useApi(): AxiosInstance {
-  // useMemo ensures we don't recreate the instance on every render
-  const { getToken } = useAuth();
-
+  // useMemo ensures the Axios instance is not recreated every render
   const api = useMemo(() => {
     const instance = axios.create({
       baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
     });
 
-    // Interceptor to attach Clerk token to protected routes
+    // Interceptor to attach Better Auth token to protected routes
     instance.interceptors.request.use(async (config) => {
       const protectedPrefixes = ["/api/app"];
 
@@ -21,7 +19,8 @@ export default function useApi(): AxiosInstance {
       );
 
       if (isProtected) {
-        const token = await getToken();
+        const { data } = await authClient.getSession();
+        const token = data?.session.token;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }

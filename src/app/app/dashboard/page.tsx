@@ -14,17 +14,19 @@ import VersesTable from "@/components/app/tables/verses";
 import Image from "next/image";
 import ProgressComp from "@/components/app/progress";
 import { useGetVerses } from "@/hooks/useQuery";
-import { useUser } from "@clerk/nextjs";
 import IsLoadingError from "@/components/app/isLoadingError";
+import { authClient } from "@/lib/authClient";
 
 export default function Dashboard() {
-  const { user, isLoaded } = useUser();
+  const { data: userSession, isPending: userIsloading } =
+    authClient.useSession();
+
   const { isPending, isError, error, data } = useGetVerses();
 
   if (isPending || isError)
     return (
       <IsLoadingError
-        isLoading={isPending || !isLoaded || !user}
+        isLoading={isPending || userIsloading}
         error={error}
         isError={isError}
       />
@@ -32,7 +34,7 @@ export default function Dashboard() {
 
   return (
     <Content
-      tittle={`Hello ${user ? user?.firstName?.split(" ")[0] : ""}!`}
+      tittle={`Hello ${userSession?.user.name?.split(" ")[0]}!`}
       Icon={BsEmojiSmile}
     >
       <div className="grid grid-cols-1 md:grid-cols-6 md:gap-4 gap-6">
@@ -110,7 +112,7 @@ export default function Dashboard() {
                 colorB={colorB}
                 colorT={colorT}
                 Icon={icon}
-                isLoading={isPending || !isLoaded}
+                isLoading={isPending || !userIsloading}
                 isError={isError}
               />
             ))}

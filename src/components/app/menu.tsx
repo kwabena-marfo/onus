@@ -22,36 +22,32 @@ import { LuLogOut } from "react-icons/lu";
 import { BsPerson } from "react-icons/bs";
 
 import menuData from "@/data/loggedInMenu";
-
-import { useUser, useClerk } from "@clerk/nextjs";
+import { authClient } from "@/lib/authClient"; // <-- Better Auth client
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
 
-  const { user, isLoaded } = useUser();
-  const { signOut } = useClerk();
+  const { data: userSession, isPending: userIsLoading } =
+    authClient.useSession();
+  const user = userSession?.user;
+
+  const signOut = () => authClient.signOut();
+
+  if (userIsLoading) return null; // optionally render a loader
 
   return (
     <div className="grid gap-4 text-white">
       <div className="flex gap-2 justify-start items-center">
         <Avatar className="w-14 h-14">
-          <AvatarImage src={user?.imageUrl || "/"} alt="admin" />
+          <AvatarImage src={user?.image || "/"} alt={user?.name || "admin"} />
           <AvatarFallback>
             <BsPerson className="text-black w-10 h-10" />
           </AvatarFallback>
         </Avatar>
 
         <div className="flex flex-col gap-0">
-          {isLoaded && (
-            <>
-              <h1 className="text-lg font-bold line-clamp-1">
-                {user?.fullName}
-              </h1>
-              <p className="text-sm line-clamp-1">
-                {user?.primaryEmailAddress?.emailAddress}
-              </p>
-            </>
-          )}
+          <h1 className="text-lg font-bold line-clamp-1">{user?.name}</h1>
+          <p className="text-sm line-clamp-1">{user?.email}</p>
         </div>
       </div>
 
@@ -99,10 +95,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-              <AlertDialogAction
-                className="bg-destructive"
-                onClick={() => signOut()}
-              >
+              <AlertDialogAction className="bg-destructive" onClick={signOut}>
                 <div className="flex items-center space-x-1">
                   <LuLogOut className="w-8 h-8" />
                   <p className="hidden md:block">Continue</p>

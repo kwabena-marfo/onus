@@ -1,28 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { auth } from "@/lib/auth";
 
-import { getAuth } from "@clerk/nextjs/server";
-
-export default function authMiddleware(prisma: any) {
-  return async (c: any, next: any) => {
+export default function requireAuth() {
+  return async (c: any, next: () => Promise<void>) => {
     try {
-      const { userId: clerkId } = getAuth(c.req.raw);
+      const session = await auth.api.getSession({ headers: c.req.raw.headers });
+      console.log({ session });
 
-      // No Clerk session?
-      if (!clerkId) return c.json({ error: "Unauthorized" }, 401);
-
-      const user = await prisma.user.findFirst({
-        where: { clerkId },
-      });
-
-      if (!user) return c.json({ error: "User not found in database" }, 404);
-
-      // Attach DB user to context
-      c.set("user", user);
-
+      if (!session) {
+        c.set("user", null);
+        c.set("session", null);
+        await next();
+        return;
+      }
+      c.set("user", session.user);
+      c.set("session", session.session);
       await next();
-    } catch (error) {
-      console.error("Auth Middleware Error:", error);
-      return c.json({ error: "Authentication failed" }, 401);
+    } catch (err) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
   };
 }

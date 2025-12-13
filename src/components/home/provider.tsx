@@ -11,8 +11,6 @@ export default function ProviderComp({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider publishableKey="pk_test_bm92ZWwtcHJhd24tOS5jbGVyay5hY2NvdW50cy5kZXYk">
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </ClerkProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
