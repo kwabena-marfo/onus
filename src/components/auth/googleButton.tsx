@@ -32,7 +32,6 @@ export default function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
     }
   };
 
-  // Optional loading placeholder (mirrors your Clerk check)
   if (!authClient) {
     return (
       <div className="flex items-center justify-center py-4">

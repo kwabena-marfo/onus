@@ -1,24 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useUser } from "@clerk/nextjs";
-
 import Content from "@/components/app/content";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BsPerson } from "react-icons/bs";
 
 export default function MyOnusBible() {
-  const { user, isLoaded } = useUser();
-
-  if (!isLoaded) {
-    return (
-      <Content tittle="My Account" Icon={BsPerson}>
-        <div className="flex justify-center items-center mt-10">Loading...</div>
-      </Content>
-    );
-  }
-
   return (
     <Content tittle="My Account" Icon={BsPerson}>
       <div className="flex w-full justify-center items-center md:gap-6 gap-4 mt-6">
@@ -26,7 +14,7 @@ export default function MyOnusBible() {
           <div className="grid justify-center items-center p-3">
             <div className="flex justify-center">
               <Avatar className="w-32 h-32">
-                <AvatarImage src={user?.imageUrl || "/"} alt="user avatar" />
+                {/* <AvatarImage src={user?.imageUrl || "/"} alt="user avatar" /> */}
                 <AvatarFallback>
                   <BsPerson className="text-black w-24 h-24" />
                 </AvatarFallback>
@@ -34,9 +22,9 @@ export default function MyOnusBible() {
             </div>
 
             <div className="flex flex-col justify-center items-center gap-0">
-              <h1 className="text-xl font-bold">{user?.fullName}</h1>
+              {/* <h1 className="text-xl font-bold">{user?.fullName}</h1> */}
               <p className="text-lg">
-                {user?.primaryEmailAddress?.emailAddress}
+                {/* {user?.primaryEmailAddress?.emailAddress} */}
               </p>
             </div>
           </div>

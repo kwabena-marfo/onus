@@ -7,28 +7,6 @@ import { useRouter } from "next/navigation";
 
 // ---------------- PUBLIC HOOKS ----------------
 
-export function useCreateUserApi() {
-  const api = useFetchApi();
-
-  const mutation = useMutation({
-    mutationFn: async (userData: {
-      name: string | any;
-      email: string | any;
-      clerkId: string | any;
-    }) => {
-      const res = await api.post("/api/auth/create-user", userData);
-      return res.data;
-    },
-  });
-
-  return {
-    ...mutation,
-    trigger: mutation.mutateAsync,
-  };
-}
-
-// ---------------- PROTECTED HOOKS ----------------
-
 export function useFetchVersesApi() {
   const api = useFetchApi();
 

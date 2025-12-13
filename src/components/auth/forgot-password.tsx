@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSignIn } from "@clerk/nextjs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -11,8 +10,6 @@ import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ForgotPasswordForm() {
-  const { isLoaded, signIn } = useSignIn();
-
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -21,18 +18,16 @@ export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  if (!isLoaded) return null;
-
   // Step 1 — Request password reset code
   const sendResetEmail = async () => {
     try {
       setLoading(true);
       setErrorMsg("");
 
-      await signIn.create({
-        strategy: "reset_password_email_code",
-        identifier: email,
-      });
+      // await signIn.create({
+      //   strategy: "reset_password_email_code",
+      //   identifier: email,
+      // });
 
       setStep("verify");
     } catch (err: any) {
@@ -47,16 +42,6 @@ export default function ForgotPasswordForm() {
     try {
       setLoading(true);
       setErrorMsg("");
-
-      const result = await signIn.attemptFirstFactor({
-        strategy: "reset_password_email_code",
-        code,
-        password: newPassword,
-      });
-
-      if (result.status === "complete") {
-        window.location.href = "/login"; // redirect on success
-      }
     } catch (err: any) {
       setErrorMsg(err?.errors?.[0]?.message || "Invalid code or password");
     } finally {

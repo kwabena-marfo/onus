@@ -25,14 +25,10 @@ import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 
 import GoogleButton from "@/components/auth/googleButton";
-import { useSignUp } from "@clerk/nextjs";
-import { useCreateUserApi } from "@/hooks/useQuery";
 
 export default function SignupForm({}: React.ComponentProps<"form">) {
   type signupSchema = z.infer<typeof signupFormSchema>;
   const router = useRouter();
-
-  const { signUp, isLoaded, setActive } = useSignUp();
 
   const [isHidePass, setIsHidePass] = useState(true);
   const [isPending, setIsPending] = useState(false);
@@ -50,26 +46,16 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
     shouldFocusError: true,
   });
 
-  const { trigger } = useCreateUserApi();
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
     setIsPending(true);
-    if (!isLoaded) return null;
 
     try {
-      // 1. Create Clerk user
-      const user = await signUp.create({
-        emailAddress: data.email,
-        password: data.password,
-        firstName: data.name,
-      });
-
-      await trigger({
-        email: user?.emailAddress,
-        clerkId: user?.id,
-        name: user?.firstName,
-      });
-
-      await setActive({ session: signUp.createdSessionId });
+      //
+      // const user = await signUp.create({
+      //   emailAddress: data.email,
+      //   password: data.password,
+      //   firstName: data.name,
+      // });
 
       setIsSuccess(true);
     } catch (error: any) {
