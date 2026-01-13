@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@better-auth/core": "^1.4.7",
+    "@better-auth/expo": "^1.4.7",
     "@hookform/resolvers": "^5.1.1",
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -30,7 +32,7 @@
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
-    "better-auth": "^1.4.6",
+    "better-auth": "^1.4.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -45,6 +47,7 @@
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.8.16",
     "nodemailer": "^6.10.1",
+    "or": "^0.2.0",
     "prisma": "^6.10.1",
     "react": "19.2.1",
     "react-confetti": "^6.4.0",
@@ -57,7 +60,7 @@
     "swr": "^2.3.3",
     "tailwind-merge": "^3.3.0",
     "vaul": "^1.1.2",
-    "zod": "^3.25.67"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.4",

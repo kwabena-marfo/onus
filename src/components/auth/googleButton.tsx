@@ -24,6 +24,7 @@ export default function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
         provider: "google",
         callbackURL: "/app/dashboard",
       });
+
       // Redirect happens automatically
     } catch (err) {
       console.error("Google Auth Error:", err);

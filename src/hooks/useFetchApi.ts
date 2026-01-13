@@ -8,6 +8,7 @@ export default function useApi(): AxiosInstance {
   const api = useMemo(() => {
     const instance = axios.create({
       baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
+      withCredentials: false,
     });
 
     // Interceptor to attach Better Auth token to protected routes

@@ -25,6 +25,7 @@ import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 
 import GoogleButton from "@/components/auth/googleButton";
+import { authClient } from "@/lib/authClient";
 
 export default function SignupForm({}: React.ComponentProps<"form">) {
   type signupSchema = z.infer<typeof signupFormSchema>;
@@ -48,22 +49,19 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
 
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
     setIsPending(true);
-
+    const { email, password, name } = data;
     try {
-      //
-      // const user = await signUp.create({
-      //   emailAddress: data.email,
-      //   password: data.password,
-      //   firstName: data.name,
-      // });
+      await authClient.signUp.email({
+        email,
+        password,
+        name,
+      });
 
       setIsSuccess(true);
     } catch (error: any) {
       setErrorMsg(
         error.errors?.[0]?.longMessage || error.message || "Signup failed"
       );
-    } finally {
-      setIsPending(false);
     }
   };
 

@@ -41,12 +41,11 @@ export default function LoginForm() {
     mode: "all",
   });
 
-  /** Redirect if already signed in */
-  // useEffect(() => {
-  //   authClient.getSession().then((session) => {
-  //     if (session) router.push(callbackUrl);
-  //   });
-  // }, [callbackUrl, router]);
+  useEffect(() => {
+    authClient.getSession().then((session) => {
+      if (session) router.push(callbackUrl);
+    });
+  }, [callbackUrl, router]);
 
   const onSubmitLoginForm: SubmitHandler<LoginSchema> = async (data) => {
     try {
@@ -67,8 +66,6 @@ export default function LoginForm() {
       router.push(callbackUrl);
     } catch {
       setErrorMsg("Invalid email or password");
-    } finally {
-      setLoading(false);
     }
   };
 

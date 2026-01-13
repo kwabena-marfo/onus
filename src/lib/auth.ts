@@ -1,29 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { expo } from "@better-auth/expo";
+
 import PrismaClient from "@/config/prisma";
-import { Hono } from "hono";
 
 export const auth = betterAuth({
   database: prismaAdapter(PrismaClient, {
     provider: "mongodb",
   }),
+  plugins: [expo()],
+  trustedOrigins: [
+    "onusbible://",
+    ...(process.env.NODE_ENV === "development"
+      ? [
+          "null",
+          "exp://*/*", // Trust all Expo development URLs
+          "exp://10.0.0.*:*/*", // Trust 10.0.0.x IP range
+          "exp://192.168.*.*:*/*", // Trust 192.168.x.x IP range
+          "exp://172.*.*.*:*/*", // Trust 172.x.x.x IP range
+          "exp://localhost:*/*", // Trust localhost
+        ]
+      : []),
+  ],
   emailAndPassword: {
     enabled: true,
   },
   socialProviders: {
     google: {
       prompt: "select_account",
-      clientId: process.env.CLIENT_ID as string,
-      clientSecret: process.env.CLIENT_SECRETE as string,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRETE as string,
     },
   },
-});
-
-export const authApp = new Hono();
-
-authApp.on(["GET", "POST"], "/*", (c) => {
-  return auth.handler(c.req.raw);
 });
 
 export type AuthType = {

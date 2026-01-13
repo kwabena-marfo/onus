@@ -7,7 +7,6 @@ export default function createOnusChecker(prisma: any) {
   return async (c: any, next: any) => {
     try {
       const user = c.get("user");
-      console.log(user);
 
       const body = await c.req.json();
 
@@ -36,7 +35,7 @@ export default function createOnusChecker(prisma: any) {
         return c.json({ message: "Verse edited successfully" });
       }
 
-      const existingVerse = await prisma.verses.findFirst({
+      const existingVerse = await prisma.Verse.findFirst({
         where: {
           userId: user.id,
           book,
@@ -53,7 +52,7 @@ export default function createOnusChecker(prisma: any) {
         const fetchedVerses = await getVersesFromExternalApi({
           book: foundBookIndex,
           chapter,
-          translation: "NKJV",
+          translation: "NIV",
           verse,
           verseTo,
         });

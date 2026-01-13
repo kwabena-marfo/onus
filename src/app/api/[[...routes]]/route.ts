@@ -12,26 +12,43 @@ import { auth } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-const app = new Hono().basePath("/api/app");
+// -------------------- TYPES --------------------
+export type AuthState = {
+  user: typeof auth.$Infer.Session.user | null;
+  session: typeof auth.$Infer.Session.session | null;
+  onusVerse?: string | null;
+};
 
-app.use("*", cors());
+// -------------------- APP SETUP --------------------
+export const app = new Hono<{ Variables: AuthState }>().basePath("/api");
 
-app.use("*", async (c: any, next) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+// -------------------- CORS --------------------
+app.use(
+  "*",
+  cors({
+    origin: [
+      "onusbible://",
+      "http://10.0.2.2:8081",
+      "exp://*/*",
+      "exp://10.0.0.*:*/*",
+      "exp://192.168.*.*:*/*",
+      "exp://172.*.*.*:*/*",
+      "exp://localhost:*/*",
+    ],
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS", "DELETE"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  })
+);
 
-  if (!session) {
-    c.set("user", null);
-    c.set("session", null);
-    await next();
-    return;
-  }
-  c.set("user", session.user);
-  c.set("session", session.session);
-  await next();
-});
+// -------------------- BETTER AUTH ROUTES --------------------
+app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
+app.use(authMiddleware());
 // -------------------- GET VERSES FROM EXTERNAL API --------------------
-app.post("/get-verses", authMiddleware(), async ({ req, json }: any) => {
+app.post("/app/get-verses", authMiddleware(), async ({ req, json }: any) => {
   try {
     const { book, chapter, translation, verse, verseTo } = await req.json();
 
@@ -51,53 +68,48 @@ app.post("/get-verses", authMiddleware(), async ({ req, json }: any) => {
 });
 
 // -------------------- CREATE ONUS VERSE --------------------
-app.post(
-  "/create-onus",
-  authMiddleware(),
-  createOnusChecker(prisma),
-  async (c: any) => {
-    try {
-      const user = c.get("user");
+app.post("/app/create-onus", createOnusChecker(prisma), async (c: any) => {
+  try {
+    const user = c.get("user");
 
-      const {
+    const {
+      book,
+      chapter,
+      verse,
+      verseTo,
+      version,
+      onusVerse,
+      verseNotes,
+      tags,
+      memorised,
+    } = await c.req.json();
+
+    await prisma.verse.create({
+      data: {
         book,
         chapter,
         verse,
-        verseTo,
-        version,
-        onusVerse,
+        verseTo: verseTo ?? null,
+        version: "NIV",
+        onusVerse: onusVerse || c.get("onusVerse"),
         verseNotes,
         tags,
         memorised,
-      } = await c.req.json();
-
-      await prisma.verse.create({
-        data: {
-          book,
-          chapter,
-          verse,
-          verseTo: verseTo ?? null,
-          version,
-          onusVerse: onusVerse || c.get("onusVerse"),
-          verseNotes,
-          tags,
-          memorised,
-          user: {
-            connect: { id: user.id },
-          },
+        user: {
+          connect: { id: user.id },
         },
-      });
+      },
+    });
 
-      return c.json({ message: "Verse created successfully" });
-    } catch (error) {
-      console.error(error);
-      return c.json({ error: "An Error Occurred" }, 400);
-    }
+    return c.json({ message: "Verse created successfully" });
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "An Error Occurred" }, 400);
   }
-);
+});
 
 // -------------------- GET USER VERSES --------------------
-app.get("/get-onus", async (c: any) => {
+app.get("/app/get-onus", async (c: any) => {
   try {
     const user = c.get("user");
 
@@ -131,7 +143,7 @@ app.get("/get-onus", async (c: any) => {
 });
 
 // -------------------- DELETE ONUS VERSES --------------------
-app.delete("/delete-onus", async (c) => {
+app.delete("/app/delete-onus", async (c) => {
   const idsParam: any = c.req.query("ids");
 
   try {
@@ -157,13 +169,13 @@ app.delete("/delete-onus", async (c) => {
 });
 
 // -------------------- CREATE ONUS QUIZ --------------------
-app.post("/create-onus-quize", authMiddleware(), async (c: any) => {
+app.post("/app/create-onus-quize", authMiddleware(), async (c: any) => {
   try {
     const user = c.get("user");
 
     const { quizName, score, total } = await c.req.json();
 
-    await prisma.quizscore.upsert({
+    await prisma.quizScore.upsert({
       where: {
         userId_quizName: { userId: user.id, quizName },
       },
@@ -179,11 +191,11 @@ app.post("/create-onus-quize", authMiddleware(), async (c: any) => {
 });
 
 // -------------------- GET USER QUIZZES --------------------
-app.get("/get-onus-quize", authMiddleware(), async (c: any) => {
+app.get("/app/get-onus-quize", authMiddleware(), async (c: any) => {
   try {
     const user = c.get("user");
 
-    const quizzes = await prisma.quizscore.findMany({
+    const quizzes = await prisma.quizScore.findMany({
       where: { userId: user?.id },
     });
 
@@ -193,7 +205,6 @@ app.get("/get-onus-quize", authMiddleware(), async (c: any) => {
     return c.json({ error: "An error occurred" }, 500);
   }
 });
-
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
 export const POST = handle(app);

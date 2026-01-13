@@ -5,13 +5,11 @@ export default function requireAuth() {
   return async (c: any, next: () => Promise<void>) => {
     try {
       const session = await auth.api.getSession({ headers: c.req.raw.headers });
-      console.log({ session });
 
       if (!session) {
         c.set("user", null);
         c.set("session", null);
-        await next();
-        return;
+        return c.json({ error: "Unauthorized" }, 401);
       }
       c.set("user", session.user);
       c.set("session", session.session);

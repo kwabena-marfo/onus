@@ -69,9 +69,14 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
 
   const verseMap =
     onusData?.grouped?.reduce((acc: any, entry: any) => {
-      const book = Object.keys(entry)[0];
-      const bookData = entry[book];
-      acc[book] = bookData?.verses?.length || 0;
+      const key = Object.keys(entry)[0]; // book name
+      const bookData = entry[key];
+
+      acc[key] =
+        bookData?.verses?.filter(
+          (verse: any) => verse.memorised === "memorised"
+        ).length || 0;
+
       return acc;
     }, {}) || {};
 

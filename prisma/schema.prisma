@@ -9,15 +9,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model verse {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String
-  book      String
-  chapter   Int
-  verse     Int
-  verseTo   Int?      // optional
-  version   String
-  onusVerse String?
+model Verse {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String
+  book       String
+  chapter    String
+  verse      String
+  verseTo    String?      // optional
+  version    String?
+  onusVerse  String?
   verseNotes String?
   tags       String[]  // array of strings
   memorised  String   
@@ -28,7 +28,7 @@ model verse {
 }
 
 
-model passwordreset {
+model PasswordReset {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String
   token  String
@@ -38,7 +38,7 @@ model passwordreset {
   @@map("passwordReset")
 }
 
-model quizscore {
+model QuizScore {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   userId   String
   quizName String
@@ -62,9 +62,9 @@ model User {
   updatedAt     DateTime        @updatedAt
   sessions      Session[]
   accounts      Account[]
-  verse         verse[]
-  passwordreset passwordreset[]
-  quizscore     quizscore[]
+  verse         Verse[]
+  passwordreset PasswordReset[]
+  quizscore     QuizScore[]
 
   @@unique([email])
   @@map("User")
