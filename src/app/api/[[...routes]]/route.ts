@@ -12,17 +12,14 @@ import { auth } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-// -------------------- TYPES --------------------
 export type AuthState = {
   user: typeof auth.$Infer.Session.user | null;
   session: typeof auth.$Infer.Session.session | null;
   onusVerse?: string | null;
 };
 
-// -------------------- APP SETUP --------------------
 export const app = new Hono<{ Variables: AuthState }>().basePath("/api");
 
-// -------------------- CORS --------------------
 app.use(
   "*",
   cors({
@@ -43,11 +40,10 @@ app.use(
   })
 );
 
-// -------------------- BETTER AUTH ROUTES --------------------
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
 app.use(authMiddleware());
-// -------------------- GET VERSES FROM EXTERNAL API --------------------
+
 app.post("/app/get-verses", authMiddleware(), async ({ req, json }: any) => {
   try {
     const { book, chapter, translation, verse, verseTo } = await req.json();

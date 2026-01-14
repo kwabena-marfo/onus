@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { authClient } from "@/lib/authClient"; // your Better Auth client
+import { authClient } from "@/lib/authClient";
+import { useRouter } from "next/navigation";
 
 import {
   AlertDialog,
@@ -38,13 +39,8 @@ import AddVerseModal from "./addVerse";
 import SearchModal from "./search";
 
 export default function Header() {
-  const { data: userSession, isPending: userIsLoading } =
-    authClient.useSession();
-
-  const signOut = () => authClient.signOut();
-
-  if (userIsLoading) return null; // or a loader if you prefer
-
+  const { data: userSession } = authClient.useSession();
+  const router = useRouter();
   const user = userSession?.user;
 
   return (
@@ -139,7 +135,10 @@ export default function Header() {
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={signOut}
+                            onClick={async () => {
+                              await authClient.signOut();
+                              router.push("/");
+                            }}
                             className="bg-red-900"
                           >
                             <div className="flex items-center space-x-1">

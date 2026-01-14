@@ -2,14 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { authClient } from "@/lib/authClient";
 
 import { BsApple, BsGooglePlay } from "react-icons/bs";
+import { useEffect } from "react";
 
 export default function LayoutComp({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+
+  const { data: sessionData, isPending } = authClient.useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isPending) return;
+    if (sessionData) router.push(callbackUrl);
+  }, [callbackUrl, router, sessionData]);
+
   return (
     <div className="h-[100dvh] grid  lg:grid-cols-6 lg:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-2  flex flex-col relative  h-full">

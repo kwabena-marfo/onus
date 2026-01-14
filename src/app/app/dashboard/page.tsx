@@ -23,13 +23,11 @@ export default function Dashboard() {
 
   const { isPending, isError, error, data } = useGetVerses();
 
+  const isLoading = isPending || userIsloading;
+
   if (isPending || isError)
     return (
-      <IsLoadingError
-        isLoading={isPending || userIsloading}
-        error={error}
-        isError={isError}
-      />
+      <IsLoadingError isLoading={isLoading} error={error} isError={isError} />
     );
 
   return (
@@ -63,8 +61,8 @@ export default function Dashboard() {
                     />
                   </div>
                 ),
-                isLoading: false,
-                isError: false,
+                isLoading,
+                isError,
               },
               {
                 label: "Saved Verses",
@@ -76,8 +74,8 @@ export default function Dashboard() {
                 colorB: "border-l-[#8C15E8]",
                 colorT: "text-[#8C15E8]",
                 icon: BsBookmarkFill,
-                isLoading: false,
-                isError: false,
+                isLoading,
+                isError,
               },
               {
                 label: "Completed Books",
@@ -91,8 +89,8 @@ export default function Dashboard() {
                 colorB: "border-l-[#9A6A10]",
                 colorT: "text-[#9A6A10]",
                 icon: BsBookHalf,
-                isLoading: false,
-                isError: false,
+                isLoading,
+                isError,
               },
               {
                 label: "Quizzes So Far",
@@ -101,8 +99,8 @@ export default function Dashboard() {
                 colorB: "border-l-[#760606]",
                 colorT: "text-[#760606]",
                 icon: BsLightbulbFill,
-                isLoading: false,
-                isError: false,
+                isLoading,
+                isError,
               },
             ].map(({ label, value, colorB, colorT, icon }, index) => (
               <StatCard
@@ -112,7 +110,7 @@ export default function Dashboard() {
                 colorB={colorB}
                 colorT={colorT}
                 Icon={icon}
-                isLoading={isPending || !userIsloading}
+                isLoading={isLoading}
                 isError={isError}
               />
             ))}

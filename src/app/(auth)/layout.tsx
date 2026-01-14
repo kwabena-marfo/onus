@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Observing, Navigating and Understanding Scripture",
 };
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

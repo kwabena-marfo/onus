@@ -41,12 +41,6 @@ export default function LoginForm() {
     mode: "all",
   });
 
-  useEffect(() => {
-    authClient.getSession().then((session) => {
-      if (session) router.push(callbackUrl);
-    });
-  }, [callbackUrl, router]);
-
   const onSubmitLoginForm: SubmitHandler<LoginSchema> = async (data) => {
     try {
       setLoading(true);
@@ -137,7 +131,7 @@ export default function LoginForm() {
         {/* Submit */}
         <Button className="w-full bg-[#e77306]" disabled={loading}>
           {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Login <LuLogIn className="ml-2 h-4 w-4" />
+          Login
         </Button>
 
         {errorMsg && (
