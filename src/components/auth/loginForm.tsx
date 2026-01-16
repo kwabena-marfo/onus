@@ -50,6 +50,8 @@ export default function LoginForm() {
         password: data.password,
       });
 
+      setLoading(false);
+
       if (result?.error) {
         setErrorMsg(result.error.message);
         return;

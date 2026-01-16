@@ -136,8 +136,13 @@ export default function Header() {
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={async () => {
-                              await authClient.signOut();
-                              router.push("/");
+                              await authClient.signOut({
+                                fetchOptions: {
+                                  onSuccess: () => {
+                                    router.push("/");
+                                  },
+                                },
+                              });
                             }}
                             className="bg-red-900"
                           >

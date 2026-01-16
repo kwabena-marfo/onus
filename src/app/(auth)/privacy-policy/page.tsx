@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
 
   return (
     <Suspense>
-      <div className="flex flex-col justify-center items-center  z-50">
+      <div className="flex flex-col justify-center items-center  z-50 mt-10">
         <ScrollArea className="max-h-[80vh] py-6 px-4 bg-white border rounded-md">
           <section className="space-y-6 text-sm leading-relaxed text-muted-foreground">
             <div className="space-y-2">

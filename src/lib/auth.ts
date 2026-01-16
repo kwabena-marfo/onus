@@ -4,16 +4,21 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { expo } from "@better-auth/expo";
 
 import PrismaClient from "@/config/prisma";
+import axios from "axios";
 
 export const auth = betterAuth({
   database: prismaAdapter(PrismaClient, {
     provider: "mongodb",
   }),
   plugins: [expo()],
+
   trustedOrigins: [
     "onusbible://",
+    "https://onusbible.com",
+    "https://onusbible.vercel.app",
     ...(process.env.NODE_ENV === "development"
       ? [
+          "http://localhost:3000",
           "null",
           "exp://*/*", // Trust all Expo development URLs
           "exp://10.0.0.*:*/*", // Trust 10.0.0.x IP range
@@ -25,6 +30,17 @@ export const auth = betterAuth({
   ],
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      await axios.post(`${process.env.BETTER_AUTH_URL}/api/app/send-email`, {
+        to: user.email,
+        subject: "Reset your password",
+        text: `Click the link to reset your password: ${url}`,
+      });
+    },
+    onPasswordReset: async ({ user }, request) => {
+      // your logic here
+      console.log(`Password for user ${user.email} has been reset.`);
+    },
   },
   socialProviders: {
     google: {

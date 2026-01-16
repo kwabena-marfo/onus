@@ -9,7 +9,9 @@ import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 import authMiddleware from "../middlewares/authorize";
 import { auth } from "@/lib/auth";
+import transporter from "@/config/nodemailer";
 
+import EmailTemplate from "@/components/email";
 export const runtime = "nodejs";
 
 export type AuthState = {
@@ -41,6 +43,28 @@ app.use(
 );
 
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
+
+app.post("/app/send-email", async ({ req, json }: any) => {
+  try {
+    const { to, subject, text } = await req.json();
+
+    const mailBody = EmailTemplate({
+      message: `${text}`,
+    });
+
+    await transporter.sendMail({
+      from: `"Onus" <"noreply@onusbible.com">`,
+      to,
+      subject,
+      html: mailBody,
+    });
+
+    return json("Done");
+  } catch (error) {
+    console.error({ error });
+    return json("An Error Occurred", 500);
+  }
+});
 
 app.use(authMiddleware());
 
@@ -114,7 +138,7 @@ app.get("/app/get-onus", async (c: any) => {
     });
 
     if (!verses || verses.length === 0)
-      return c.json({ error: "No verses found" }, 404);
+      return c.json({ verses: [], grouped: [] });
 
     const grouped = verses.reduce((acc, verse) => {
       const bookKey = verse.book.toLowerCase();
@@ -201,6 +225,7 @@ app.get("/app/get-onus-quize", authMiddleware(), async (c: any) => {
     return c.json({ error: "An error occurred" }, 500);
   }
 });
+
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
 export const POST = handle(app);

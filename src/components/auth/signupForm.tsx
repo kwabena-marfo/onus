@@ -50,19 +50,18 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
   const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
     setIsPending(true);
     const { email, password, name } = data;
-    try {
-      await authClient.signUp.email({
-        email,
-        password,
-        name,
-      });
 
-      setIsSuccess(true);
-    } catch (error: any) {
-      setErrorMsg(
-        error.errors?.[0]?.longMessage || error.message || "Signup failed"
-      );
-    }
+    const { error } = await authClient.signUp.email({
+      email,
+      password,
+      name,
+    });
+
+    error?.code
+      ? setErrorMsg(error.message || "Signup failed")
+      : setIsSuccess(true);
+
+    setIsPending(false);
   };
 
   if (isSuccess) {
@@ -76,12 +75,12 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
           <p className="text-center">
             Get started on your journey to spiritual growth
           </p>
-          <Button
+          {/* <Button
             onClick={() => router.push("/app/dashboard")} // redirect to dashboard
             className="w-full bg-[#e77306] font-medium rounded-full"
           >
             Sure, Log me in.
-          </Button>
+          </Button> */}
         </div>
       </div>
     );
@@ -186,7 +185,7 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
             </p>
           )}
         </div>
-        <div className="mt-2">
+        <div className="flex flex-col  gap-0 mt-2">
           <Button className="w-full bg-[#e77306] flex justify-center items-center gap-2">
             {isPending && <LucideLoader2 className="h-4 w-4 animate-spin" />}
             Sign Up

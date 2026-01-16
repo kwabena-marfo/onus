@@ -5,53 +5,80 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { BsLock, BsEnvelope } from "react-icons/bs";
+import { BsLock, BsEnvelope, BsCheck2Circle } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
+import { authClient } from "@/lib/authClient";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [step, setStep] = useState<"request" | "verify">("request");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const isPasswordValid = newPassword.length >= 8;
+
+  const token = new URLSearchParams(window.location.search).get("token");
+
   // Step 1 — Request password reset code
   const sendResetEmail = async () => {
-    try {
-      setLoading(true);
-      setErrorMsg("");
+    setLoading(true);
+    setErrorMsg("");
 
-      // await signIn.create({
-      //   strategy: "reset_password_email_code",
-      //   identifier: email,
-      // });
+    const { error } = await authClient.requestPasswordReset({
+      email,
+      redirectTo: `${process.env.NEXT_PUBLIC_HOST}/forgot-password`,
+    });
 
-      setStep("verify");
-    } catch (err: any) {
-      setErrorMsg(err?.errors?.[0]?.message || "Failed to send reset email");
-    } finally {
-      setLoading(false);
-    }
+    error?.code
+      ? setErrorMsg(error.message || "Signup failed")
+      : setIsSuccess(true);
+    setLoading(false);
   };
 
   // Step 2 — Verify code + set new password
   const resetPassword = async () => {
-    try {
-      setLoading(true);
-      setErrorMsg("");
-    } catch (err: any) {
-      setErrorMsg(err?.errors?.[0]?.message || "Invalid code or password");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    setErrorMsg("");
+
+    const { error } = await authClient.resetPassword({
+      newPassword,
+      token: token as any, // required
+    });
+
+    error?.code
+      ? setErrorMsg(error.message || "Sorry an error occured")
+      : setIsSuccess(true);
+    setLoading(false);
   };
 
   return (
     <div className="w-full rounded-md mt-10">
-      {step === "request" && (
+      {!errorMsg && isSuccess ? (
+        <div className="justify-self-center items-center z-50  pt-5">
+          <div className="flex flex-col justify-center items-center gap-1">
+            <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
+            <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
+              All Done! <br />
+            </h1>
+            {!token ? (
+              <p>Check Your email for a confirmation link</p>
+            ) : (
+              <>
+                <p>
+                  Your password has been reset <br /> Login to access your
+                  account
+                </p>
+                <Link href="/login" className="w-full">
+                  <Button className="w-full bg-[#e77306]">Log in</Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      ) : !token ? (
         <>
           <h2 className="text-2xl font-bold text-center ">Forgot Password</h2>
           <p className="text-center mb-4">
@@ -71,7 +98,9 @@ export default function ForgotPasswordForm() {
             />
           </div>
 
-          {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
+          {errorMsg && (
+            <p className="text-red-500 text-center text-sm -mt-1">{errorMsg}</p>
+          )}
 
           <Button
             className="w-full bg-[#e77306]"
@@ -85,24 +114,14 @@ export default function ForgotPasswordForm() {
             <Link href="/login">Go To Login</Link>
           </div>
         </>
-      )}
-
-      {step === "verify" && (
+      ) : token ? (
         <>
-          <h2 className="text-2xl font-bold text-center mb-4">
+          <h2 className="text-2xl font-bold text-center mb-1">
             Reset Password
           </h2>
           <p className="text-center mb-4">
-            Check your email for the verification code.
+            Set a new password to reset your password
           </p>
-
-          <Label className="mb-1">Verification Code</Label>
-          <Input
-            className="mb-3"
-            placeholder="Enter code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
 
           <Label className="mb-1">New Password</Label>
           <div className="relative w-full mb-3">
@@ -118,18 +137,17 @@ export default function ForgotPasswordForm() {
             />
           </div>
 
-          {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
-
           <Button
             className="w-full bg-[#e77306]"
             onClick={resetPassword}
-            disabled={loading}
+            disabled={loading || !isPasswordValid}
           >
             {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
             Reset Password
           </Button>
+          {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
         </>
-      )}
+      ) : null}
     </div>
   );
 }

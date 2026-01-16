@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import { useRouter } from "next/navigation";
 import { LuLogOut } from "react-icons/lu";
 import { BsPerson } from "react-icons/bs";
 
@@ -30,8 +30,7 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const { data: userSession, isPending: userIsLoading } =
     authClient.useSession();
   const user = userSession?.user;
-
-  const signOut = () => authClient.signOut();
+  const router = useRouter();
 
   if (userIsLoading) return null; // optionally render a loader
 
@@ -95,7 +94,18 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-              <AlertDialogAction className="bg-destructive" onClick={signOut}>
+              <AlertDialogAction
+                className="bg-destructive"
+                onClick={async () => {
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        router.push("/");
+                      },
+                    },
+                  });
+                }}
+              >
                 <div className="flex items-center space-x-1">
                   <LuLogOut className="w-8 h-8" />
                   <p className="hidden md:block">Continue</p>

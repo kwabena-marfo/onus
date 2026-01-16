@@ -48,7 +48,6 @@
     "nextjs-toploader": "^3.8.16",
     "nodemailer": "^6.10.1",
     "or": "^0.2.0",
-    "prisma": "^5.22.0",
     "react": "19.2.1",
     "react-confetti": "^6.4.0",
     "react-dom": "19.2.1",
@@ -74,6 +73,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "postcss": "^8.5.4",
+    "prisma": "^7.2.0",
     "tailwindcss": "^4.1.8",
     "tw-animate-css": "^1.3.0",
     "typescript": "^5"
