@@ -1,14 +1,13 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/authClient";
 
 import { Suspense, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function PrivacyPolicy() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+  const callbackUrl = "/app/dashboard";
 
   const { data: sessionData, isPending } = authClient.useSession();
   const router = useRouter();
