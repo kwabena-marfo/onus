@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/authClient";
 
 import { BsApple, BsGooglePlay } from "react-icons/bs";
@@ -13,8 +13,8 @@ export default function LayoutComp({
 }: {
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+  // const searchParams = useSearchParams();
+  const callbackUrl = "/app/dashboard";
 
   const { data: sessionData, isPending } = authClient.useSession();
   const router = useRouter();

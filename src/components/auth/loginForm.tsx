@@ -16,7 +16,6 @@ import { Label } from "@/components/ui/label";
 
 import { BsEye, BsEyeSlash, BsLock, BsPerson } from "react-icons/bs";
 import { LucideLoader2 } from "lucide-react";
-import { LuLogIn } from "react-icons/lu";
 import Link from "next/link";
 import GoogleAuthButton from "./googleButton";
 
