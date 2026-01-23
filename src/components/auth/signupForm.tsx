@@ -197,9 +197,6 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
         </div>
       </div>
 
-      {/* Sign Up Button */}
-
-      {/* Google Sign In */}
       <div className="flex flex-col p-1">
         <p className="text-center">Or</p>
         <GoogleButton />

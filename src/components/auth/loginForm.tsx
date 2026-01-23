@@ -138,18 +138,17 @@ export default function LoginForm() {
         {errorMsg && (
           <p className="text-red-500 text-sm text-center">{errorMsg}</p>
         )}
+      </div>
 
-        {/* Google */}
-        <div className="flex flex-col p-1">
-          <p className="text-center">Or</p>
-          <GoogleAuthButton />
-          <p className="text-center text-sm mt-2">
-            Don&apos;t have an account? Sign Up
-            <Link className="text-blue-500 pl-1" href="/signup">
-              Here
-            </Link>
-          </p>
-        </div>
+      <div className="flex flex-col p-1">
+        <p className="text-center">Or</p>
+        <GoogleAuthButton />
+        <p className="text-center text-sm mt-2">
+          Don&apos;t have an account? Sign Up
+          <Link className="text-blue-500 pl-1" href="/signup">
+            Here
+          </Link>
+        </p>
       </div>
     </form>
   );

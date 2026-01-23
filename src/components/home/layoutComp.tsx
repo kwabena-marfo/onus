@@ -14,6 +14,7 @@ export default function LayoutComp({
   children: React.ReactNode;
 }) {
   // const searchParams = useSearchParams();
+
   const callbackUrl = "/app/dashboard";
 
   const { data: sessionData, isPending } = authClient.useSession();

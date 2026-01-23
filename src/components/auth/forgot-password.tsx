@@ -55,28 +55,25 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="w-full rounded-md mt-10">
+    <div className="w-full rounded-md">
       {!errorMsg && isSuccess ? (
-        <div className="justify-self-center items-center z-50  pt-5">
-          <div className="flex flex-col justify-center items-center gap-1">
-            <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
-            <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
-              All Done! <br />
-            </h1>
-            {!token ? (
-              <p>Check Your email for a confirmation link</p>
-            ) : (
-              <>
-                <p>
-                  Your password has been reset <br /> Login to access your
-                  account
-                </p>
-                <Link href="/login" className="w-full">
-                  <Button className="w-full bg-[#e77306]">Log in</Button>
-                </Link>
-              </>
-            )}
-          </div>
+        <div className="flex flex-col justify-self-center gap-2 items-center z-50">
+          <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
+          <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
+            All Done! <br />
+          </h1>
+          {!token ? (
+            <p>Check Your email for a confirmation link</p>
+          ) : (
+            <div className="">
+              <p className="text-center">
+                Your password has been reset Login to access your account
+              </p>
+              <Link href="/login" className="w-full">
+                <Button className="w-full bg-[#e77306]">Log in</Button>
+              </Link>
+            </div>
+          )}
         </div>
       ) : !token ? (
         <>
