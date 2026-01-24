@@ -12,7 +12,7 @@ const montserrat = Poppins({
 
 export const metadata: Metadata = {
   title: "Onus",
-  description: "Observing, Navigating and Understanding Scripture",
+  description: "Observe, Navigate, Understand, Store",
 };
 
 export default function RootLayout({
