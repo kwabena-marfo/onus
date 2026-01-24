@@ -29,8 +29,8 @@ export default function AddVerseModal({ TriggerComp, verse }: any) {
             onInteractOutside={(event: any) => event.preventDefault()}
             className="min-w-2xl"
           >
-            <ScrollArea className="max-h-[80vh] py-6 px-4">
-              <div className="flex items-center gap-2">
+            <ScrollArea className="max-h-[80vh] p-3">
+              <div className="flex justify-center items-center gap-2">
                 <AddVerseForm verse={verse} />
               </div>
             </ScrollArea>

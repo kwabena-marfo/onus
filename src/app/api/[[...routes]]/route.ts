@@ -39,7 +39,7 @@ app.use(
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
     credentials: true,
-  })
+  }),
 );
 
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
@@ -97,7 +97,6 @@ app.post("/app/create-onus", createOnusChecker(prisma), async (c: any) => {
       chapter,
       verse,
       verseTo,
-      version,
       onusVerse,
       verseNotes,
       tags,
@@ -140,16 +139,20 @@ app.get("/app/get-onus", async (c: any) => {
     if (!verses || verses.length === 0)
       return c.json({ verses: [], grouped: [] });
 
-    const grouped = verses.reduce((acc, verse) => {
-      const bookKey = verse.book.toLowerCase();
-      if (!acc[bookKey]) acc[bookKey] = { memorised: 0, saved: 0, verses: [] };
+    const grouped = verses.reduce(
+      (acc, verse) => {
+        const bookKey = verse.book.toLowerCase();
+        if (!acc[bookKey])
+          acc[bookKey] = { memorised: 0, saved: 0, verses: [] };
 
-      if (verse.memorised === "memorised") acc[bookKey].memorised++;
-      if (verse.memorised === "saved") acc[bookKey].saved++;
+        if (verse.memorised === "memorised") acc[bookKey].memorised++;
+        if (verse.memorised === "saved") acc[bookKey].saved++;
 
-      acc[bookKey].verses.push(verse);
-      return acc;
-    }, {} as Record<string, { memorised: number; saved: number; verses: any[] }>);
+        acc[bookKey].verses.push(verse);
+        return acc;
+      },
+      {} as Record<string, { memorised: number; saved: number; verses: any[] }>,
+    );
 
     const result = Object.entries(grouped).map(([book, data]) => ({
       [book]: data,
@@ -164,26 +167,21 @@ app.get("/app/get-onus", async (c: any) => {
 
 // -------------------- DELETE ONUS VERSES --------------------
 app.delete("/app/delete-onus", async (c) => {
-  const idsParam: any = c.req.query("ids");
+  const id: any = c.req.query("id");
 
   try {
-    const parsed = z.array(z.string()).parse(JSON.parse(idsParam));
-
-    const result = await prisma.verse.deleteMany({
-      where: { id: { in: parsed } },
+    await prisma.verse.delete({
+      where: { id },
     });
 
-    return c.json(
-      { message: "Verse deleted successfully", count: result.count },
-      200
-    );
+    return c.json({ message: "Verse deleted successfully" }, 200);
   } catch (error) {
+    console.error(error);
     return c.json(
       {
-        message: "Invalid request or IDs",
-        error: error instanceof Error ? error.message : String(error),
+        error: "An error occurred",
       },
-      400
+      400,
     );
   }
 });

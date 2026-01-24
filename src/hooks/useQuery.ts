@@ -60,9 +60,7 @@ export function useDeleteVerse() {
 
   const mutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      const res = await api.delete(
-        `/api/app/delete-onus/?ids=${JSON.stringify(ids)}`
-      );
+      const res = await api.delete(`/api/app/delete-onus/?id=${ids}`);
       return res.data;
     },
     onSuccess: () => {

@@ -9,23 +9,31 @@ generator client {
   provider = "prisma-client-js"
 }
 
+type Tag {
+  tag  String
+  color String?
+}
+
+
 model Verse {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String
   book       String
   chapter    String
   verse      String
-  verseTo    String?      // optional
+  verseTo    String?
   version    String?
   onusVerse  String?
   verseNotes String?
-  tags       String[]  // array of strings
-  memorised  String   
+
+  tags       Tag[]     // 👈 array of objects
+  memorised  String
 
   user User @relation(fields: [userId], references: [id])
 
   @@map("verses")
 }
+
 
 
 model PasswordReset {

@@ -28,7 +28,7 @@ export default function DeleteVerse({
 
   const handleDelete = async () => {
     try {
-      await deletePost([ids]);
+      await deletePost(ids);
       toast("Verse Deleted succesfully");
       // setOpen(false); // ✅ only close after success
     } catch (error) {

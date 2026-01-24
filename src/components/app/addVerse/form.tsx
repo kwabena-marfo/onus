@@ -30,6 +30,7 @@ import {
 } from "@/hooks/useQuery";
 import IsLoadingError from "../isLoadingError";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export default function AddVerseForm({ className, verse }: any) {
   const {
@@ -62,6 +63,8 @@ export default function AddVerseForm({ className, verse }: any) {
     error: deletePostError,
     isError: isDeletePostError,
   } = useDeleteVerse();
+
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -120,7 +123,6 @@ export default function AddVerseForm({ className, verse }: any) {
   useEffect(() => {
     if (fetchVersesData) {
       const formattedVerse = formatVersesFromExternalData(fetchVersesData);
-
       setValue("onusVerse", formattedVerse);
     }
   }, [fetchVersesData]);
@@ -143,18 +145,19 @@ export default function AddVerseForm({ className, verse }: any) {
     );
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       {isSuccess ? (
         <div className="flex flex-col justify-center items-center gap-3 p-4">
           <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
           <h1 className="text-center text-xl md:text-3xl font-bold text-gray-700">
-            All Done, Verse Added!
+            All Done, Verse {verse ? "Edited" : "Added"}!
           </h1>
           <p className="text-center text-lg">
             Keep Growing dearly beloved of the Lord, You are already winning.
           </p>
           <Button
             onClick={() => {
+              if (verse) router.refresh();
               resetPostVers();
             }}
             className="w-full bg-[#fa9a40] text-gray-800"
@@ -163,19 +166,23 @@ export default function AddVerseForm({ className, verse }: any) {
           </Button>
         </div>
       ) : (
-        <>
+        <div className="flex flex-col items-center justify-center ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={cn(
-              "grid w-full gap-3 z-50 bg-white p-4 rounded-md",
-              className
+              "flex flex-col justify-self-center w-full gap-3 z-50 bg-white p-4 rounded-md",
+              className,
             )}
           >
             <div className="flex flex-col gap-0 justify-center items-center ">
-              <p className="text-3xl md:text-4xl font-bold">Add Verse</p>
-              <p className="text-center">
-                Your Journey to Spritual Growth Begins here
+              <p className="text-3xl md:text-4xl font-bold">
+                {verse ? "Edit" : "Add"} Verse
               </p>
+              {!verse ? (
+                <p className="text-center">
+                  Your Journey to Spritual Growth Begins here
+                </p>
+              ) : null}
             </div>
             <div className="flex flex-col gap-1">
               {!verse ? (
@@ -213,13 +220,9 @@ export default function AddVerseForm({ className, verse }: any) {
 
               {onusVerse ? (
                 <>
-                  <Textarea
-                    rows={3}
-                    readOnly
-                    value={onusVerse?.replace(/<[^>]*>?/gm, "")}
-                    placeholder="Verse Appears Here"
-                    className="text-[16px]"
-                  />
+                  <div className="gap-1 rounded-lg border border-dashed p-2">
+                    {onusVerse?.replace(/<[^>]*>?/gm, "")}
+                  </div>
                 </>
               ) : null}
             </div>
@@ -283,15 +286,15 @@ export default function AddVerseForm({ className, verse }: any) {
 
           {verse ? (
             <DeleteVerse
-              ids={[verse?.id]}
+              ids={verse?.id}
               deletePostLoading={deletePostLoading}
               deletePost={deletePost}
               deletePostError={deletePostError}
               isDeletePostError={isDeletePostError}
             />
           ) : null}
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 }

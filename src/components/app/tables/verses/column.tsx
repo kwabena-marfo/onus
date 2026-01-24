@@ -99,7 +99,7 @@ export default function useColumns({ searchQuery }: any) {
               className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left"
             />
 
-            <div className="hidden gap-1 peer-checked:grid  mt-2">
+            <div className="hidden gap-1 peer-checked:grid mt-2">
               {verseNotes ? (
                 <div>
                   <Label

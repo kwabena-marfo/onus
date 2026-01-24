@@ -24,7 +24,7 @@ export default function createOnusChecker(prisma: any) {
       } = body;
 
       if (id) {
-        await prisma.verses.update({
+        await prisma.verse.update({
           where: { userId: user.id, id },
           data: {
             verseNotes,
@@ -35,17 +35,56 @@ export default function createOnusChecker(prisma: any) {
         return c.json({ message: "Verse edited successfully" });
       }
 
-      const existingVerse = await prisma.Verse.findFirst({
+      const start = Number(verse);
+      const end = verseTo ? Number(verseTo) : start;
+
+      if (end < start) {
+        return c.json({ error: "Invalid verse range" }, 400);
+      }
+
+      const verseStart = Number(verse);
+      const verseEnd = verseTo ? Number(verseTo) : Number(verse);
+
+      const existingVerse = await prisma.verse.findFirst({
         where: {
           userId: user.id,
           book,
           chapter,
-          verse,
-          ...(verseTo ? { verseTo } : { verseTo: null }),
+
+          AND: [
+            {
+              OR: [
+                // existing single verse OR range starts before new range ends
+                {
+                  verse: {
+                    lte: verseEnd.toString(),
+                  },
+                },
+              ],
+            },
+            {
+              OR: [
+                // existing range OR single verse ends after new range starts
+                {
+                  verseTo: {
+                    gte: verseStart.toString(),
+                  },
+                },
+                {
+                  verseTo: null,
+                },
+              ],
+            },
+          ],
         },
       });
 
-      if (existingVerse) return c.json({ error: "Verse already exists" }, 400);
+      if (existingVerse) {
+        return c.json(
+          { error: "Verse overlaps with an existing saved verse range" },
+          400,
+        );
+      }
 
       if (!onusVerse) {
         // Fetch verses from API

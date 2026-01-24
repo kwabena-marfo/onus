@@ -12,13 +12,9 @@ export default function SearchForm({ className }: ComponentProps<"form">) {
 
   return (
     <>
-      <div
-        className={cn(
-          "grid w-full gap-4 z-50 bg-white p-4 rounded-md",
-          className
-        )}
-      >
-        {onusData?.verses?.length ? (
+      <div className={cn("grid w-full gap-4 z-50  p-4 rounded-md", className)}>
+        <p>SEARCH HERE</p>
+        {onusData ? (
           <>
             <VersesTable
               data={onusData?.verses}
