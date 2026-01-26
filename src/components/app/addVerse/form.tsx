@@ -128,6 +128,7 @@ export default function AddVerseForm({ className, verse }: any) {
   }, [fetchVersesData]);
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     await postVerse({
       ...data,
       foundBookIndex,
@@ -276,7 +277,7 @@ export default function AddVerseForm({ className, verse }: any) {
                 {verse ? "Edit Verse" : "Add Verse"}
               </Button>
               {postVerseIsError ? (
-                <p className="text-left text-red-500">
+                <p className="text-center text-red-500">
                   {(postVerseError as AxiosError<{ error: string }>)?.response
                     ?.data?.error || "Something went wrong"}
                 </p>

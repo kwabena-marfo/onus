@@ -45,43 +45,40 @@ export default function createOnusChecker(prisma: any) {
       const verseStart = Number(verse);
       const verseEnd = verseTo ? Number(verseTo) : Number(verse);
 
+      console.log(book, chapter, verseStart, verseEnd);
+
       const existingVerse = await prisma.verse.findFirst({
         where: {
           userId: user.id,
           book,
           chapter,
-
-          AND: [
+          OR: [
+            // ✅ Case 1: existing verse is a RANGE
             {
-              OR: [
-                // existing single verse OR range starts before new range ends
-                {
-                  verse: {
-                    lte: verseEnd.toString(),
-                  },
-                },
+              AND: [
+                { verseTo: { not: null } },
+                { verse: { lte: verseEnd.toString() } },
+                { verseTo: { gte: verseStart.toString() } },
               ],
             },
+
+            // ✅ Case 2: existing verse is a SINGLE verse
             {
-              OR: [
-                // existing range OR single verse ends after new range starts
-                {
-                  verseTo: {
-                    gte: verseStart.toString(),
-                  },
-                },
-                {
-                  verseTo: null,
-                },
+              AND: [
+                { verseTo: null },
+                { verse: { gte: verseStart.toString() } },
+                { verse: { lte: verseEnd.toString() } },
               ],
             },
           ],
         },
       });
 
+      console.log(existingVerse);
+
       if (existingVerse) {
         return c.json(
-          { error: "Verse overlaps with an existing saved verse range" },
+          { error: "Verse overlaps with an existing saved verse" },
           400,
         );
       }
