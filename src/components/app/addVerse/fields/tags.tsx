@@ -10,11 +10,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { BsX } from "react-icons/bs";
 import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
 
-const defaultTags = [
+type Tag = {
+  tag: string;
+  color: string;
+};
+
+/* ---------------- DEFAULT TAGS ---------------- */
+const defaultTags: Tag[] = [
   { tag: "peace", color: "bg-blue-400" },
   { tag: "faith", color: "bg-purple-400" },
   { tag: "love", color: "bg-red-400" },
@@ -42,128 +48,127 @@ const defaultTags = [
   { tag: "courage", color: "bg-red-400" },
 ];
 
-const getNextUnusedColor = (usedColors: string[]) => {
-  const available = defaultTags
-    .map((t) => t.color)
-    .find((c) => !usedColors.includes(c));
+/* ---------------- COLOR PICKER FALLBACK ---------------- */
+const randomColors = [
+  "bg-rose-400",
+  "bg-lime-200",
+  "bg-violet-400",
+  "bg-amber-400",
+  "bg-cyan-200",
+  "bg-emerald-200",
+  "bg-teal-200",
+  "bg-fuchsia-400",
+  "bg-blue-200",
+  "bg-zinc-400",
+  "bg-stone-300",
+  "bg-sky-200",
+];
 
-  if (available) return available;
-
-  // Generate a random Tailwind-like bg color
-  const colors = [
-    "bg-rose-400",
-    "bg-lime-200",
-    "bg-violet-400",
-    "bg-amber-400",
-    "bg-cyan-200",
-    "bg-emerald-200",
-    "bg-teal-200",
-    "bg-fuchsia-400",
-    "bg-blue-200",
-    "bg-zinc-400",
-    "bg-stone-300",
-    "bg-sky-200",
-  ];
-
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  return randomColor;
+const getNextUnusedColor = (used: string[]) => {
+  const fromDefaults = defaultTags.find((t) => !used.includes(t.color));
+  if (fromDefaults) return fromDefaults.color;
+  return randomColors[Math.floor(Math.random() * randomColors.length)];
 };
+
+/* ---------------- COMPONENT ---------------- */
 export default function Tags({ tags, addTag, removeTag }: any) {
   const [customInput, setCustomInput] = useState("");
-  const [allTags, setAllTags] = useState([...defaultTags]);
+  const [allTags, setAllTags] = useState<Tag[]>(defaultTags);
 
+  /* -------- LOAD SAVED TAGS -------- */
   useEffect(() => {
-    const savedCustomTags = JSON.parse(
-      localStorage.getItem("custom-tags") || "[]"
-    );
-    if (Array.isArray(savedCustomTags)) {
-      setAllTags((prev) => [...prev, ...savedCustomTags]);
+    const saved = JSON.parse(localStorage.getItem("custom-tags") || "[]");
+    if (Array.isArray(saved)) {
+      setAllTags((prev) => [...prev, ...saved]);
     }
   }, []);
 
-  const saveNewTag = (newTag: { tag: string; color: string }) => {
-    const existing = JSON.parse(localStorage.getItem("custom-tags") || "[]");
-    const updated = [...existing, newTag];
-    localStorage.setItem("custom-tags", JSON.stringify(updated));
+  /* -------- SAVE TAG -------- */
+  const persistTag = (tag: Tag) => {
+    const stored = JSON.parse(localStorage.getItem("custom-tags") || "[]");
+    localStorage.setItem("custom-tags", JSON.stringify([...stored, tag]));
   };
 
+  /* -------- ADD CUSTOM TAGS -------- */
   const handleCustomInput = () => {
+    if (!customInput.trim()) return;
+
+    const usedColors = allTags.map((t) => t.color);
     const newTags = customInput
       .split(",")
       .map((t) => t.trim().toLowerCase())
-      .filter((t) => t && !tags.some((tag: any) => tag.tag === t));
+      .filter(Boolean);
 
-    const usedColors = tags
-      .map((t: any) => t.color)
-      .concat(allTags.map((t) => t.color));
+    newTags.forEach((tagName) => {
+      if (tags.some((t: Tag) => t.tag === tagName)) return;
 
-    newTags.forEach((tag) => {
-      const existing = allTags.find((pt) => pt.tag === tag);
-      if (!existing) {
-        const color = getNextUnusedColor(usedColors);
-        const newTag = { tag, color };
-        saveNewTag(newTag);
-        setAllTags((prev) => [...prev, newTag]);
-        addTag(newTag);
-      } else {
+      const existing = allTags.find((t) => t.tag === tagName);
+      if (existing) {
         addTag(existing);
+        return;
       }
+
+      const newTag: Tag = {
+        tag: tagName,
+        color: getNextUnusedColor(usedColors),
+      };
+
+      persistTag(newTag);
+      setAllTags((prev) => [...prev, newTag]);
+      addTag(newTag);
     });
 
     setCustomInput("");
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-row gap-2">
-        <div>
-          <Label className="text-sm ">Select Tags</Label>
-          <Select
-            onValueChange={(value) => {
-              const found = allTags.find((pt) => pt.tag === value);
-              if (found && !tags.some((t: any) => t.tag === value)) {
-                addTag(found);
-              }
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a tag" />
-            </SelectTrigger>
-            <SelectContent className="max-h-[200px] overflow-y-auto">
-              {allTags.map((t) => (
-                <SelectItem key={t.tag} value={t.tag}>
-                  {t.tag}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className=" w-full">
-          <Label className="text-sm  ">Or Add Custom Tags</Label>
-          <Input
-            placeholder="Type and press Enter or comma"
-            value={customInput}
-            onChange={(e) => setCustomInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === ",") {
-                e.preventDefault();
-                handleCustomInput();
-              }
-            }}
-          />
-        </div>
+    <div className="space-y-1">
+      {/* SELECT TAG */}
+      <div className="flex flex-col gap-1">
+        <Label className="text-sm">Select Tags or Add Custom Tags</Label>
+        <Select
+          onValueChange={(value) => {
+            const found = allTags.find((t) => t.tag === value);
+            if (found && !tags.some((t: Tag) => t.tag === value)) {
+              addTag(found);
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a tag" />
+          </SelectTrigger>
+          <SelectContent className="max-h-[200px] overflow-y-auto">
+            {allTags.map((t) => (
+              <SelectItem key={t.tag} value={t.tag}>
+                {t.tag}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Tag list */}
+      {/* CUSTOM INPUT */}
+      <Input
+        placeholder="Type tag and press Enter or comma"
+        value={customInput}
+        onChange={(e) => setCustomInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            handleCustomInput();
+          }
+        }}
+      />
+
+      {/* SELECTED TAGS */}
       {tags?.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {tags.map(({ tag, color }: any, index: number) => (
+          {tags.map(({ tag, color }: Tag, index: number) => (
             <div
               key={index}
               className={cn(
                 "px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2",
-                color
+                color,
               )}
             >
               <span>{tag}</span>

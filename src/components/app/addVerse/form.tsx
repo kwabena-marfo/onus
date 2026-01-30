@@ -31,6 +31,7 @@ import {
 import IsLoadingError from "../isLoadingError";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import WhyNKJV from "../whyNKJV/index.tsx";
 
 export default function AddVerseForm({ className, verse }: any) {
   const {
@@ -92,7 +93,7 @@ export default function AddVerseForm({ className, verse }: any) {
   } = useFieldArray<any>({
     control,
     name: "tags",
-    shouldUnregister: true,
+    shouldUnregister: false,
   });
 
   const book = watch("book");
@@ -128,7 +129,6 @@ export default function AddVerseForm({ className, verse }: any) {
   }, [fetchVersesData]);
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     await postVerse({
       ...data,
       foundBookIndex,
@@ -224,6 +224,11 @@ export default function AddVerseForm({ className, verse }: any) {
                   <div className="gap-1 rounded-lg border border-dashed p-2">
                     {onusVerse?.replace(/<[^>]*>?/gm, "")}
                   </div>
+                  <WhyNKJV
+                    TriggerComp={() => (
+                      <p className="text-right text-xs">Why we use NIV?</p>
+                    )}
+                  />
                 </>
               ) : null}
             </div>
@@ -253,11 +258,11 @@ export default function AddVerseForm({ className, verse }: any) {
                   >
                     <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
                       <RadioGroupItem value="memorised" id="r2" />
-                      <Label htmlFor="r2">I have Memorised</Label>
+                      <Label htmlFor="r2">Verse Memorised</Label>
                     </div>
-                    <div className="flex items-center gap-3 p-2 border rounded-lg w-full">
+                    <div className="flex items-center gap-3 p-2 border rounded-lg w-full ">
                       <RadioGroupItem value="saved" id="r3" />
-                      <Label htmlFor="r3">I want to save</Label>
+                      <Label htmlFor="r3">Save for now</Label>
                     </div>
                   </RadioGroup>
                   {error && (

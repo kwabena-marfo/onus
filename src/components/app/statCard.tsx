@@ -20,13 +20,13 @@ export default function StatCard({
   const router = useRouter();
   return (
     <div
+      onClick={() => {
+        if (link) return router.push(link);
+        if (clickFunction) return clickFunction();
+      }}
       className={`rounded-lg  p-2 bg-gray-50 border w-full h-full border-l-3 ${colorB} `}
     >
       <div
-        onClick={() => {
-          if (link) return router.push(link);
-          if (clickFunction) return clickFunction();
-        }}
         className={`grid items-center space-x-1 text-gray-700 cursor-pointer`}
       >
         <Icon className={`md:w-8 md:h-8 w-6 h-6 ${colorT}`} />

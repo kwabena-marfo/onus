@@ -38,40 +38,42 @@ export default function ChapterAndVerse({
   };
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex gap-2 w-full justify-between items-center">
-        <Controller
-          control={control}
-          name="chapter"
-          rules={{ required: "Required" }}
-          render={({
-            field: { onChange, value },
-            fieldState: { error },
-          }: any) => {
-            return (
-              <div className="flex flex-col gap-1 flex-1 w-full">
-                <Label>Chapter</Label>
-                <Select
-                  onValueChange={onChange}
-                  value={value || ""}
-                  disabled={!book ? true : false}
-                >
-                  <SelectTrigger
-                    className={` w-full ${error && "border-red-500"}`}
+      <div className="flex flex-1 gap-2 w-full justify-between items-center">
+        <div className="flex flex-col gap-1 flex-1 w-full">
+          <Controller
+            control={control}
+            name="chapter"
+            rules={{ required: "Required" }}
+            render={({
+              field: { onChange, value },
+              fieldState: { error },
+            }: any) => {
+              return (
+                <>
+                  <Label>Chapter</Label>
+                  <Select
+                    onValueChange={onChange}
+                    value={value || ""}
+                    disabled={!book ? true : false}
                   >
-                    <SelectValue placeholder="Chapter" />
-                  </SelectTrigger>
-                  <SelectContent className="h-52">
-                    {foundBook?.versesPerChapter.map((_: any, index: any) => (
-                      <SelectItem key={index} value={`${index + 1}`}>
-                        {index + 1}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            );
-          }}
-        />
+                    <SelectTrigger
+                      className={` w-full ${error && "border-red-500"}`}
+                    >
+                      <SelectValue placeholder="" />
+                    </SelectTrigger>
+                    <SelectContent className="h-52 w-full min-w-[var(--radix-select-trigger-width)]">
+                      {foundBook?.versesPerChapter.map((_: any, index: any) => (
+                        <SelectItem key={index} value={`${index + 1}`}>
+                          {index + 1}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              );
+            }}
+          />
+        </div>
 
         <Controller
           control={control}
@@ -92,7 +94,7 @@ export default function ChapterAndVerse({
                   <SelectTrigger
                     className={`w-full ${error && "border-red-500"}`}
                   >
-                    <SelectValue placeholder="Verse" />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                   <SelectContent className="h-52">
                     {new Array(foundBook?.versesPerChapter[+chapter - 1])
@@ -133,12 +135,12 @@ export default function ChapterAndVerse({
                   <SelectTrigger
                     className={`w-full ${error && "border-red-500"}`}
                   >
-                    <SelectValue placeholder="Verse" />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                   <SelectContent className="h-52">
                     {Array.from(
                       { length: totalVerses - start + 1 },
-                      (_, i) => start + i
+                      (_, i) => start + i,
                     ).map((v) => (
                       <SelectItem key={v} value={`${v}`}>
                         {v}

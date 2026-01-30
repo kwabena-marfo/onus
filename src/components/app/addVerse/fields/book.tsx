@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Controller } from "react-hook-form";
+import WhyLimitedSelection from "../../whyLimitedSelection/index.tsx";
 
 export default function BibleBook({ control, bibleData, onusData }: any) {
   // Map book name -> verse count
@@ -54,7 +55,7 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
   ];
 
   const filteredBooks = bibleBooksWithIndex.filter((book: any) =>
-    allowedBooks.includes(book.value)
+    allowedBooks.includes(book.value),
   );
 
   const sortedFilteredBooks = filteredBooks.sort((a: any, b: any) => {
@@ -74,7 +75,7 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
 
       acc[key] =
         bookData?.verses?.filter(
-          (verse: any) => verse.memorised === "memorised"
+          (verse: any) => verse.memorised === "memorised",
         ).length || 0;
 
       return acc;
@@ -89,6 +90,11 @@ export default function BibleBook({ control, bibleData, onusData }: any) {
         <div className="w-full flex flex-col gap-1">
           <div className="flex justify-between">
             <Label>Book </Label>
+            <WhyLimitedSelection
+              TriggerComp={() => (
+                <p className="text-right text-xs">Why we limit selection?</p>
+              )}
+            />
           </div>
           <Select onValueChange={onChange} value={value}>
             <SelectTrigger

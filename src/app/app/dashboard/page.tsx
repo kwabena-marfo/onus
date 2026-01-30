@@ -44,10 +44,10 @@ export default function Dashboard() {
             {[
               {
                 label: "Memorised Verses",
-                link: "/myonusbible",
+                link: "/app/myonusbible",
                 value:
                   data?.verses?.filter(
-                    ({ memorised }: any) => memorised === "memorised"
+                    ({ memorised }: any) => memorised === "memorised",
                   )?.length || 0,
                 colorB: "border-l-[#0F3187]",
                 colorT: "text-[#0F3187]",
@@ -66,10 +66,10 @@ export default function Dashboard() {
               },
               {
                 label: "Saved Verses",
-                link: "/saved",
+                link: "/app/saved",
                 value:
                   data?.verses?.filter(
-                    ({ memorised }: any) => memorised === "saved"
+                    ({ memorised }: any) => memorised === "saved",
                   )?.length || 0,
                 colorB: "border-l-[#8C15E8]",
                 colorT: "text-[#8C15E8]",
@@ -79,6 +79,7 @@ export default function Dashboard() {
               },
               {
                 label: "Completed Books",
+                link: "/app/myonusbible",
                 value:
                   data?.grouped?.reduce((count: any, entry: any) => {
                     const bookName = Object.keys(entry)[0];
@@ -94,7 +95,7 @@ export default function Dashboard() {
               },
               {
                 label: "Quizzes So Far",
-                link: "/quize",
+                link: "/app/quize",
                 value: 0,
                 colorB: "border-l-[#760606]",
                 colorT: "text-[#760606]",
@@ -102,8 +103,9 @@ export default function Dashboard() {
                 isLoading,
                 isError,
               },
-            ].map(({ label, value, colorB, colorT, icon }, index) => (
+            ].map(({ label, value, colorB, colorT, icon, link }, index) => (
               <StatCard
+                link={link}
                 key={index}
                 label={label}
                 value={value}

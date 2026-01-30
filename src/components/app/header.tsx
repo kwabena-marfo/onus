@@ -37,10 +37,16 @@ import { Separator } from "@/components/ui/separator";
 
 import AddVerseModal from "./addVerse";
 import SearchModal from "./search";
+import { useState } from "react";
+import { LucideLoader2 } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function Header() {
   const { data: userSession } = authClient.useSession();
   const router = useRouter();
+
+  const [logoutLoading, setLogoutLoading] = useState(false);
+
   const user = userSession?.user;
 
   return (
@@ -85,7 +91,11 @@ export default function Header() {
                     alt={user?.name || "User"}
                   />
                   <AvatarFallback>
-                    <BsPerson className="h-6 w-6" />
+                    {logoutLoading ? (
+                      <LucideLoader2 className="h-6 w-6" />
+                    ) : (
+                      <BsPerson className="h-6 w-6" />
+                    )}
                   </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
@@ -134,8 +144,10 @@ export default function Header() {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
+                          <Button
+                            disabled={logoutLoading}
                             onClick={async () => {
+                              setLogoutLoading(true);
                               await authClient.signOut({
                                 fetchOptions: {
                                   onSuccess: () => {
@@ -143,14 +155,19 @@ export default function Header() {
                                   },
                                 },
                               });
+                              setLogoutLoading(false);
                             }}
                             className="bg-red-900"
                           >
                             <div className="flex items-center space-x-1">
-                              <LuLogOut className="w-8 h-8" />
+                              {logoutLoading ? (
+                                <LucideLoader2 className="h-6 w-6" />
+                              ) : (
+                                <LuLogOut className="w-8 h-8" />
+                              )}
                               <p>Continue</p>
                             </div>
-                          </AlertDialogAction>
+                          </Button>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

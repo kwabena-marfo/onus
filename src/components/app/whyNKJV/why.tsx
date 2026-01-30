@@ -7,16 +7,16 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function NKJVReasons() {
+export default function NIVReasons() {
   return (
     <Card className="max-w-3xl mx-auto p-4 md:p-6">
       <CardHeader className="text-center">
-        <CardTitle className="text-center font-bold ">
-          Why Onus Considers the NKJV One of the Best Bible Versions
+        <CardTitle className="text-center font-bold">
+          Why Onus Considers the NIV One of the Best Bible Versions
         </CardTitle>
         <CardDescription>
-          A simple, balanced explanation of why pastors, teachers, and Bible
-          students appreciate the New King James Version.
+          A clear and practical explanation of why pastors, teachers, and Bible
+          students around the world value the New International Version.
         </CardDescription>
       </CardHeader>
 
@@ -24,12 +24,12 @@ export default function NKJVReasons() {
         {/* 1 */}
         <div>
           <h3 className="font-semibold text-lg">
-            1. Faithful to the Original Texts
+            1. Accurate and Faithful to the Original Texts
           </h3>
           <p className="text-sm text-muted-foreground">
-            The NKJV stays close to the <strong>Textus Receptus</strong>, the
-            same manuscript base as the KJV, which many find reliable and
-            historically trusted.
+            The NIV is translated directly from the best available Hebrew,
+            Aramaic, and Greek manuscripts, using modern scholarship to ensure
+            accuracy and reliability.
           </p>
         </div>
 
@@ -38,11 +38,11 @@ export default function NKJVReasons() {
         {/* 2 */}
         <div>
           <h3 className="font-semibold text-lg">
-            2. Modern English Without Losing the Majesty
+            2. Clear, Natural Modern English
           </h3>
           <p className="text-sm text-muted-foreground">
-            Older words like <em>thee, thou, thy</em> are removed for clarity,
-            but the NKJV still maintains the classic “Bible sound.”
+            The NIV uses everyday English, making Scripture easy to understand
+            without needing to decode archaic words or sentence structures.
           </p>
         </div>
 
@@ -51,11 +51,12 @@ export default function NKJVReasons() {
         {/* 3 */}
         <div>
           <h3 className="font-semibold text-lg">
-            3. Balanced: Accurate and Readable
+            3. Meaning-Based Translation for Better Understanding
           </h3>
           <p className="text-sm text-muted-foreground">
-            NKJV strikes a perfect balance — accurate enough for deep study, yet
-            smooth and readable for everyday devotion.
+            Rather than translating word-for-word only, the NIV focuses on
+            conveying the original meaning clearly, helping readers grasp the
+            message as it was intended.
           </p>
         </div>
 
@@ -64,11 +65,11 @@ export default function NKJVReasons() {
         {/* 4 */}
         <div>
           <h3 className="font-semibold text-lg">
-            4. Great for Sermons, Study, and Memorization
+            4. Excellent for Study, Teaching, and Devotion
           </h3>
           <p className="text-sm text-muted-foreground">
-            Its consistent, poetic wording makes it excellent for preaching,
-            teaching, and remembering Scripture.
+            Its clarity makes the NIV ideal for personal devotion, group Bible
+            study, teaching, and preaching to mixed or new audiences.
           </p>
         </div>
 
@@ -77,11 +78,12 @@ export default function NKJVReasons() {
         {/* 5 */}
         <div>
           <h3 className="font-semibold text-lg">
-            5. Easy Transition from the KJV
+            5. Great for New and Growing Christians
           </h3>
           <p className="text-sm text-muted-foreground">
-            If you grew up on the KJV, the NKJV feels familiar but easier to
-            understand — classic verses still feel like classic verses.
+            Because it is easy to read and understand, the NIV is often
+            recommended for new believers and those building a consistent Bible
+            reading habit.
           </p>
         </div>
 
@@ -90,11 +92,11 @@ export default function NKJVReasons() {
         {/* 6 */}
         <div>
           <h3 className="font-semibold text-lg">
-            6. Minimal Interpretive Bias
+            6. Widely Used and Reviewed Internationally
           </h3>
           <p className="text-sm text-muted-foreground">
-            The NKJV updates language but avoids adding interpretation, keeping
-            meaning as close as possible to the originals.
+            The NIV is one of the most widely read Bible translations in the
+            world, reviewed and updated by a large team of evangelical scholars.
           </p>
         </div>
 
@@ -103,12 +105,12 @@ export default function NKJVReasons() {
         {/* 7 */}
         <div>
           <h3 className="font-semibold text-lg">
-            7. Widely Trusted by Many Churches
+            7. Trusted Across Many Churches
           </h3>
           <p className="text-sm text-muted-foreground">
-            The NKJV is accepted across many denominations — Pentecostal,
-            Baptist, evangelical, charismatic — making it great for public
-            reading and teaching.
+            Used across denominations and cultures, the NIV works well for
+            public reading, teaching, and shared study in diverse church
+            settings.
           </p>
         </div>
 
@@ -117,8 +119,8 @@ export default function NKJVReasons() {
         {/* Summary */}
         <div>
           <p className="font-medium">
-            In short: Accurate • Clear • Beautiful • Easy to memorize • Trusted
-            • Modern without changing the meaning.
+            In short: Clear • Accurate • Easy to understand • Great for study •
+            Ideal for daily reading • Trusted worldwide.
           </p>
         </div>
       </CardContent>

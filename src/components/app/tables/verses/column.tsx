@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import Highlighter from "react-highlight-words";
 import DOMPurify from "dompurify";
 
-import { BsCheckCircle, BsChevronDown } from "react-icons/bs";
+import { BsCheckCircle } from "react-icons/bs";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
-import { LucideEdit } from "lucide-react";
+import { ChevronDown, ChevronUp, LucideEdit } from "lucide-react";
 import AddVerseModal from "@/components/app/addVerse";
 
 type Tag = {
@@ -49,7 +49,7 @@ export default function useColumns({ searchQuery }: any) {
         } = row.original;
 
         return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group gap-0  ">
+          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group gap-0.5  ">
             <input
               type="checkbox"
               id={`${book}-${chapter}-${verse}-${verseTo}`}
@@ -58,39 +58,30 @@ export default function useColumns({ searchQuery }: any) {
               className="peer hidden"
             />
 
-            <Label
-              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
-              className="flex justify-between gap-2 items-center"
-            >
+            <div className="flex justify-between gap-3 items-center cursor-pointer">
               <div className="flex gap-2 items-center">
                 {memorised !== "saved" ? (
-                  <BsCheckCircle className={`${"text-[#0F3187]"}`} />
+                  <BsCheckCircle className="text-[#0F3187]" />
                 ) : (
-                  <LuLoader className={`${"text-[#8C15E8]"}`} />
+                  <LuLoader className="text-[#8C15E8]" />
                 )}
 
                 <p className="md:text-lg font-bold uppercase">
                   <Highlighter
                     searchWords={[searchQuery]}
-                    autoEscape={true}
+                    autoEscape
                     textToHighlight={book}
                   />{" "}
                   {chapter}:{verse}
                   {verseTo ? `-${verseTo}` : null}
                 </p>
-                <BsChevronDown />
               </div>
-              <div className="flex  justify-center items-center gap-0 ">
-                <AddVerseModal
-                  verse={row.original}
-                  TriggerComp={() => (
-                    <Button size="icon" variant="ghost">
-                      <LucideEdit />
-                    </Button>
-                  )}
-                />
-              </div>
-            </Label>
+
+              <AddVerseModal
+                verse={row.original}
+                TriggerComp={() => <LucideEdit className="w-4 h-4" />}
+              />
+            </div>
 
             <div
               dangerouslySetInnerHTML={{
@@ -99,7 +90,7 @@ export default function useColumns({ searchQuery }: any) {
               className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left"
             />
 
-            <div className="hidden gap-1 peer-checked:grid mt-2">
+            <div className="hidden gap-1 peer-checked:grid mt-1">
               {verseNotes ? (
                 <div>
                   <Label
@@ -124,6 +115,18 @@ export default function useColumns({ searchQuery }: any) {
                 ))}
               </div>
             </div>
+            <Label
+              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
+              className="transition-transform duration-200 peer-checked:hidden flex justify-end "
+            >
+              <ChevronDown className="w-6 h-6" />
+            </Label>
+            <Label
+              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
+              className="transition-transform duration-200 peer-checked:flex hidden justify-end "
+            >
+              <ChevronUp className="w-6 h-6" />
+            </Label>
           </div>
         );
       },
