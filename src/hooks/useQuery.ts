@@ -109,3 +109,53 @@ export function useGetQuizzes() {
     },
   });
 }
+
+// ---------------- UPDATE ACCOUNT ----------------
+
+export function useUpdateProfile() {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: async (data: { fullName: string }) => {
+      const res = await api.patch("/api/user/profile", data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Profile updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["session"] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to update profile");
+    },
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
+
+export function useChangePassword() {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: async (data: {
+      currentPassword: string;
+      newPassword: string;
+    }) => {
+      const res = await api.post("/api/user/change-password", data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Password changed successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to change password");
+    },
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
