@@ -16,6 +16,7 @@ import { BsPerson } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
 
 import { authClient } from "@/lib/authClient";
+import axios from "axios";
 
 type ProfileForm = {
   name: string;
@@ -88,22 +89,21 @@ export default function MyAccount() {
 
       // Upload to Cloudinary if avatarFile exists
       if (avatarFile) {
-        const formData = new FormData();
-        formData.append("file", avatarFile);
-        formData.append("upload_preset", "your_upload_preset"); // replace with your Cloudinary preset
-        formData.append("folder", "avatars");
+        console.log(avatarFile);
 
-        const res = await fetch(
+        const uploadImage: any = await axios.post(
           "https://api.cloudinary.com/v1_1/kalakap/image/upload",
           {
-            method: "POST",
-            body: formData,
+            file: avatarFile,
+            upload_preset: "gtConnect",
+            folder: "/gtConnect/membersPhoto",
+            quality: 80,
           },
         );
 
-        console.log(res);
-        const data = await res.json();
-        imageUrl = data.secure_url;
+        console.log(uploadImage);
+
+        imageUrl = uploadImage.secure_url;
       }
 
       // Update profile in auth
@@ -114,7 +114,7 @@ export default function MyAccount() {
 
       toast.success("Profile updated successfully", { position: "top-right" });
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast.error(error?.message || "Failed to update profile");
     }
   };
@@ -145,7 +145,7 @@ export default function MyAccount() {
         <div className=" md:max-w-lg flex flex-col gap-6 rounded-lg p-4 bg-gray-50/30 border w-full">
           {/* Avatar */}
           <div className="flex flex-col items-center gap-2">
-            <Avatar className="w-32 h-32">
+            {/* <Avatar className="w-32 h-32">
               {avatarPreview ? (
                 <AvatarImage src={avatarPreview} alt="user avatar" />
               ) : (
@@ -153,17 +153,17 @@ export default function MyAccount() {
                   <BsPerson className="w-20 h-20 text-gray-700" />
                 </AvatarFallback>
               )}
-            </Avatar>
+            </Avatar> */}
 
             {/* Change avatar button */}
-            <Label htmlFor="avatar-upload">Change Avatar</Label>
+            {/* <Label htmlFor="avatar-upload">Change Avatar</Label>
             <input
               type="file"
               id="avatar-upload"
               accept="image/*"
               onChange={handleAvatarChange}
               className="hidden"
-            />
+            /> */}
           </div>
 
           {/* ---------------- EDIT PROFILE ---------------- */}
@@ -171,8 +171,6 @@ export default function MyAccount() {
             onSubmit={handleProfileSubmit(updateProfile)}
             className="flex flex-col gap-4"
           >
-            <h2 className="text-lg font-semibold">Profile Information</h2>
-
             <div className="grid gap-1">
               <Label>Full Name</Label>
               <Input
