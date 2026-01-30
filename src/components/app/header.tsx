@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -40,6 +39,7 @@ import SearchModal from "./search";
 import { useState } from "react";
 import { LucideLoader2 } from "lucide-react";
 import { Button } from "../ui/button";
+import Logout from "./logout";
 
 export default function Header() {
   const { data: userSession } = authClient.useSession();
@@ -126,51 +126,14 @@ export default function Header() {
 
                     <Separator orientation="horizontal" />
 
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
+                    <Logout
+                      TriggerComp={() => (
                         <div className="flex text-red-900 items-center gap-3 ml-2 cursor-pointer">
                           <LuLogOut className="w-5 h-5" />
                           <p>Logout</p>
                         </div>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will log you out of the app
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <Button
-                            disabled={logoutLoading}
-                            onClick={async () => {
-                              setLogoutLoading(true);
-                              await authClient.signOut({
-                                fetchOptions: {
-                                  onSuccess: () => {
-                                    router.push("/");
-                                  },
-                                },
-                              });
-                              setLogoutLoading(false);
-                            }}
-                            className="bg-red-900"
-                          >
-                            <div className="flex items-center space-x-1">
-                              {logoutLoading ? (
-                                <LucideLoader2 className="h-6 w-6" />
-                              ) : (
-                                <LuLogOut className="w-8 h-8" />
-                              )}
-                              <p>Continue</p>
-                            </div>
-                          </Button>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      )}
+                    />
                   </div>
                 </div>
               </PopoverContent>

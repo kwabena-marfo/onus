@@ -23,6 +23,7 @@ import { BsPerson } from "react-icons/bs";
 
 import menuData from "@/data/loggedInMenu";
 import { authClient } from "@/lib/authClient"; // <-- Better Auth client
+import Logout from "./logout";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
@@ -75,45 +76,14 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
           );
         })}
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
+        <Logout
+          TriggerComp={() => (
             <div className="flex text-red-200 items-center gap-3 ml-2 cursor-pointer">
               <LuLogOut className="w-5 h-5" />
               <p className="text-lg">Logout</p>
             </div>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will log you out of the app
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-              <AlertDialogAction
-                className="bg-destructive"
-                onClick={async () => {
-                  await authClient.signOut({
-                    fetchOptions: {
-                      onSuccess: () => {
-                        router.push("/");
-                      },
-                    },
-                  });
-                }}
-              >
-                <div className="flex items-center space-x-1">
-                  <LuLogOut className="w-8 h-8" />
-                  <p className="hidden md:block">Continue</p>
-                </div>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          )}
+        />
       </ul>
     </div>
   );
