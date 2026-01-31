@@ -2,29 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/authClient";
-
-import { BsApple, BsGooglePlay } from "react-icons/bs";
-import { useEffect } from "react";
 
 export default function LayoutComp({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // const searchParams = useSearchParams();
-
-  const callbackUrl = "/app/dashboard";
-
-  const { data: sessionData, isPending } = authClient.useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isPending) return;
-    if (sessionData) router.push(callbackUrl);
-  }, [callbackUrl, router, sessionData]);
-
   return (
     <div className="h-[100dvh] grid  lg:grid-cols-6 lg:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-2  flex flex-col relative  h-full">
@@ -84,7 +67,7 @@ export default function LayoutComp({
       </div>
 
       {/* Footer */}
-      <div className="md:flex gap-2 justify-center items-center p-6 w-full absolute bottom-0 hidden">
+      {/* <div className="md:flex gap-2 justify-center items-center p-6 w-full absolute bottom-0 hidden">
         <div className="md:flex gap-2 justify-center items-center p-6  top-0 w-full z-50 hidden">
           <div className="flex rounded-md p-3 justify-center items-center bg-white gap-2 cursor-pointer">
             <BsApple className="w-10 h-10" />
@@ -101,7 +84,7 @@ export default function LayoutComp({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

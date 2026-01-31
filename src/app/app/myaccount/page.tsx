@@ -76,7 +76,6 @@ export default function MyAccount() {
     if (!file) return;
     setAvatarFile(file);
 
-    // Preview locally
     const reader = new FileReader();
     reader.onload = () => setAvatarPreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -87,26 +86,20 @@ export default function MyAccount() {
     try {
       let imageUrl: string | undefined;
 
-      // Upload to Cloudinary if avatarFile exists
       if (avatarFile) {
-        console.log(avatarFile);
+        const formData = new FormData();
+        formData.append("file", avatarFile);
+        formData.append("upload_preset", "gtConnect");
+        formData.append("folder", "/gtConnect/membersPhoto");
 
         const uploadImage: any = await axios.post(
           "https://api.cloudinary.com/v1_1/kalakap/image/upload",
-          {
-            file: avatarFile,
-            upload_preset: "gtConnect",
-            folder: "/gtConnect/membersPhoto",
-            quality: 80,
-          },
+          formData,
         );
 
-        console.log(uploadImage);
-
-        imageUrl = uploadImage.secure_url;
+        imageUrl = uploadImage.data.secure_url;
       }
 
-      // Update profile in auth
       await authClient.updateUser(
         { name: data.name, image: imageUrl },
         { disableSignal: true },
@@ -114,7 +107,6 @@ export default function MyAccount() {
 
       toast.success("Profile updated successfully", { position: "top-right" });
     } catch (error: any) {
-      console.error(error);
       toast.error(error?.message || "Failed to update profile");
     }
   };
@@ -142,21 +134,28 @@ export default function MyAccount() {
   return (
     <Content tittle="My Account" Icon={BsPerson}>
       <div className="flex w-full justify-center mt-6">
-        <div className=" md:max-w-lg flex flex-col gap-6 rounded-lg p-4 bg-gray-50/30 border w-full">
+        <div
+          className="md:max-w-lg flex flex-col gap-6 rounded-lg p-4 w-full
+          bg-white/90 border border-gray-200 dark:bg-gray-900/80 dark:border-gray-700"
+        >
           {/* Avatar */}
           <div className="flex flex-col items-center gap-2">
-            {/* <Avatar className="w-32 h-32">
+            <Avatar className="w-32 h-32">
               {avatarPreview ? (
                 <AvatarImage src={avatarPreview} alt="user avatar" />
               ) : (
                 <AvatarFallback>
-                  <BsPerson className="w-20 h-20 text-gray-700" />
+                  <BsPerson className="w-20 h-20 text-gray-700 dark:text-gray-300" />
                 </AvatarFallback>
               )}
-            </Avatar> */}
+            </Avatar>
 
-            {/* Change avatar button */}
-            {/* <Label htmlFor="avatar-upload">Change Avatar</Label>
+            {/* <Label
+              htmlFor="avatar-upload"
+              className="cursor-pointer text-blue-600 dark:text-blue-400"
+            >
+              Change Avatar
+            </Label>
             <input
               type="file"
               id="avatar-upload"
@@ -172,16 +171,17 @@ export default function MyAccount() {
             className="flex flex-col gap-4"
           >
             <div className="grid gap-1">
-              <Label>Full Name</Label>
+              <Label className="dark:text-gray-200">Full Name</Label>
               <Input
                 placeholder="Enter your full name"
                 {...registerProfile("name", { required: true })}
+                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             <Button
               disabled={isUpdatingProfile}
-              className="bg-[#fa9a40] text-gray-900"
+              className="bg-[#fa9a40] text-gray-900 dark:text-gray-100"
             >
               {isUpdatingProfile && (
                 <LuLoader className="mr-2 h-4 w-4 animate-spin" />
@@ -190,43 +190,48 @@ export default function MyAccount() {
             </Button>
           </form>
 
-          <Separator />
+          <Separator className="dark:border-gray-700" />
 
           {/* ---------------- CHANGE PASSWORD ---------------- */}
           <form
             onSubmit={handlePasswordSubmit(updatePassword)}
             className="flex flex-col gap-4"
           >
-            <h2 className="text-lg font-semibold">Change Password</h2>
+            <h2 className="text-lg font-semibold dark:text-gray-100">
+              Change Password
+            </h2>
 
             <div className="grid gap-1">
-              <Label>Current Password</Label>
+              <Label className="dark:text-gray-200">Current Password</Label>
               <Input
                 type="password"
                 {...registerPassword("currentPassword", { required: true })}
+                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             <div className="grid gap-1">
-              <Label>New Password</Label>
+              <Label className="dark:text-gray-200">New Password</Label>
               <Input
                 type="password"
                 {...registerPassword("newPassword", { required: true })}
+                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             <div className="grid gap-1">
-              <Label>Confirm New Password</Label>
+              <Label className="dark:text-gray-200">Confirm New Password</Label>
               <Input
                 type="password"
                 {...registerPassword("confirmPassword", { required: true })}
+                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
             </div>
 
             <Button
               disabled={isUpdatingPassword}
               variant="outline"
-              className="border-[#fa9a40] text-[#fa9a40]"
+              className="border-[#fa9a40] text-[#fa9a40] dark:border-orange-400 dark:text-orange-400"
             >
               {isUpdatingPassword && (
                 <LuLoader className="mr-2 h-4 w-4 animate-spin" />

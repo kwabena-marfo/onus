@@ -25,11 +25,12 @@ export default function StatCard({
         if (clickFunction) return clickFunction();
       }}
       className={`
-        rounded-lg p-3 w-full h-full cursor-pointer
-        bg-card text-foreground border border-border
-        border-l-4 ${colorB}
-        transition-colors
-      `}
+    rounded-lg p-3 w-full h-full cursor-pointer
+    bg-white dark:bg-gray-800
+    text-foreground border border-border
+    border-l-4 ${colorB}
+    transition-colors
+  `}
     >
       <div className="grid items-center space-y-1">
         <Icon className={`md:w-8 md:h-8 w-6 h-6 ${colorT}`} />

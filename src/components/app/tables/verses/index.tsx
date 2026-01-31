@@ -66,9 +66,9 @@ export default function DataTable({ data, isTittle }: any) {
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex flex-col gap-4 w-full p-4 border border-border rounded-lg bg-card">
+      <div className="flex flex-col gap-4 w-full p-4 border border-border rounded-lg bg-white dark:bg-gray-800">
         {!data?.length ? (
-          <div className="flex flex-col justify-center items-center h-60 text-muted-foreground">
+          <div className="flex flex-col justify-center items-center h-60 text-muted-foreground dark:text-gray-300">
             <BsDatabaseSlash className="w-12 h-12 mb-2" />
             <p className="font-medium">No Data Found</p>
             <p className="text-sm">
@@ -78,7 +78,7 @@ export default function DataTable({ data, isTittle }: any) {
         ) : (
           <div className="flex flex-col w-full gap-2">
             {isTittle && (
-              <h4 className="text-2xl md:text-4xl font-bold text-foreground">
+              <h4 className="text-2xl md:text-4xl font-bold text-foreground dark:text-gray-100">
                 Added Verses
               </h4>
             )}
@@ -89,7 +89,7 @@ export default function DataTable({ data, isTittle }: any) {
                   <span className="absolute inset-y-0 right-3 flex items-center">
                     {searchQuery && (
                       <BsX
-                        className="cursor-pointer text-muted-foreground"
+                        className="cursor-pointer text-muted-foreground dark:text-gray-300"
                         onClick={() => setSearchQuery("")}
                       />
                     )}
@@ -99,7 +99,7 @@ export default function DataTable({ data, isTittle }: any) {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search through Added Verses..."
-                    className="rounded-full h-12 bg-muted"
+                    className="rounded-full h-12 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
                 </div>
               </TableHeader>
@@ -125,7 +125,7 @@ export default function DataTable({ data, isTittle }: any) {
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center text-muted-foreground"
+                      className="h-24 text-center text-muted-foreground dark:text-gray-300"
                     >
                       No results.
                     </TableCell>

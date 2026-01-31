@@ -19,14 +19,16 @@ export default function PrivacyPolicy() {
 
   return (
     <Suspense>
-      <div className="flex flex-col justify-center items-center  z-50 mt-10">
-        <ScrollArea className="max-h-[80vh] py-6 px-4 bg-white border rounded-md">
-          <section className="space-y-6 text-sm leading-relaxed text-muted-foreground">
+      <div className="flex flex-col justify-center items-center z-50 mt-10">
+        <ScrollArea className="max-h-[80vh] py-6 px-4 bg-gray-900 border border-gray-700 rounded-md">
+          <section className="space-y-6 text-sm leading-relaxed text-gray-300">
             <div className="space-y-2">
-              <h1 className="text-3xl font-extrabold text-foreground">
+              <h1 className="text-3xl font-extrabold text-white">
                 Privacy Policy for Onus
               </h1>
-              <p className="text-xs">Last updated: January 2026</p>
+              <p className="text-xs text-gray-400">
+                Last updated: January 2026
+              </p>
             </div>
 
             <p>
@@ -41,7 +43,7 @@ export default function PrivacyPolicy() {
             </p>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 1. Information We Collect
               </h2>
               <ul className="list-disc pl-5 space-y-1">
@@ -55,14 +57,14 @@ export default function PrivacyPolicy() {
                 </li>
               </ul>
               <p>
-                We do <span className="font-medium text-foreground">not</span>{" "}
+                We do <span className="font-medium text-white">not</span>{" "}
                 collect sensitive personal information such as location,
                 contacts, or payment details.
               </p>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 2. How We Use Your Information
               </h2>
               <ul className="list-disc pl-5 space-y-1">
@@ -74,7 +76,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 3. Cookies & Authentication
               </h2>
               <p>
@@ -88,19 +90,19 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 4. Data Sharing
               </h2>
               <p>
-                We do <span className="font-medium text-foreground">not</span>{" "}
-                sell, rent, or share your personal data with third parties. Your
-                data is only accessed when necessary to provide core app
+                We do <span className="font-medium text-white">not</span> sell,
+                rent, or share your personal data with third parties. Your data
+                is only accessed when necessary to provide core app
                 functionality.
               </p>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 5. Data Security
               </h2>
               <ul className="list-disc pl-5 space-y-1">
@@ -111,7 +113,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 6. Children’s Privacy
               </h2>
               <p>
@@ -122,7 +124,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 7. Your Rights
               </h2>
               <ul className="list-disc pl-5 space-y-1">
@@ -133,7 +135,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 8. Changes to This Policy
               </h2>
               <p>
@@ -143,7 +145,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 9. Contact Us
               </h2>
               <p>
