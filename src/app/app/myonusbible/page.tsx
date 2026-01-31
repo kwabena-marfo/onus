@@ -23,8 +23,9 @@ export default function MyOnusBible() {
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];
     const bookData = entry[book];
-    return bookData.verses.length >= 5; // ✅ only books with 5 or more verses
+    return bookData.verses.length >= 5;
   });
+
   if (getOnusIsLoading || getOnusError)
     return (
       <IsLoadingError
@@ -36,7 +37,7 @@ export default function MyOnusBible() {
 
   return (
     <Content
-      tittle="My ONUS Bible"
+      tittle="My Onus"
       Icon={() => (
         <Image
           priority
@@ -47,20 +48,20 @@ export default function MyOnusBible() {
         />
       )}
     >
-      <div className="grid h-full md:grid-cols-5  grid-cols-1 gap-2 w-full ">
+      <div className="grid h-full md:grid-cols-5 grid-cols-1 gap-2 w-full">
         {!filteredBooks?.length ? (
-          <div className="flex flex-col col-span-5 md:col-span-3 justify-center  p-3 border rounded-lg items-center   w-full ">
+          <div className="flex flex-col col-span-5 md:col-span-3 justify-center p-3 border rounded-lg items-center w-full text-muted-foreground">
             <BsDatabaseSlash className="w-12 h-12" />
             <p>No Data Found</p>
             <p>
-              Your <strong> completed books </strong> will appear here
+              Your <strong>completed books</strong> will appear here
             </p>
           </div>
         ) : (
-          <div className="md:col-span-3 col-span-5 grid h-fit justify-center items-center md:grid-cols-4 grid-cols-2   gap-3 md:pr-2 pb-2 w-full">
+          <div className="md:col-span-3 col-span-5 grid h-fit justify-center items-center md:grid-cols-4 grid-cols-2 gap-3 md:pr-2 pb-2 w-full">
             {filteredBooks.map((entry: any, index: any) => {
-              const book = Object.keys(entry)[0]; // e.g. "matthew"
-              const bookData = entry[book]; // e.g. { memorised: 2, saved: 1, verses: [...] }
+              const book = Object.keys(entry)[0];
+              const bookData = entry[book];
               const verses = bookData.verses;
 
               return (
@@ -68,11 +69,11 @@ export default function MyOnusBible() {
                   key={index}
                   verses={verses}
                   TriggerComp={() => (
-                    <div className="flex flex-col  rounded-lg gap-0 p-2 bg-gray-50 border border-l-4 border-l-[#8C15E8] hover:bg-[#8C15E8]/10">
-                      <p className="md:text-xl text-left text-lg text-gray-700 font-bold capitalize">
-                        {book}:
+                    <div className="flex flex-col rounded-lg gap-0 p-2 bg-card border border-l-4 border-l-[#8C15E8] hover:bg-[#8C15E8]/10 transition-colors">
+                      <p className="md:text-xl text-left text-lg font-bold capitalize text-foreground">
+                        {book}
                       </p>
-                      <p className="text-left text-md text-gray-600 ">
+                      <p className="text-left text-sm text-muted-foreground">
                         {verses.length} Verses
                       </p>
                     </div>
@@ -82,7 +83,8 @@ export default function MyOnusBible() {
             })}
           </div>
         )}
-        <div className="col-span-5 md:col-span-2 flex flex-col gap-1 w-full  ">
+
+        <div className="col-span-5 md:col-span-2 flex flex-col gap-1 w-full">
           <ProgressComp data={onusData?.grouped || []} />
         </div>
       </div>

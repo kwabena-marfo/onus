@@ -73,15 +73,12 @@ const getNextUnusedColor = (used: string[]) => {
 /* ---------------- COMPONENT ---------------- */
 export default function Tags({ tags, addTag, removeTag }: any) {
   const [customInput, setCustomInput] = useState("");
-  const [allTags, setAllTags] = useState<Tag[]>(defaultTags);
 
   /* -------- LOAD SAVED TAGS -------- */
-  useEffect(() => {
+  const [allTags, setAllTags] = useState<Tag[]>(() => {
     const saved = JSON.parse(localStorage.getItem("custom-tags") || "[]");
-    if (Array.isArray(saved)) {
-      setAllTags((prev) => [...prev, ...saved]);
-    }
-  }, []);
+    return Array.isArray(saved) ? [...defaultTags, ...saved] : defaultTags;
+  });
 
   /* -------- SAVE TAG -------- */
   const persistTag = (tag: Tag) => {

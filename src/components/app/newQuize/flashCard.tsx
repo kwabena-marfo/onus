@@ -17,7 +17,6 @@ export default function Flashcard({
   const { selected, hasFlipped } = quizState;
   const [flipped, setFlipped] = useState(false);
 
-  // Flip back resets local state but not quiz state
   const handleFlipBack = () => {
     setFlipped(false);
     if (!hasFlipped) {
@@ -26,16 +25,21 @@ export default function Flashcard({
   };
 
   return (
-    <div className="relative perspective w-full h-80 my-8 max-w-xl bg-b">
+    <div className="relative perspective w-full h-80 my-8 max-w-xl">
       <div
         className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${
           flipped ? "rotate-y-180" : ""
         }`}
       >
         {/* FRONT SIDE */}
-        <div className="absolute w-full h-full backface-hidden rounded-xl bg-white border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
+        <div
+          className="absolute w-full h-full backface-hidden rounded-xl border shadow-md flex flex-col justify-between text-center text-lg font-medium p-6
+          bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100
+        "
+        >
           <div className="grid gap-3">
-            <p className="text-lg text-center font-semibold">{question}</p>
+            <p className="text-lg text-left font-semibold">{question}</p>
+
             <RadioGroup
               disabled={hasFlipped}
               value={selected || ""}
@@ -63,7 +67,7 @@ export default function Flashcard({
           <Button
             disabled={!selected}
             onClick={() => setFlipped(true)}
-            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
+            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500"
           >
             Flip Card
             <LucideRotateCcwSquare className="w-5 h-5 ml-2" />
@@ -71,17 +75,25 @@ export default function Flashcard({
         </div>
 
         {/* BACK SIDE */}
-        <div className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl bg-blue-100 border border-gray-300 shadow-md flex flex-col justify-between text-center text-lg font-medium p-6">
+        <div
+          className="absolute w-full h-full backface-hidden rotate-y-180 rounded-xl border shadow-md flex flex-col justify-between text-center text-lg font-medium p-6
+          bg-blue-100 dark:bg-blue-900 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100
+        "
+        >
           <div>
             <p className="text-lg font-semibold mb-2">Correct Answer:</p>
-            <p className="text-green-600">{options[correctAnswerIndex]}</p>
-            <p className="text-lg text-gray-600 mt-2">{reference}</p>
+            <p className="text-green-600 dark:text-green-400 font-semibold">
+              {options[correctAnswerIndex]}
+            </p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
+              {reference}
+            </p>
           </div>
 
           <Button
             variant="outline"
             onClick={handleFlipBack}
-            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600"
+            className="mt-4 w-fit self-center rounded-full bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500"
           >
             <BsArrowReturnLeft className="mr-2" />
             See Front

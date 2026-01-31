@@ -3,18 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { authClient } from "@/lib/authClient";
-import { useRouter } from "next/navigation";
-
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 import {
   BsBook,
@@ -36,30 +24,20 @@ import { Separator } from "@/components/ui/separator";
 
 import AddVerseModal from "./addVerse";
 import SearchModal from "./search";
-import { useState } from "react";
-import { LucideLoader2 } from "lucide-react";
-import { Button } from "../ui/button";
 import Logout from "./logout";
+import { ModeToggle } from "./toggleMode";
+import Logo from "../home/logo";
 
 export default function Header() {
   const { data: userSession } = authClient.useSession();
-  const router = useRouter();
-
-  const [logoutLoading, setLogoutLoading] = useState(false);
 
   const user = userSession?.user;
 
   return (
     <>
       {/* Top nav */}
-      <nav className="flex items-center justify-between gap-2 p-1 px-3 md:left-1/6 fixed top-0 bg-white z-50 md:w-5/6 w-full md:border-b-2">
-        <Image
-          priority
-          width={36}
-          height={36}
-          src="/imgs/logos/onusLogoChosen.png"
-          alt="logo"
-        />
+      <nav className="flex items-center justify-between gap-2 p-1 px-3 md:left-1/6 fixed top-0 bg-background text-foreground z-50 md:w-5/6 w-full border-b border-border">
+        <Logo />
 
         <div className="flex items-center gap-3 p-2">
           <div className="md:flex hidden">
@@ -91,11 +69,7 @@ export default function Header() {
                     alt={user?.name || "User"}
                   />
                   <AvatarFallback>
-                    {logoutLoading ? (
-                      <LucideLoader2 className="h-6 w-6" />
-                    ) : (
-                      <BsPerson className="h-6 w-6" />
-                    )}
+                    <BsPerson className="h-6 w-6" />
                   </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
@@ -139,11 +113,13 @@ export default function Header() {
               </PopoverContent>
             </Popover>
           </div>
+
+          <ModeToggle />
         </div>
       </nav>
 
       {/* Bottom mobile nav */}
-      <nav className="flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6 h-fit fixed md:hidden bottom-0 bg-white z-50 md:w-5/6 w-full border-t-1">
+      <nav className="flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6 fixed md:hidden bottom-0 bg-background text-foreground z-50 md:w-5/6 w-full border-t border-border">
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
           <Link href="/app/dashboard">
             <div className="flex flex-col items-center justify-center cursor-pointer">

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
 import Highlighter from "react-highlight-words";
 import DOMPurify from "dompurify";
 
 import { BsCheckCircle } from "react-icons/bs";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
 import { LuLoader } from "react-icons/lu";
 import { ChevronDown, ChevronUp, LucideEdit } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import AddVerseModal from "@/components/app/addVerse";
 
 type Tag = {
-  value: string;
+  tag: string;
   color: string;
 };
 
@@ -48,84 +48,84 @@ export default function useColumns({ searchQuery }: any) {
           memorised,
         } = row.original;
 
-        return (
-          <div className="grid w-full border-1 rounded-md p-2 bg-gray-50 group gap-0.5  ">
-            <input
-              type="checkbox"
-              id={`${book}-${chapter}-${verse}-${verseTo}`}
-              value={`${book}-${chapter}-${verse}-${verseTo}`}
-              name="verse"
-              className="peer hidden"
-            />
+        const checkboxId = `${book}-${chapter}-${verse}-${verseTo}`;
 
-            <div className="flex justify-between gap-3 items-center cursor-pointer">
+        return (
+          <div className="grid w-full rounded-lg border border-border bg-card p-3 gap-1">
+            {/* toggle */}
+            <input type="checkbox" id={checkboxId} className="peer hidden" />
+
+            {/* header */}
+            <div className="flex justify-between items-center gap-3 cursor-pointer">
               <div className="flex gap-2 items-center">
                 {memorised !== "saved" ? (
-                  <BsCheckCircle className="text-[#0F3187]" />
+                  <BsCheckCircle className="text-primary" />
                 ) : (
-                  <LuLoader className="text-[#8C15E8]" />
+                  <LuLoader className="text-muted-foreground animate-spin" />
                 )}
 
-                <p className="md:text-lg font-bold uppercase">
+                <p className="md:text-lg font-bold uppercase text-foreground">
                   <Highlighter
                     searchWords={[searchQuery]}
                     autoEscape
                     textToHighlight={book}
                   />{" "}
                   {chapter}:{verse}
-                  {verseTo ? `-${verseTo}` : null}
+                  {verseTo && `-${verseTo}`}
                 </p>
               </div>
 
               <AddVerseModal
                 verse={row.original}
-                TriggerComp={() => <LucideEdit className="w-4 h-4" />}
+                TriggerComp={() => (
+                  <LucideEdit className="w-4 h-4 text-muted-foreground hover:text-foreground" />
+                )}
               />
             </div>
 
+            {/* verse text */}
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(onusVerse),
               }}
-              className="md:text-lg overflow-hidden text-ellipsis peer-checked:text-wrap peer-checked:text-clip text-nowrap text-left"
+              className="md:text-lg text-foreground overflow-hidden text-ellipsis text-nowrap peer-checked:text-wrap peer-checked:text-clip"
             />
 
-            <div className="hidden gap-1 peer-checked:grid mt-1">
-              {verseNotes ? (
+            {/* expanded content */}
+            <div className="hidden peer-checked:grid gap-2 mt-1">
+              {verseNotes && (
                 <div>
-                  <Label
-                    htmlFor={verseNotes}
-                    className="flex justify-between gap-2 items-center"
-                  >
-                    Notes
-                  </Label>
-                  <p className="md:text-lg overflow-hidden   text-ellipsis  text-wrap text-left">
-                    {verseNotes}
-                  </p>
+                  <Label className="text-sm text-muted-foreground">Notes</Label>
+                  <p className="md:text-lg text-foreground">{verseNotes}</p>
                 </div>
-              ) : null}
-              <div className="flex  gap-1">
-                {tags?.map(({ tag, color }: any, index) => (
+              )}
+
+              <div className="flex flex-wrap gap-1">
+                {tags?.map(({ tag, color }, index) => (
                   <Badge
                     key={index}
-                    className={`rounded-full text-gray-800 ${color}`}
+                    className="rounded-full"
+                    style={{ backgroundColor: color }}
                   >
                     {tag}
                   </Badge>
                 ))}
               </div>
             </div>
+
+            {/* chevrons */}
             <Label
-              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
-              className="transition-transform duration-200 peer-checked:hidden flex justify-end "
+              htmlFor={checkboxId}
+              className="flex justify-end cursor-pointer peer-checked:hidden"
             >
-              <ChevronDown className="w-6 h-6" />
+              <ChevronDown className="w-5 h-5 text-muted-foreground" />
             </Label>
+
             <Label
-              htmlFor={`${book}-${chapter}-${verse}-${verseTo}`}
-              className="transition-transform duration-200 peer-checked:flex hidden justify-end "
+              htmlFor={checkboxId}
+              className="hidden justify-end cursor-pointer peer-checked:flex"
             >
-              <ChevronUp className="w-6 h-6" />
+              <ChevronUp className="w-5 h-5 text-muted-foreground" />
             </Label>
           </div>
         );

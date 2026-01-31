@@ -53,34 +53,34 @@ export default function Quizzes() {
                 const book = Object.keys(entry)[0]; // e.g. "matthew"
 
                 const quizeScore = onusQuizeData?.find(
-                  (item: any) => item.quizName?.toLowerCase() == book
+                  (item: any) => item.quizName?.toLowerCase() == book,
                 );
 
                 return (
                   <div
                     key={index}
-                    className="flex flex-col  rounded-lg gap-0 p-2 bg-gray-50 border border-l-4 border-l-[#8C15E8] hover:bg-[#8C15E8]/10"
+                    className="flex flex-col rounded-lg gap-0 p-2 bg-gray-50 dark:bg-gray-800 border border-l-4 border-l-[#8C15E8] dark:border-l-[#FA9A40] hover:bg-[#8C15E8]/10 dark:hover:bg-[#FA9A40]/20"
                   >
-                    <div className="flex  gap-1  items-center p-0">
-                      <p className="md:text-xl text-left text-lg text-gray-700 font-bold capitalize">
+                    <div className="flex gap-1 items-center p-0">
+                      <p className="md:text-xl text-left text-lg text-gray-700 dark:text-gray-200 font-bold capitalize">
                         {book}:
                       </p>
                     </div>
-                    <p className="text-left text-md text-gray-600 font-medium -mt-1">
+                    <p className="text-left text-md text-gray-600 dark:text-gray-300 font-medium -mt-1">
                       {quizeScore
                         ? `Latest Score: ${quizeScore?.score} / ${quizeScore?.total}`
                         : "No Quize yet"}
                     </p>
 
-                    <Separator className="my-1" />
-                    <div className="flex  gap-1 mt-2">
+                    <Separator className="my-1 dark:border-gray-700" />
+                    <div className="flex gap-1 mt-2">
                       <NewQuizeModal
                         book={book}
                         TriggerComp={() => (
                           <Button
                             size="sm"
                             variant="outline"
-                            className="w-fit cursor-pointer "
+                            className="w-fit cursor-pointer text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
                           >
                             Quize Me <BsLightbulb />
                           </Button>

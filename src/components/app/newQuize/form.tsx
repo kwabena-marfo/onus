@@ -14,7 +14,7 @@ import { usePostOnusQuize } from "@/hooks/useQuery";
 
 export default function QuizeFlashcardCarousel({ book }: any) {
   const selectedBook = quizzes.find(
-    (q) => q.book.toLowerCase() === book.toLowerCase()
+    (q) => q.book.toLowerCase() === book.toLowerCase(),
   );
 
   const bookQuestions = selectedBook ? selectedBook.questions : [];
@@ -35,7 +35,7 @@ export default function QuizeFlashcardCarousel({ book }: any) {
       selected: "",
       hasFlipped: false,
       wasCorrect: undefined,
-    }))
+    })),
   );
 
   const setQuizState = (index: number, partial: any) => {
@@ -75,15 +75,17 @@ export default function QuizeFlashcardCarousel({ book }: any) {
 
   useEffect(() => {
     if (isSuccess) {
-      setFinished(true);
-      reset();
+      setTimeout(() => {
+        setFinished(true);
+        reset();
+      }, 0);
     }
   }, [isSuccess]);
 
   if (!selectedBook) {
     return (
-      <div className="mt-6 text-center flex flex-col justify-center items-center capitalize">
-        <LuClock className="h-12 w-12 " />
+      <div className="mt-6 text-center flex flex-col justify-center items-center capitalize text-gray-700 dark:text-gray-200">
+        <LuClock className="h-12 w-12 text-gray-500 dark:text-gray-400" />
         <p className="text-3xl font-bold">STAY TUNED!</p>
         Quizzes for {book} are being added.
       </div>
@@ -93,7 +95,7 @@ export default function QuizeFlashcardCarousel({ book }: any) {
   // ✅ Show result screen
   if (!isError && finished) {
     return (
-      <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start">
+      <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start text-gray-800 dark:text-gray-200">
         <Congratulations />
 
         <p className="text-lg">
@@ -108,12 +110,12 @@ export default function QuizeFlashcardCarousel({ book }: any) {
                 selected: "",
                 hasFlipped: false,
                 wasCorrect: undefined,
-              }))
+              })),
             );
             setScore(0);
             setFinished(false);
           }}
-          className="mt-4 bg-green-600 hover:bg-green-700 text-white"
+          className="mt-4 bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 text-white"
         >
           Go Again <LucideRotateCw className="ml-2" />
         </Button>
@@ -121,12 +123,14 @@ export default function QuizeFlashcardCarousel({ book }: any) {
     );
   }
 
+  // ✅ Loader
   if (isPending) {
     return (
-      <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400" />
+      <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400 dark:text-gray-500" />
     );
   }
 
+  // ✅ Main carousel
   return (
     <CarouselComp
       tittle={`Quiz on ${book}`}

@@ -12,7 +12,7 @@ import DOMPurify from "dompurify";
 export default function VerseFlashcardCarousel({ verses }: any) {
   return (
     <CarouselComp
-      tittle="My ONUS Bible"
+      tittle="My ONUS"
       subTittle="The Book Of Matthew"
       Content={() => (
         <>
@@ -27,53 +27,56 @@ export default function VerseFlashcardCarousel({ verses }: any) {
                 verseNotes,
                 tags,
               }: any,
-              index: any
+              index: any,
             ) => (
               <CarouselItem key={index}>
                 <Flashcard
                   FrontComp={() => (
                     <div className="grid gap-3">
-                      <p className="md:text-4xl text-2xl text-gray-700 font-bold uppercase">
+                      <p className="md:text-4xl text-2xl font-bold uppercase text-gray-900 dark:text-gray-100">
                         {book} {chapter}:{verse}
                         {verseTo ? `-${verseTo}` : ""}
                       </p>
                     </div>
                   )}
                   BackComp={() => (
-                    <ScrollArea className="min-h-[200px] py-6 px-4 flex flex-col justify-center items-center gap-3">
+                    <ScrollArea className="min-h-[200px] py-6 px-4 flex flex-col justify-center items-center gap-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl border border-gray-300 dark:border-gray-700">
                       <p
                         dangerouslySetInnerHTML={{
                           __html: DOMPurify.sanitize(onusVerse),
                         }}
-                        className="md:text-2xl text-gray-700 text-center"
+                        className="md:text-2xl text-center"
                       />
 
-                      <div className="flex gap-1 justify-center">
+                      <div className="flex gap-1 justify-center flex-wrap">
                         {tags?.map(({ tag, color }: any, index: any) => (
                           <Badge
                             key={index}
-                            className={`rounded-full ${color}`}
+                            className={`rounded-full ${color} text-white`}
                           >
                             {tag}
                           </Badge>
                         ))}
                       </div>
-                      {verseNotes ? (
+
+                      {verseNotes && (
                         <>
-                          <Separator />
+                          <Separator className="border-gray-300 dark:border-gray-600" />
                           <div className="flex flex-col justify-center items-center w-full">
-                            <p className="font-bold">My Notes</p>{" "}
-                            <p className="text-lg 2xl text-gray-700  ">
+                            <p className="font-bold text-gray-900 dark:text-gray-100">
+                              My Notes
+                            </p>
+                            <p className="text-lg text-center text-gray-700 dark:text-gray-200">
                               {verseNotes}
                             </p>
                           </div>
                         </>
-                      ) : null}
+                      )}
                     </ScrollArea>
                   )}
                 />
               </CarouselItem>
-            )
+            ),
           )}
         </>
       )}
