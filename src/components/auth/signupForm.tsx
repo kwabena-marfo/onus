@@ -107,7 +107,7 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
             </span>
             <Input
               className="pl-8"
-              placeholder="Enter your nae"
+              placeholder="Enter your name"
               {...register("name")}
             />
           </div>
