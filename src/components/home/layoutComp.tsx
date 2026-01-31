@@ -12,7 +12,7 @@ export default function LayoutComp({
     <div className="h-[100dvh] grid  lg:grid-cols-6 lg:bg-[url('/imgs/bgs/worldMap.svg')] bg-cover bg-repeat">
       <div className="col-span-3 md:col-span-2  flex flex-col relative  h-full">
         <div className="absolute  h-full w-full bg-gradient-to-br from-white/95 via-white/95 to-[#01CFFE]/80    rounded-br-[500px] md:rounded-br-[500px]  " />
-        <div className="flex flex-col gap-9  justify-start items-start  h-full  ">
+        <div className="flex flex-col gap-9  justify-start items-start  h-full">
           <div className="flex flex-col justify-center items-center w-full pt-6 md:px-28 px-6">
             <Link href="/" className="relative  h-20  w-20">
               <Image
@@ -52,7 +52,7 @@ export default function LayoutComp({
         </div>
       </div>
 
-      <div className="col-span-3 md:col-span-4 lg:flex   relative hidden">
+      <div className="col-span-3 md:col-span-4 lg:flex relative hidden">
         <Image
           fill
           alt="Service Photo"

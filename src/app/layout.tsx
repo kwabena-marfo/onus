@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={`${montserrat} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
