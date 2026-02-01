@@ -2,16 +2,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import signupFormSchema from "@/schemas/signupSchema";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   BsCheck2Circle,
   BsEnvelope,
@@ -27,30 +26,27 @@ import Link from "next/link";
 import GoogleButton from "@/components/auth/googleButton";
 import { authClient } from "@/lib/authClient";
 
-export default function SignupForm({}: React.ComponentProps<"form">) {
-  type signupSchema = z.infer<typeof signupFormSchema>;
-  const router = useRouter();
+export default function SignupForm() {
+  type SignupSchema = z.infer<typeof signupFormSchema>;
 
   const [isHidePass, setIsHidePass] = useState(true);
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
   const [errorMsg, setErrorMsg] = useState("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<signupSchema>({
+  } = useForm<SignupSchema>({
     resolver: zodResolver(signupFormSchema),
     mode: "all",
-    shouldFocusError: true,
   });
 
-  const onSubmitSignupForm: SubmitHandler<signupSchema> = async (data) => {
+  const onSubmitSignupForm: SubmitHandler<SignupSchema> = async (data) => {
     setIsPending(true);
-    const { email, password, name } = data;
 
+    const { email, password, name } = data;
     const { error } = await authClient.signUp.email({
       email,
       password,
@@ -66,45 +62,40 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
 
   if (isSuccess) {
     return (
-      <div className="justify-self-center items-center z-50  pt-5">
-        <div className="flex flex-col justify-center items-center gap-3 ">
-          <BsCheck2Circle className="md:w-16 md:h-16 w-12 h-12 text-green-700" />
-          <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-700">
-            All Done! <br /> Welcome to the ONUS!
+      <div className="pt-5">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <BsCheck2Circle className="w-14 h-14 text-green-600" />
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            All Done! <br /> Welcome to ONUS
           </h1>
-          <p className="text-center">
+          <p className="text-muted-foreground">
             Get started on your journey to spiritual growth
           </p>
-          {/* <Button
-            onClick={() => router.push("/app/dashboard")} // redirect to dashboard
-            className="w-full bg-[#e77306] font-medium rounded-full"
-          >
-            Sure, Log me in.
-          </Button> */}
         </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmitSignupForm)}>
+    <form
+      onSubmit={handleSubmit(onSubmitSignupForm)}
+      className="text-foreground"
+    >
       {/* Heading */}
-      <div className="flex flex-col gap-1 justify-center items-center mb-4">
+      <div className="flex flex-col items-center mb-4">
         <p className="text-3xl md:text-4xl font-bold">Get Started</p>
-        <p className="text-center">
+        <p className="text-center text-muted-foreground">
           Your Journey to Spiritual Growth Starts Here.
         </p>
       </div>
 
-      {/* Form Inputs */}
+      {/* Inputs */}
       <div className="grid gap-4">
         {/* Name */}
         <div className="grid gap-1">
           <Label>Your Name</Label>
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsPerson />
-            </span>
+          <div className="relative">
+            <BsPerson className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-8"
               placeholder="Enter your name"
@@ -112,17 +103,15 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
             />
           </div>
           {errors.name && (
-            <p className="text-red-500 text-sm">{errors.name.message}</p>
+            <p className="text-destructive text-sm">{errors.name.message}</p>
           )}
         </div>
 
         {/* Email */}
         <div className="grid gap-1">
           <Label>Your Email</Label>
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsEnvelope />
-            </span>
+          <div className="relative">
+            <BsEnvelope className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-8"
               placeholder="Enter your email"
@@ -130,79 +119,77 @@ export default function SignupForm({}: React.ComponentProps<"form">) {
             />
           </div>
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+            <p className="text-destructive text-sm">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password */}
-        <div className="flex flex-col space-y-1.5">
+        <div className="grid gap-1">
           <Label>Password</Label>
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsLock />
-            </span>
+          <div className="relative">
+            <BsLock className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-8"
               type={isHidePass ? "password" : "text"}
               placeholder="Enter your password"
               {...register("password")}
             />
-            <span
+            <button
+              type="button"
               onClick={() => setIsHidePass(!isHidePass)}
-              className="absolute right-2.5 bottom-2.5 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
               {isHidePass ? <BsEyeSlash /> : <BsEye />}
-            </span>
+            </button>
           </div>
           {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
+            <p className="text-destructive text-sm">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
         {/* Confirm Password */}
-        <div className="flex flex-col space-y-1.5">
+        <div className="grid gap-1">
           <Label>Confirm Password</Label>
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsLock />
-            </span>
+          <div className="relative">
+            <BsLock className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               className="pl-8"
               type={isHidePass ? "password" : "text"}
               placeholder="Confirm your password"
               {...register("confirmPassword")}
             />
-            <span
-              onClick={() => setIsHidePass(!isHidePass)}
-              className="absolute right-2.5 bottom-2.5 cursor-pointer"
-            >
-              {isHidePass ? <BsEyeSlash /> : <BsEye />}
-            </span>
           </div>
           {errors.confirmPassword && (
-            <p className="text-red-500 text-sm">
+            <p className="text-destructive text-sm">
               {errors.confirmPassword.message}
             </p>
           )}
         </div>
-        <div className="flex flex-col  gap-0 mt-2">
-          <Button className="w-full bg-[#e77306] flex justify-center items-center gap-2">
-            {isPending && <LucideLoader2 className="h-4 w-4 animate-spin" />}
-            Sign Up
-            <LuLogIn className="h-4 w-4" />
-          </Button>
-          {errorMsg && !isPending && (
-            <p className="text-red-500 text-sm text-center pt-2">{errorMsg}</p>
-          )}
-        </div>
+
+        {/* Submit */}
+        <Button
+          disabled={isPending}
+          className="w-full bg-[#e77306] hover:bg-[#d66a05] text-white gap-2"
+        >
+          {isPending && <LucideLoader2 className="h-4 w-4 animate-spin" />}
+          Sign Up
+          <LuLogIn />
+        </Button>
+
+        {errorMsg && (
+          <p className="text-destructive text-sm text-center">{errorMsg}</p>
+        )}
       </div>
 
-      <div className="flex flex-col p-1">
-        <p className="text-center">Or</p>
+      {/* Footer */}
+      <div className="flex flex-col mt-4 gap-2">
+        <p className="text-center text-muted-foreground">Or</p>
         <GoogleButton />
-        <p className="text-center text-sm mt-2">
+        <p className="text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link className="text-blue-500" href="/login">
+          <Link href="/login" className="text-primary font-medium">
             Login
           </Link>
         </p>

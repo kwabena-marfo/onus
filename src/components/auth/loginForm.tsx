@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,7 @@ export default function LoginForm() {
 
   const [isHidePass, setIsHidePass] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<any>("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const {
     register,
@@ -53,7 +53,7 @@ export default function LoginForm() {
       setLoading(false);
 
       if (result?.error) {
-        setErrorMsg(result.error.message);
+        setErrorMsg(result?.error.message as any);
         return;
       }
 
@@ -61,14 +61,19 @@ export default function LoginForm() {
       router.push(callbackUrl);
     } catch {
       setErrorMsg("Invalid email or password");
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitLoginForm)}>
-      <div className="flex flex-col gap-1 justify-center items-center mb-4">
+    <form
+      onSubmit={handleSubmit(onSubmitLoginForm)}
+      className="text-foreground"
+    >
+      {/* Heading */}
+      <div className="flex flex-col items-center mb-4">
         <p className="text-3xl md:text-4xl font-bold">Login</p>
-        <p className="text-center">
+        <p className="text-center text-muted-foreground">
           Continue Your Journey to Spiritual Growth.
         </p>
       </div>
@@ -77,10 +82,8 @@ export default function LoginForm() {
         {/* Email */}
         <div className="grid gap-1">
           <Label htmlFor="email">Email</Label>
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsPerson />
-            </span>
+          <div className="relative">
+            <BsPerson className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="email"
               className="pl-8"
@@ -89,7 +92,7 @@ export default function LoginForm() {
             />
           </div>
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+            <p className="text-destructive text-sm">{errors.email.message}</p>
           )}
         </div>
 
@@ -97,16 +100,16 @@ export default function LoginForm() {
         <div className="grid gap-1">
           <div className="flex justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link className="text-sm" href="/forgot-password">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
               Forgot Password?
             </Link>
           </div>
 
-          <div className="relative w-full">
-            <span className="pointer-events-none absolute inset-y-0 flex items-center pl-2 text-gray-400">
-              <BsLock />
-            </span>
-
+          <div className="relative">
+            <BsLock className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="password"
               className="pl-8"
@@ -115,38 +118,44 @@ export default function LoginForm() {
               autoComplete="current-password"
               {...register("password")}
             />
-
-            <span
+            <button
+              type="button"
               onClick={() => setIsHidePass(!isHidePass)}
-              className="absolute right-2.5 bottom-2.5 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
               {isHidePass ? <BsEyeSlash /> : <BsEye />}
-            </span>
+            </button>
           </div>
 
           {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
+            <p className="text-destructive text-sm">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
         {/* Submit */}
-        <Button className="w-full bg-[#e77306]" disabled={loading}>
+        <Button
+          disabled={loading}
+          className="w-full bg-[#e77306] hover:bg-[#d66a05] text-white"
+        >
           {loading && <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
 
         {errorMsg && (
-          <p className="text-red-500 text-sm text-center">{errorMsg}</p>
+          <p className="text-destructive text-sm text-center">{errorMsg}</p>
         )}
       </div>
 
-      <div className="flex flex-col p-1">
-        <p className="text-center">Or</p>
+      {/* Footer */}
+      <div className="flex flex-col mt-4 gap-2">
+        <p className="text-center text-muted-foreground">Or</p>
         <GoogleAuthButton />
-        <p className="text-center text-sm mt-2">
-          Don&apos;t have an account? Sign Up
-          <Link className="text-blue-500 pl-1" href="/signup">
-            Here
+        <p className="text-center text-sm text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className="text-primary font-medium">
+            Sign up
           </Link>
         </p>
       </div>
