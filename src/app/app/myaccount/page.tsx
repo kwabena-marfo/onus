@@ -4,13 +4,23 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import Content from "@/components/app/content";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { BsPerson } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
@@ -29,8 +39,12 @@ type PasswordForm = {
 };
 
 export default function MyAccount() {
+  const router = useRouter();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
 
   /* ---------------- PROFILE FORM ---------------- */
   const {
@@ -39,9 +53,7 @@ export default function MyAccount() {
     reset: resetProfileForm,
     formState: { isSubmitting: isUpdatingProfile },
   } = useForm<ProfileForm>({
-    defaultValues: {
-      name: "",
-    },
+    defaultValues: { name: "" },
   });
 
   /* ---------------- PASSWORD FORM ---------------- */
@@ -49,7 +61,7 @@ export default function MyAccount() {
     register: registerPassword,
     handleSubmit: handlePasswordSubmit,
     reset: resetPasswordForm,
-    formState: { isSubmitting: isUpdatingPassword },
+    formState: { errors, isValid, isSubmitting: isUpdatingPassword },
   } = useForm<PasswordForm>();
 
   /* ---------------- LOAD SESSION ---------------- */
@@ -96,7 +108,6 @@ export default function MyAccount() {
           "https://api.cloudinary.com/v1_1/kalakap/image/upload",
           formData,
         );
-
         imageUrl = uploadImage.data.secure_url;
       }
 
@@ -111,23 +122,40 @@ export default function MyAccount() {
     }
   };
 
-  /* ---------------- UPDATE PASSWORD ---------------- */
-  const updatePassword = async (data: PasswordForm) => {
+  /* ---------------- HANDLE PASSWORD CHANGE ---------------- */
+  const handlePasswordChange = async (data: PasswordForm) => {
     if (data.newPassword !== data.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
 
+    setLoadingPassword(true);
     try {
       await authClient.changePassword({
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
-      });
+        fetchOptions: {
+          onSuccess: async () => {
+            toast.success(
+              "Password updated successfully! You will be logged out.",
+              { position: "top-right" },
+            );
+            resetPasswordForm();
+            setPasswordDialogOpen(false);
 
-      toast.success("Password updated successfully");
-      resetPasswordForm();
+            // Logout user and redirect to login page
+            await authClient.signOut();
+            router.push("/");
+          },
+          onError: (error: any) => {
+            toast.error(error?.error?.message || "Failed to update password");
+          },
+        },
+      });
     } catch (error: any) {
       toast.error(error?.message || "Failed to update password");
+    } finally {
+      setLoadingPassword(false);
     }
   };
 
@@ -149,20 +177,6 @@ export default function MyAccount() {
                 </AvatarFallback>
               )}
             </Avatar>
-
-            {/* <Label
-              htmlFor="avatar-upload"
-              className="cursor-pointer text-blue-600 dark:text-blue-400"
-            >
-              Change Avatar
-            </Label>
-            <input
-              type="file"
-              id="avatar-upload"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              className="hidden"
-            /> */}
           </div>
 
           {/* ---------------- EDIT PROFILE ---------------- */}
@@ -193,51 +207,113 @@ export default function MyAccount() {
           <Separator className="dark:border-gray-700" />
 
           {/* ---------------- CHANGE PASSWORD ---------------- */}
-          <form
-            onSubmit={handlePasswordSubmit(updatePassword)}
-            className="flex flex-col gap-4"
-          >
-            <h2 className="text-lg font-semibold dark:text-gray-100">
-              Change Password
-            </h2>
+          {/* ---------------- CHANGE PASSWORD ---------------- */}
+          <h2 className="text-lg font-semibold dark:text-gray-100">
+            Change Password
+          </h2>
 
+          <form className="flex flex-col gap-4">
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">Current Password</Label>
               <Input
                 type="password"
-                {...registerPassword("currentPassword", { required: true })}
+                {...registerPassword("currentPassword", {
+                  required: "Current password is required",
+                })}
                 className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
+              {errors.currentPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.currentPassword.message}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">New Password</Label>
               <Input
                 type="password"
-                {...registerPassword("newPassword", { required: true })}
+                {...registerPassword("newPassword", {
+                  required: "New password is required",
+                })}
                 className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
+              {errors.newPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.newPassword.message}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">Confirm New Password</Label>
               <Input
                 type="password"
-                {...registerPassword("confirmPassword", { required: true })}
+                {...registerPassword("confirmPassword", {
+                  required: "Please confirm your new password",
+                })}
                 className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
               />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
-            <Button
-              disabled={isUpdatingPassword}
-              variant="outline"
-              className="border-[#fa9a40] text-[#fa9a40] dark:border-orange-400 dark:text-orange-400"
+            {/* ---------------- CONFIRM DIALOG ---------------- */}
+            <Dialog
+              open={passwordDialogOpen}
+              onOpenChange={setPasswordDialogOpen}
             >
-              {isUpdatingPassword && (
-                <LuLoader className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Update Password
-            </Button>
+              <DialogTrigger asChild>
+                <Button
+                  disabled={isUpdatingPassword}
+                  variant="outline"
+                  className="border-[#fa9a40] text-[#fa9a40] dark:border-orange-400 dark:text-orange-400"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    // Validate all fields first
+                    await handlePasswordSubmit(async () => true)();
+
+                    if (isValid) setPasswordDialogOpen(true);
+                  }}
+                >
+                  {isUpdatingPassword && (
+                    <LuLoader className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Update Password
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirm Password Change</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to change your password? You will be
+                    logged out and need to log in again.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setPasswordDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handlePasswordSubmit(handlePasswordChange)}
+                    className="bg-[#fa9a40] hover:bg-orange-500 text-white"
+                    disabled={loadingPassword}
+                  >
+                    {loadingPassword && (
+                      <LuLoader className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Confirm
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </form>
         </div>
       </div>
