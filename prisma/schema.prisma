@@ -125,3 +125,43 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+
+model Quiz {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  questions Question[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Question {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  text        String
+  reference   Reference  @relation(fields: [referenceId], references: [id])
+  referenceId String     @db.ObjectId @unique
+  options     Option[]
+  quiz        Quiz       @relation(fields: [quizId], references: [id])
+  quizId      String     @db.ObjectId
+}
+
+model Option {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  text       String
+  isCorrect  Boolean  @default(false)
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String   @db.ObjectId
+}
+
+
+model Reference {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  book     String
+  chapter  Int
+  verse    Int
+  question Question?
+}
+
+
+
+ 

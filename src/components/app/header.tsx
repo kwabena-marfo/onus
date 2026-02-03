@@ -7,6 +7,7 @@ import { authClient } from "@/lib/authClient";
 import {
   BsBook,
   BsBookmark,
+  BsGearWideConnected,
   BsHouse,
   BsLightbulb,
   BsPerson,
@@ -16,17 +17,19 @@ import {
 import { LuLogOut } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 import AddVerseModal from "./addVerse";
 import SearchModal from "./search";
 import Logout from "./logout";
 import { ModeToggle } from "./toggleMode";
 import Logo from "../home/logo";
+import { Separator } from "../ui/separator";
 
 export default function Header() {
   const { data: userSession } = authClient.useSession();
@@ -51,6 +54,28 @@ export default function Header() {
             />
           </div>
 
+          <div className="flex">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="cursor-pointer" asChild>
+                <div className="flex justify-left items-center gap-1">
+                  <BsGearWideConnected className="h-6 w-6" />
+                  <p className="md:flex hidden">Admin</p>
+                </div>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="flex flex-col w-72 p-4">
+                <DropdownMenuItem asChild>
+                  <Link href="/app/admin/add-quize">
+                    <div className="flex justify-left items-center gap-2  ">
+                      <BsLightbulb className="w-12 h-12" />
+                      Add Quize
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
           <SearchModal
             TriggerComp={() => (
               <div className="flex items-center justify-center md:p-2 p-1.5 cursor-pointer">
@@ -59,11 +84,10 @@ export default function Header() {
             )}
           />
 
-          {/* Mobile Avatar & Popover */}
           <div className="flex md:hidden">
-            <Popover>
-              <PopoverTrigger>
-                <Avatar className="h-8 w-8">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="h-8 w-8 cursor-pointer">
                   <AvatarImage
                     src={user?.image || ""}
                     alt={user?.name || "User"}
@@ -72,46 +96,47 @@ export default function Header() {
                     <BsPerson className="h-6 w-6" />
                   </AvatarFallback>
                 </Avatar>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="grid gap-4">
-                  <div className="flex flex-col justify-center items-center">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage
-                        src={user?.image || ""}
-                        alt={user?.name || "User"}
-                      />
-                      <AvatarFallback>
-                        <BsPerson className="text-black w-16 h-16" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <h1 className="text-xl font-bold">{user?.name}</h1>
-                    <p className="text-sm p-1">{user?.email}</p>
-                  </div>
+              </DropdownMenuTrigger>
 
-                  <div className="grid gap-2">
-                    <Link
-                      href="/app/myaccount"
-                      className="flex items-center gap-3 ml-2 cursor-pointer"
-                    >
-                      <BsPerson className="w-5 h-5" />
-                      <p>My Account</p>
-                    </Link>
-
-                    <Separator orientation="horizontal" />
-
-                    <Logout
-                      TriggerComp={() => (
-                        <div className="flex text-red-900 items-center gap-3 ml-2 cursor-pointer">
-                          <LuLogOut className="w-5 h-5" />
-                          <p>Logout</p>
-                        </div>
-                      )}
+              <DropdownMenuContent className="flex flex-col w-72 p-4">
+                <div className="flex flex-col items-center gap-0 mb-4">
+                  <Avatar className="w-16 h-16">
+                    <AvatarImage
+                      src={user?.image || ""}
+                      alt={user?.name || "User"}
                     />
-                  </div>
+                    <AvatarFallback>
+                      <BsPerson className="w-16 h-16 text-black" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <h1 className="text-xl font-bold">{user?.name}</h1>
+                  <p className="text-sm text-center">{user?.email}</p>
                 </div>
-              </PopoverContent>
-            </Popover>
+
+                <Separator />
+
+                {/* Actions */}
+                <DropdownMenuItem asChild>
+                  <Link href="/app/myaccount">
+                    <div className="flex justify-left items-center gap-2  ">
+                      <BsPerson className="w-12 h-12" />
+                      My Account
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Logout
+                    TriggerComp={() => (
+                      <div className="flex justify-left items-center gap-2  text-red-600">
+                        <LuLogOut className="w-5 h-5" />
+                        Logout
+                      </div>
+                    )}
+                  />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <ModeToggle />

@@ -52,10 +52,8 @@ export default function useColumns({ searchQuery }: any) {
 
         return (
           <div className="grid w-full rounded-lg border border-border bg-card p-3 gap-1">
-            {/* toggle */}
             <input type="checkbox" id={checkboxId} className="peer hidden" />
 
-            {/* header */}
             <div className="flex justify-between items-center gap-3 cursor-pointer">
               <div className="flex gap-2 items-center">
                 {memorised !== "saved" ? (

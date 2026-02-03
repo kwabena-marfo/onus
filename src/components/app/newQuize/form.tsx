@@ -10,7 +10,7 @@ import Congratulations from "./congratulations";
 import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
-import { usePostOnusQuize } from "@/hooks/useQuery";
+import { usePostOnusQuize, useFetchVersesApi } from "@/hooks/useQuery";
 
 export default function QuizeFlashcardCarousel({ book }: any) {
   const selectedBook = quizzes.find(

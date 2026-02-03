@@ -48,6 +48,7 @@
     "nextjs-toploader": "^3.8.16",
     "nodemailer": "^6.10.1",
     "or": "^0.2.0",
+    "radix-ui": "^1.4.3",
     "react": "19.2.1",
     "react-confetti": "^6.4.0",
     "react-dom": "19.2.1",

@@ -20,6 +20,28 @@ export type AuthState = {
   onusVerse?: string | null;
 };
 
+interface OptionInput {
+  text: string;
+}
+
+interface ReferenceInput {
+  book: string;
+  chapter: number;
+  verse: number;
+}
+
+interface QuestionInput {
+  question: string;
+  options: string[]; // array of option texts
+  correctAnswerIndex: number;
+  reference: ReferenceInput;
+}
+
+interface QuizInput {
+  quizName: string;
+  questions: QuestionInput[];
+}
+
 export const app = new Hono<{ Variables: AuthState }>().basePath("/api");
 
 app.use(
@@ -221,6 +243,99 @@ app.get("/app/get-onus-quize", authMiddleware(), async (c: any) => {
   } catch (error) {
     console.error(error);
     return c.json({ error: "An error occurred" }, 500);
+  }
+});
+
+app.post("/app/create-quiz", authMiddleware(), async (c) => {
+  try {
+    const body: QuizInput = await c.req.json();
+
+    const { quizName, questions } = body;
+
+    if (!quizName || !questions?.length) {
+      return c.json({ error: "Quiz name and questions are required" }, 400);
+    }
+
+    // Validate each question has distinct options
+    for (const q of questions) {
+      const optionsSet = new Set(q.options);
+      if (optionsSet.size !== q.options.length) {
+        return c.json(
+          { error: `Question "${q.question}" has duplicate options` },
+          400,
+        );
+      }
+
+      if (
+        q.correctAnswerIndex < 0 ||
+        q.correctAnswerIndex >= q.options.length
+      ) {
+        return c.json(
+          { error: `Question "${q.question}" has invalid correctAnswerIndex` },
+          400,
+        );
+      }
+    }
+
+    // Create quiz with nested questions and options
+    const createdQuiz = await prisma.quiz.create({
+      data: {
+        name: quizName,
+        questions: {
+          create: questions.map((q) => ({
+            text: q.question,
+            reference: {
+              create: {
+                book: q.reference.book,
+                chapter: q.reference.chapter,
+                verse: q.reference.verse,
+              },
+            },
+            options: {
+              create: q.options.map((opt, idx) => ({
+                text: opt,
+                isCorrect: idx === q.correctAnswerIndex,
+              })),
+            },
+          })),
+        },
+      },
+      include: {
+        questions: {
+          include: {
+            options: true,
+            reference: true,
+          },
+        },
+      },
+    });
+
+    return c.json({ message: "Quiz created successfully", quiz: createdQuiz });
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "An error occurred while creating the quiz" }, 500);
+  }
+});
+
+app.get("/app/get-quiz", authMiddleware(), async (c) => {
+  try {
+    const quizzes = await prisma.quiz.findMany({
+      include: {
+        questions: {
+          include: {
+            options: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return c.json({ quizzes }, 200);
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "Failed to fetch quizzes" }, 500);
   }
 });
 

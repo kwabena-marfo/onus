@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
 
 import Content from "@/components/app/content";
 import { Button } from "@/components/ui/button";
@@ -24,9 +25,11 @@ import {
 
 import { BsPerson } from "react-icons/bs";
 import { LuLoader } from "react-icons/lu";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 import { authClient } from "@/lib/authClient";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type ProfileForm = {
   name: string;
@@ -38,12 +41,34 @@ type PasswordForm = {
   confirmPassword: string;
 };
 
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+
+    newPassword: z
+      .string()
+      .min(8, "New password must be at least 8 characters"),
+
+    confirmPassword: z.string().min(1, "Please confirm your new password"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"], // 👈 error shows under confirm password field
+  });
+
 export default function MyAccount() {
   const router = useRouter();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
   const [loadingPassword, setLoadingPassword] = useState(false);
 
   /* ---------------- PROFILE FORM ---------------- */
@@ -62,7 +87,9 @@ export default function MyAccount() {
     handleSubmit: handlePasswordSubmit,
     reset: resetPasswordForm,
     formState: { errors, isValid, isSubmitting: isUpdatingPassword },
-  } = useForm<PasswordForm>();
+  } = useForm<PasswordForm>({
+    resolver: zodResolver(changePasswordSchema),
+  });
 
   /* ---------------- LOAD SESSION ---------------- */
   useEffect(() => {
@@ -124,38 +151,49 @@ export default function MyAccount() {
 
   /* ---------------- HANDLE PASSWORD CHANGE ---------------- */
   const handlePasswordChange = async (data: PasswordForm) => {
+    // reset states
+    setPasswordError(null);
+    setPasswordSuccess(null);
+
     if (data.newPassword !== data.confirmPassword) {
-      toast.error("Passwords do not match");
+      setPasswordError("Passwords do not match");
       return;
     }
 
     setLoadingPassword(true);
+
     try {
       await authClient.changePassword({
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
         fetchOptions: {
           onSuccess: async () => {
-            toast.success(
-              "Password updated successfully! You will be logged out.",
-              { position: "top-right" },
+            setPasswordSuccess(
+              "Password updated successfully. You will be logged out shortly.",
             );
+
             resetPasswordForm();
             setPasswordDialogOpen(false);
 
-            // Logout user and redirect to login page
-            await authClient.signOut();
-            router.push("/");
+            // small delay so user can read success message
+            setTimeout(async () => {
+              await authClient.signOut();
+              router.push("/");
+            }, 3000);
           },
           onError: (error: any) => {
-            toast.error(error?.error?.message || "Failed to update password");
+            setPasswordError(
+              error?.error?.message || "Failed to update password",
+            );
+            setLoadingPassword(false);
+            setPasswordDialogOpen(false);
           },
         },
       });
     } catch (error: any) {
-      toast.error(error?.message || "Failed to update password");
-    } finally {
       setLoadingPassword(false);
+      setPasswordDialogOpen(false);
+      setPasswordError(error?.message || "Failed to update password");
     }
   };
 
@@ -206,8 +244,6 @@ export default function MyAccount() {
 
           <Separator className="dark:border-gray-700" />
 
-          {/* ---------------- CHANGE PASSWORD ---------------- */}
-          {/* ---------------- CHANGE PASSWORD ---------------- */}
           <h2 className="text-lg font-semibold dark:text-gray-100">
             Change Password
           </h2>
@@ -215,13 +251,24 @@ export default function MyAccount() {
           <form className="flex flex-col gap-4">
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">Current Password</Label>
-              <Input
-                type="password"
-                {...registerPassword("currentPassword", {
-                  required: "Current password is required",
-                })}
-                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
-              />
+
+              <div className="relative">
+                <Input
+                  type={showCurrent ? "text" : "password"}
+                  {...registerPassword("currentPassword")}
+                  className="pr-10 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+                />
+
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => setShowCurrent((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showCurrent ? <BsEyeSlash /> : <BsEye />}
+                </Button>
+              </div>
+
               {errors.currentPassword && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.currentPassword.message}
@@ -231,13 +278,24 @@ export default function MyAccount() {
 
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">New Password</Label>
-              <Input
-                type="password"
-                {...registerPassword("newPassword", {
-                  required: "New password is required",
-                })}
-                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
-              />
+
+              <div className="relative">
+                <Input
+                  type={showNew ? "text" : "password"}
+                  {...registerPassword("newPassword")}
+                  className="pr-10 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+                />
+
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => setShowNew((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showNew ? <BsEyeSlash /> : <BsEye />}
+                </Button>
+              </div>
+
               {errors.newPassword && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.newPassword.message}
@@ -247,15 +305,26 @@ export default function MyAccount() {
 
             <div className="grid gap-1">
               <Label className="dark:text-gray-200">Confirm New Password</Label>
-              <Input
-                type="password"
-                {...registerPassword("confirmPassword", {
-                  required: "Please confirm your new password",
-                })}
-                className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
-              />
+
+              <div className="relative">
+                <Input
+                  type={showConfirm ? "text" : "password"}
+                  {...registerPassword("confirmPassword")}
+                  className="pr-10 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+                />
+
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => setShowConfirm((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirm ? <BsEyeSlash /> : <BsEye />}
+                </Button>
+              </div>
+
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-sm text-red-500">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -273,7 +342,7 @@ export default function MyAccount() {
                   className="border-[#fa9a40] text-[#fa9a40] dark:border-orange-400 dark:text-orange-400"
                   onClick={async (e) => {
                     e.preventDefault();
-                    // Validate all fields first
+
                     await handlePasswordSubmit(async () => true)();
 
                     if (isValid) setPasswordDialogOpen(true);
@@ -314,6 +383,18 @@ export default function MyAccount() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            {passwordSuccess && (
+              <p className="text-sm text-center text-green-600 dark:text-green-400">
+                {passwordSuccess}
+              </p>
+            )}
+
+            {passwordError && (
+              <p className="text-sm text-center text-red-600 dark:text-red-400">
+                {passwordError}
+              </p>
+            )}
           </form>
         </div>
       </div>

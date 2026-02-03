@@ -159,3 +159,41 @@ export function useChangePassword() {
     trigger: mutation.mutateAsync,
   };
 }
+
+export function usePostOnusQuiz() {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: async (newQuiz: any) => {
+      const res = await api.post("/api/app/create-quiz", newQuiz);
+      return res.data;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getOnusQuizzes"],
+      });
+    },
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
+
+export function useGetOnusQuizzes() {
+  const api = useFetchApi();
+
+  const query = useQuery({
+    queryKey: ["getOnusQuizzes"],
+    queryFn: async () => {
+      const res = await api.get("/api/app/get-quiz");
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+  return query;
+}
