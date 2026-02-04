@@ -39,7 +39,7 @@ export default function Quizzes() {
       <div className="grid  w-full  md:gap-6 gap-4 mt-6">
         <div className="grid h-full md:grid-cols-5  grid-cols-1 md:divide-x-2  gap-2 ">
           {!filteredBooks?.length ? (
-            <div className="flex flex-col md:col-span-3 justify-center items-center  p-3 border rounded-lg   w-full ">
+            <div className="flex flex-col md:col-span-3 justify-center items-center  p-3 border rounded-lg w-full ">
               <BsDatabaseSlash className="w-12 h-12" />
               <p>No Quizzes Found</p>
               <p className="text-center">
@@ -73,6 +73,7 @@ export default function Quizzes() {
                     </p>
 
                     <Separator className="my-1 dark:border-gray-700" />
+
                     <div className="flex gap-1 mt-2">
                       <NewQuizeModal
                         book={book}

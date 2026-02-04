@@ -55,7 +55,7 @@ export default function CarouselComp({
         <p className="font-extrabold text-3xl text-center capitalize text-gray-900 dark:text-gray-100">
           {tittle}
         </p>
-        <p className="font-medium text-center text-2xl text-gray-700 dark:text-gray-300">
+        <p className="font-medium text-center text-lg text-gray-700 dark:text-gray-300">
           {subTittle}
         </p>
       </div>
@@ -68,27 +68,26 @@ export default function CarouselComp({
 
         {/* Navigation & Info */}
         <div className="grid mt-4">
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-2 justify-center">
             <BsArrowLeft
               onClick={handlePrev}
               className="w-10 h-10 cursor-pointer text-gray-700 dark:text-gray-200 hover:text-green-400"
             />
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+              Question {currentIndex + 1} of {count}
+            </p>
             <BsArrowRight
               onClick={handleNext}
               className="w-10 h-10 cursor-pointer text-gray-700 dark:text-gray-200 hover:text-green-400"
             />
           </div>
 
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
-            Question {currentIndex + 1} of {count}
-          </p>
-
           {/* Finish button on last slide */}
           {currentIndex === count - 1 && (
             <div className="flex flex-col mt-4 items-center">
               <Button
                 onClick={onFinish}
-                className="bg-green-600 hover:bg-green-700 text-white dark:text-gray-100"
+                className="bg-green-600 hover:bg-green-700 text-white dark:text-gray-100 w-full"
               >
                 Finish Quiz
               </Button>

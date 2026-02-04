@@ -28,8 +28,32 @@ export default function useQueryOnus(verses: any) {
       const fuse = new Fuse(verses, options);
       return fuse.search(searchQuery);
     },
-    [verses]
+    [verses],
   );
 
   return queryOnus;
+}
+
+export function useQueryQuiz(quizzes: any[]) {
+  const options = {
+    ...optionsList,
+    keys: [
+      "name", // quiz / book name
+      "questions.text",
+      "questions.reference.book",
+      "questions.reference.chapter",
+      "questions.reference.verse",
+    ],
+  };
+
+  const queryQuiz = useCallback(
+    (searchQuery: string) => {
+      if (!searchQuery) return quizzes;
+      const fuse = new Fuse(quizzes, options);
+      return fuse.search(searchQuery);
+    },
+    [quizzes],
+  );
+
+  return queryQuiz;
 }

@@ -237,7 +237,7 @@ export default function AddVerseForm({ className, verse }: any) {
                       className="flex items-center gap-3 p-3 border rounded-lg w-full cursor-pointer"
                     >
                       <RadioGroupItem value={val} />
-                      {val === "memorised" ? "Verse Memorised" : "Save for now"}
+                      {val === "memorised" ? "Memorised" : "Save for now"}
                     </Label>
                   ))}
                 </RadioGroup>

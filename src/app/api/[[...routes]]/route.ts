@@ -10,6 +10,7 @@ import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 import authMiddleware from "../middlewares/authorize";
 import { auth } from "@/lib/auth";
 import transporter from "@/config/nodemailer";
+import quizzes from "@/data/matthewQuiz.json";
 
 import EmailTemplate from "@/components/email";
 export const runtime = "nodejs";
@@ -230,6 +231,87 @@ app.post("/app/create-onus-quize", authMiddleware(), async (c: any) => {
   }
 });
 
+app.post("/app/create-quiz-batch", authMiddleware(), async (c) => {
+  try {
+    const body: any[] = quizzes; // expect an array of quizzes
+
+    if (!body.length) {
+      return c.json({ error: "No quizzes provided" }, 400);
+    }
+
+    const createdQuizzes: any[] = [];
+
+    for (const quizData of body) {
+      const { book, questions } = quizData;
+
+      if (!book || !questions?.length) {
+        return c.json(
+          { error: "Each quiz must have a book and questions" },
+          400,
+        );
+      }
+
+      // Transform questions
+      const quizQuestions = questions.map((q: any) => {
+        // Handle reference string "Matthew 1:20" or "Matthew 5:44–45"
+        const [refBook, chapVerse] = q.reference.split(" ");
+        const [chapterStr, verseStr] = chapVerse.split(":");
+
+        const chapter = Number(chapterStr);
+        const verse = Number(verseStr.split(/–|-|—/)[0]); // Take first verse if range
+
+        return {
+          text: q.question,
+          reference: {
+            create: {
+              book: refBook,
+              chapter,
+              verse,
+            },
+          },
+          options: {
+            create: q.options.map((opt: string, idx: number) => ({
+              text: opt,
+              isCorrect: idx === q.correctAnswerIndex,
+            })),
+          },
+        };
+      });
+
+      // Create quiz in DB
+      const createdQuiz = await prisma.quiz.create({
+        data: {
+          name: book,
+          questions: {
+            create: quizQuestions,
+          },
+        },
+        include: {
+          questions: {
+            include: {
+              options: true,
+              reference: true,
+            },
+          },
+        },
+      });
+
+      createdQuizzes.push(createdQuiz);
+    }
+
+    return c.json({
+      message: "All quizzes created successfully",
+      quizzes: createdQuizzes,
+    });
+  } catch (error) {
+    console.error(error);
+    return c.json(
+      { error: "An error occurred while creating quizzes", details: error },
+      500,
+    );
+  }
+});
+
 // -------------------- GET USER QUIZZES --------------------
 app.get("/app/get-onus-quize", authMiddleware(), async (c: any) => {
   try {
@@ -246,14 +328,46 @@ app.get("/app/get-onus-quize", authMiddleware(), async (c: any) => {
   }
 });
 
+app.get("/app/get-added-quizzes", authMiddleware(), async (c) => {
+  try {
+    const quizzes = await prisma.quiz.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        questions: {
+          include: {
+            options: true,
+            reference: true,
+          },
+        },
+      },
+    });
+
+    return c.json(quizzes);
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "Failed to fetch added quizzes" }, 500);
+  }
+});
+
 app.post("/app/create-quiz", authMiddleware(), async (c) => {
   try {
     const body: QuizInput = await c.req.json();
-
     const { quizName, questions } = body;
 
     if (!quizName || !questions?.length) {
       return c.json({ error: "Quiz name and questions are required" }, 400);
+    }
+
+    // Check for duplicate quiz name
+    const existingQuiz = await prisma.quiz.findFirst({
+      where: { name: quizName },
+    });
+
+    if (existingQuiz) {
+      return c.json(
+        { error: `A quiz with the name "${quizName}" already exists` },
+        400,
+      );
     }
 
     // Validate each question has distinct options
@@ -317,28 +431,43 @@ app.post("/app/create-quiz", authMiddleware(), async (c) => {
   }
 });
 
-app.get("/app/get-quiz", authMiddleware(), async (c) => {
-  try {
-    const quizzes = await prisma.quiz.findMany({
-      include: {
-        questions: {
-          include: {
-            options: true,
-          },
+app.get("/app/get-quiz/:book", async (c) => {
+  const book = c.req.param("book");
+
+  const quiz = await prisma.quiz.findFirst({
+    where: { name: book?.toLowerCase() },
+    include: {
+      questions: {
+        include: {
+          options: true,
+          reference: true,
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    },
+  });
 
-    return c.json({ quizzes }, 200);
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "Failed to fetch quizzes" }, 500);
+  if (!quiz) {
+    return c.json({ error: "Quiz not found" }, 404);
   }
-});
 
+  const response = {
+    book: quiz.name,
+    questions: quiz.questions.map((q) => {
+      const correctIndex = q.options.findIndex((o) => o.isCorrect);
+
+      return {
+        question: q.text,
+        options: q.options.map((o) => o.text),
+        correctAnswerIndex: correctIndex,
+        reference: q.reference
+          ? `${q.reference.book} ${q.reference.chapter}:${q.reference.verse}`
+          : null,
+      };
+    }),
+  };
+
+  return c.json(response);
+});
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
 export const POST = handle(app);

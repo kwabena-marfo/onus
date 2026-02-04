@@ -21,7 +21,7 @@ export default function Congratulations() {
   const { width, height } = useWindowSize();
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center mt-20 z-50 relative">
       {/* Confetti spans full screen from the top */}
       <Confetti
         width={width}
@@ -32,12 +32,12 @@ export default function Congratulations() {
       />
 
       {/* Message appears after confetti */}
-      <div className="flex flex-col items-center justify-center mt-20 z-50 relative">
+      <div>
         <h2 className="text-3xl font-bold text-green-700">
           🎉 Congratulations! 🎉
         </h2>
         <p className="text-lg text-gray-600 mt-2">You’ve completed the quiz!</p>
       </div>
-    </>
+    </div>
   );
 }

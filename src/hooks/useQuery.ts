@@ -84,7 +84,7 @@ export function usePostOnusQuize() {
 
   const mutation = useMutation({
     mutationFn: async (newQuize: any) => {
-      const res = await api.post("/api/app/create-onus-quize", newQuize);
+      const res = await api.post("/api/app/create-quiz-batch", newQuize);
       return res.data;
     },
     onSuccess: () => {
@@ -107,6 +107,26 @@ export function useGetQuizzes() {
       const res = await api.get("/api/app/get-onus-quize");
       return res.data;
     },
+  });
+}
+
+export function useGetAddedQuizzes() {
+  const api = useFetchApi();
+
+  return useQuery({
+    queryKey: ["added-quizzes"],
+    queryFn: async () => {
+      const res = await api.get("/api/app/get-added-quizzes");
+      return res.data;
+    },
+  });
+}
+
+export function useUpdateQuiz(id: string) {
+  const api = useFetchApi();
+
+  return useMutation({
+    mutationFn: (data: any) => api.put(`/app/update-quiz/${id}`, data),
   });
 }
 
@@ -182,13 +202,13 @@ export function usePostOnusQuiz() {
   };
 }
 
-export function useGetOnusQuizzes() {
+export function useGetOnusQuizzes(book: string) {
   const api = useFetchApi();
 
   const query = useQuery({
     queryKey: ["getOnusQuizzes"],
     queryFn: async () => {
-      const res = await api.get("/api/app/get-quiz");
+      const res = await api.get(`/api/app/get-quiz/${book}`);
       return res.data;
     },
     staleTime: 1000 * 60 * 5,

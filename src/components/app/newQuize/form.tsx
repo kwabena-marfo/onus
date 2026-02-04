@@ -2,7 +2,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import quizzes from "@/data/matthewQuiz.json";
 import CarouselComp from "./carousel";
 import { CarouselItem } from "@/components/ui/carousel";
 import Flashcard from "./flashCard";
@@ -10,14 +9,10 @@ import Congratulations from "./congratulations";
 import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
-import { usePostOnusQuize, useFetchVersesApi } from "@/hooks/useQuery";
+import { usePostOnusQuize, useGetOnusQuizzes } from "@/hooks/useQuery";
 
 export default function QuizeFlashcardCarousel({ book }: any) {
-  const selectedBook = quizzes.find(
-    (q) => q.book.toLowerCase() === book.toLowerCase(),
-  );
-
-  const bookQuestions = selectedBook ? selectedBook.questions : [];
+  const { data, isLoading } = useGetOnusQuizzes(book);
 
   const {
     trigger: createOnusQuize,
@@ -27,16 +22,28 @@ export default function QuizeFlashcardCarousel({ book }: any) {
     isSuccess,
   } = usePostOnusQuize();
 
+  // ✅ Normalize data
+  const quizzes = Array.isArray(data) ? data : data ? [data] : [];
+
+  const selectedBook = quizzes.find(
+    (q) => q?.book?.toLowerCase() === book?.toLowerCase(),
+  );
+
+  const bookQuestions = selectedBook?.questions ?? [];
+
+  const [quizStates, setQuizStates] = useState<any[]>([]);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
-  const [quizStates, setQuizStates] = useState(
-    bookQuestions.map(() => ({
-      selected: "",
-      hasFlipped: false,
-      wasCorrect: undefined,
-    })),
-  );
+  if (bookQuestions.length > 0 && quizStates.length === 0) {
+    setQuizStates(
+      bookQuestions.map(() => ({
+        selected: "",
+        hasFlipped: false,
+        wasCorrect: undefined,
+      })),
+    );
+  }
 
   const setQuizState = (index: number, partial: any) => {
     setQuizStates((prev) => {
@@ -49,9 +56,10 @@ export default function QuizeFlashcardCarousel({ book }: any) {
   const handleFinish = async () => {
     let newScore = 0;
 
-    const updatedStates: any = quizStates.map((state, index) => {
+    const updatedStates = quizStates.map((state, index) => {
       const question = bookQuestions[index];
       const correctAnswer = question.options[question.correctAnswerIndex];
+
       const isCorrect = state.selected === correctAnswer;
 
       if (state.selected && isCorrect) newScore += 1;
@@ -75,16 +83,15 @@ export default function QuizeFlashcardCarousel({ book }: any) {
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        setFinished(true);
-        reset();
-      }, 0);
+      queueMicrotask(() => setFinished(true));
+      reset();
     }
-  }, [isSuccess]);
+  }, [isSuccess, reset]);
 
-  if (!selectedBook) {
+  // ❌ No quiz found
+  if (!isLoading && !selectedBook) {
     return (
-      <div className="mt-6 text-center flex flex-col justify-center items-center capitalize text-gray-700 dark:text-gray-200">
+      <div className="mt-6 text-center flex flex-col items-center capitalize text-gray-700 dark:text-gray-200">
         <LuClock className="h-12 w-12 text-gray-500 dark:text-gray-400" />
         <p className="text-3xl font-bold">STAY TUNED!</p>
         Quizzes for {book} are being added.
@@ -92,10 +99,19 @@ export default function QuizeFlashcardCarousel({ book }: any) {
     );
   }
 
-  // ✅ Show result screen
+  // ⏳ Loading
+  if (isLoading || isPending || quizStates.length !== bookQuestions.length) {
+    return (
+      <div className="flex flex-justify items-center">
+        <LuLoaderCircle className="animate-spin justify-self-center h-8 w-8 text-gray-400 dark:text-gray-500" />
+      </div>
+    );
+  }
+
+  // 🎉 Finished
   if (!isError && finished) {
     return (
-      <div className="mt-6 text-center grid grid-cols-1 justify-self-center items-start text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col items-center justify-center mt-6 text-center  text-gray-800 dark:text-gray-200">
         <Congratulations />
 
         <p className="text-lg">
@@ -115,7 +131,7 @@ export default function QuizeFlashcardCarousel({ book }: any) {
             setScore(0);
             setFinished(false);
           }}
-          className="mt-4 bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 text-white"
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white w-full"
         >
           Go Again <LucideRotateCw className="ml-2" />
         </Button>
@@ -123,26 +139,21 @@ export default function QuizeFlashcardCarousel({ book }: any) {
     );
   }
 
-  // ✅ Loader
-  if (isPending) {
-    return (
-      <LuLoaderCircle className="animate-spin justify-self-center h-20 w-20 text-gray-400 dark:text-gray-500" />
-    );
-  }
-
-  // ✅ Main carousel
+  // 🧠 Quiz UI
   return (
     <CarouselComp
       tittle={`Quiz on ${book}`}
       subTittle="Answer all questions and click Finish"
       Content={() =>
-        bookQuestions.map((quiz, index) => (
+        bookQuestions.map((quiz: any, index: number) => (
           <CarouselItem key={quiz.reference}>
-            <Flashcard
-              {...quiz}
-              quizState={quizStates[index]}
-              setQuizState={(partial: any) => setQuizState(index, partial)}
-            />
+            {quizStates[index] && (
+              <Flashcard
+                {...quiz}
+                quizState={quizStates[index]}
+                setQuizState={(partial: any) => setQuizState(index, partial)}
+              />
+            )}
           </CarouselItem>
         ))
       }

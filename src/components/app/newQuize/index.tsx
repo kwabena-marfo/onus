@@ -31,7 +31,7 @@ export default function NewQuizeModal({ TriggerComp, book }: any) {
             className="min-w-2xl"
           >
             <ScrollArea className="min-h-[300px]  py-6 px-4">
-              <div className="flex items-center gap-2">
+              <div className="flex justify-center items-center gap-2">
                 <NewQuizeForm book={book} />
               </div>
             </ScrollArea>
@@ -43,8 +43,10 @@ export default function NewQuizeModal({ TriggerComp, book }: any) {
             <TriggerComp />
           </DrawerTrigger>
           <DrawerContent>
-            <ScrollArea className="min-h-[300px] py-6 px-4">
-              <NewQuizeForm book={book} />
+            <ScrollArea className="min-h-dvh py-6 px-4">
+              <div className="flex justify-center items-center gap-2">
+                <NewQuizeForm book={book} />
+              </div>
             </ScrollArea>
             <DrawerFooter className="pt-2">
               <DrawerClose asChild></DrawerClose>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useForm, Controller, useFieldArray } from "react-hook-form";
@@ -28,11 +29,24 @@ import {
 } from "@/components/ui/card";
 
 import { quizSchema, QuizForm } from "@/schemas/quizeSchema";
-import { usePostOnusQuiz } from "@/hooks/useQuery";
+import {
+  useGetOnusQuizzes,
+  usePostOnusQuiz,
+  useUpdateQuiz,
+} from "@/hooks/useQuery";
 import books from "@/data/bible.json";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 // Bible books with chapters & verses
 
 export default function QuizFormComponent() {
+  const searchParams = useSearchParams();
+  const quizId = searchParams.get("quizId") as any;
+
+  const { data: quiz } = useGetOnusQuizzes(quizId);
+
+  console.log(quiz);
+
   const form = useForm<QuizForm>({
     resolver: zodResolver(quizSchema),
     defaultValues: {
@@ -54,17 +68,48 @@ export default function QuizFormComponent() {
   });
 
   const postQuiz = usePostOnusQuiz();
+  const updateQuize = useUpdateQuiz(quiz);
 
   const onSubmit = async (data: QuizForm) => {
     try {
-      console.log(data);
-      await postQuiz.trigger(data);
-      toast.success("Quiz submitted successfully!", { position: "top-right" });
-      form.reset();
-    } catch (error) {
-      toast.error("Failed to submit quiz");
-    }
+      if (quizId) {
+        await updateQuize.mutateAsync(data);
+
+        toast.success("Quiz updated successfully");
+      } else {
+        await postQuiz.trigger(data);
+        toast.success("Quiz submitted successfully!", {
+          position: "top-right",
+        });
+        form.reset();
+      }
+    } catch (error) {}
   };
+
+  useEffect(() => {
+    if (!quiz) return;
+
+    const formattedQuestions = quiz.questions.map((q: any) => ({
+      question: q.text,
+      reference: {
+        book: quiz.book, // 🔑 sync book with quizName
+        chapter: q.reference.chapter,
+        verse: q.reference.verse,
+      },
+      options: q.options.map((o: any) => o.text),
+      correctAnswerIndex: q.options.findIndex((o: any) => o.isCorrect),
+    }));
+
+    form.reset({
+      quizName: quiz.book,
+      questions: formattedQuestions,
+    });
+
+    // 🔥 VERY IMPORTANT
+    // sync useFieldArray with reset data
+    remove();
+    formattedQuestions.forEach((q: any) => append(q));
+  }, [quiz]);
 
   return (
     <div className="w-full sm:max-w-4xl p-1">
@@ -260,12 +305,15 @@ export default function QuizFormComponent() {
 
                 {/* Options */}
                 {question.options.map((opt, oIndex) => (
-                  <div key={oIndex} className="flex items-center gap-2 my-1">
+                  <div key={oIndex} className="flex items-center gap-1">
                     <Controller
                       control={form.control}
                       name={`questions.${qIndex}.options.${oIndex}`}
                       render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
+                        <Field
+                          className="flex gap-1"
+                          data-invalid={fieldState.invalid}
+                        >
                           <FieldLabel>Option {oIndex + 1}</FieldLabel>
                           <Input
                             {...field}
@@ -367,12 +415,25 @@ export default function QuizFormComponent() {
               Add Question
             </Button>
             <Button
+              disabled={postQuiz.isPending}
               className="flex-1 l bg-[#e77306] hover:bg-[#d66a05] text-white"
               type="submit"
             >
-              Submit Quiz
+              {postQuiz.isPending ? "Submitting..." : "Submit Quiz"}
             </Button>
           </div>
+          {postQuiz.isError && (
+            <div className="mb-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+              {(() => {
+                const err: any = postQuiz.error;
+                return (
+                  err?.response?.data?.error ||
+                  err?.message ||
+                  "Something went wrong while submitting the quiz."
+                );
+              })()}
+            </div>
+          )}
         </form>
       </CardContent>
     </div>

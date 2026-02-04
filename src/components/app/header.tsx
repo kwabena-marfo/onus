@@ -68,7 +68,15 @@ export default function Header() {
                   <Link href="/app/admin/add-quize">
                     <div className="flex justify-left items-center gap-2  ">
                       <BsLightbulb className="w-12 h-12" />
-                      Add Quize
+                      Add New Quize
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/app/admin/added-quizzes">
+                    <div className="flex justify-left items-center gap-2  ">
+                      <BsLightbulb className="w-12 h-12" />
+                      Added Quizzes
                     </div>
                   </Link>
                 </DropdownMenuItem>
