@@ -30,20 +30,21 @@ import {
 
 import { quizSchema, QuizForm } from "@/schemas/quizeSchema";
 import {
-  useGetOnusQuizzes,
+  useGetRawOnusQuizzes,
   usePostOnusQuiz,
   useUpdateQuiz,
 } from "@/hooks/useQuery";
 import books from "@/data/bible.json";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import IsLoadingError from "@/components/app/isLoadingError";
 // Bible books with chapters & verses
 
 export default function QuizFormComponent() {
   const searchParams = useSearchParams();
   const quizId = searchParams.get("quizId") as any;
 
-  const { data: quiz } = useGetOnusQuizzes(quizId);
+  const { data: quiz, isLoading, isError } = useGetRawOnusQuizzes(quizId);
 
   console.log(quiz);
 
@@ -71,45 +72,37 @@ export default function QuizFormComponent() {
   const updateQuize = useUpdateQuiz(quiz);
 
   const onSubmit = async (data: QuizForm) => {
-    try {
-      if (quizId) {
-        await updateQuize.mutateAsync(data);
+    return console.log(data);
+    const payload = {
+      ...data,
+      questions: data.questions.map((q) => ({
+        ...q,
+        reference: {
+          ...q.reference,
+          book: data.quizName, // 👈 force sync
+        },
+      })),
+    };
 
-        toast.success("Quiz updated successfully");
-      } else {
-        await postQuiz.trigger(data);
-        toast.success("Quiz submitted successfully!", {
-          position: "top-right",
-        });
-        form.reset();
-      }
-    } catch (error) {}
+    if (quizId) {
+      await updateQuize.mutateAsync(payload);
+      toast.success("Quiz updated successfully");
+    } else {
+      await postQuiz.trigger(payload);
+      toast.success("Quiz submitted successfully!");
+      form.reset();
+    }
   };
 
+  console.log(quiz);
+
   useEffect(() => {
-    if (!quiz) return;
+    if (!quizId || !quiz) return;
+    form.reset(quiz);
+  }, [quiz, form, quizId]);
 
-    const formattedQuestions = quiz.questions.map((q: any) => ({
-      question: q.text,
-      reference: {
-        book: quiz.book, // 🔑 sync book with quizName
-        chapter: q.reference.chapter,
-        verse: q.reference.verse,
-      },
-      options: q.options.map((o: any) => o.text),
-      correctAnswerIndex: q.options.findIndex((o: any) => o.isCorrect),
-    }));
-
-    form.reset({
-      quizName: quiz.book,
-      questions: formattedQuestions,
-    });
-
-    // 🔥 VERY IMPORTANT
-    // sync useFieldArray with reset data
-    remove();
-    formattedQuestions.forEach((q: any) => append(q));
-  }, [quiz]);
+  if (isLoading || (quiz && isError))
+    return <IsLoadingError isLoading={isLoading} isError={quiz && isError} />;
 
   return (
     <div className="w-full sm:max-w-4xl p-1">

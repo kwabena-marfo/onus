@@ -217,3 +217,16 @@ export function useGetOnusQuizzes(book: string) {
 
   return query;
 }
+
+export function useGetRawOnusQuizzes(book: string) {
+  const api = useFetchApi();
+
+  return useQuery({
+    queryKey: ["raw-onus-quizzes", book],
+    queryFn: async () => {
+      const res = await api.get(`/api/app/get-quiz-raw/${book}`);
+      return res.data;
+    },
+    enabled: !!book, // don’t run until book exists
+  });
+}

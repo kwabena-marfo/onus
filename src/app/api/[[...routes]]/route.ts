@@ -8,6 +8,8 @@ import prisma from "@/config/prisma";
 import createOnusChecker from "../middlewares/createOnusChecker";
 import getVersesFromExternalApi from "@/lib/getVersesFromExternalApi";
 import authMiddleware from "../middlewares/authorize";
+import authAdminMiddleware from "../middlewares/authoriseAdmin";
+
 import { auth } from "@/lib/auth";
 import transporter from "@/config/nodemailer";
 import quizzes from "@/data/matthewQuiz.json";
@@ -20,10 +22,6 @@ export type AuthState = {
   session: typeof auth.$Infer.Session.session | null;
   onusVerse?: string | null;
 };
-
-interface OptionInput {
-  text: string;
-}
 
 interface ReferenceInput {
   book: string;
@@ -349,86 +347,141 @@ app.get("/app/get-added-quizzes", authMiddleware(), async (c) => {
   }
 });
 
-app.post("/app/create-quiz", authMiddleware(), async (c) => {
-  try {
-    const body: QuizInput = await c.req.json();
-    const { quizName, questions } = body;
+app.post(
+  "/app/create-quiz",
+  authMiddleware(),
+  authAdminMiddleware(),
+  async (c) => {
+    try {
+      const body: QuizInput = await c.req.json();
+      const { quizName, questions } = body;
 
-    if (!quizName || !questions?.length) {
-      return c.json({ error: "Quiz name and questions are required" }, 400);
-    }
+      if (!quizName || !questions?.length) {
+        return c.json({ error: "Quiz name and questions are required" }, 400);
+      }
 
-    // Check for duplicate quiz name
-    const existingQuiz = await prisma.quiz.findFirst({
-      where: { name: quizName },
-    });
+      // Check for duplicate quiz name
+      const existingQuiz = await prisma.quiz.findFirst({
+        where: { name: quizName },
+      });
 
-    if (existingQuiz) {
-      return c.json(
-        { error: `A quiz with the name "${quizName}" already exists` },
-        400,
-      );
-    }
-
-    // Validate each question has distinct options
-    for (const q of questions) {
-      const optionsSet = new Set(q.options);
-      if (optionsSet.size !== q.options.length) {
+      if (existingQuiz) {
         return c.json(
-          { error: `Question "${q.question}" has duplicate options` },
+          { error: `A quiz with the name "${quizName}" already exists` },
           400,
         );
       }
 
-      if (
-        q.correctAnswerIndex < 0 ||
-        q.correctAnswerIndex >= q.options.length
-      ) {
-        return c.json(
-          { error: `Question "${q.question}" has invalid correctAnswerIndex` },
-          400,
-        );
-      }
-    }
+      // Validate each question has distinct options
+      for (const q of questions) {
+        const optionsSet = new Set(q.options);
+        if (optionsSet.size !== q.options.length) {
+          return c.json(
+            { error: `Question "${q.question}" has duplicate options` },
+            400,
+          );
+        }
 
-    // Create quiz with nested questions and options
-    const createdQuiz = await prisma.quiz.create({
-      data: {
-        name: quizName,
-        questions: {
-          create: questions.map((q) => ({
-            text: q.question,
-            reference: {
-              create: {
-                book: q.reference.book,
-                chapter: q.reference.chapter,
-                verse: q.reference.verse,
+        if (
+          q.correctAnswerIndex < 0 ||
+          q.correctAnswerIndex >= q.options.length
+        ) {
+          return c.json(
+            {
+              error: `Question "${q.question}" has invalid correctAnswerIndex`,
+            },
+            400,
+          );
+        }
+      }
+
+      // Create quiz with nested questions and options
+      const createdQuiz = await prisma.quiz.create({
+        data: {
+          name: quizName,
+          questions: {
+            create: questions.map((q) => ({
+              text: q.question,
+              reference: {
+                create: {
+                  book: q.reference.book,
+                  chapter: q.reference.chapter,
+                  verse: q.reference.verse,
+                },
               },
-            },
-            options: {
-              create: q.options.map((opt, idx) => ({
-                text: opt,
-                isCorrect: idx === q.correctAnswerIndex,
-              })),
-            },
-          })),
-        },
-      },
-      include: {
-        questions: {
-          include: {
-            options: true,
-            reference: true,
+              options: {
+                create: q.options.map((opt, idx) => ({
+                  text: opt,
+                  isCorrect: idx === q.correctAnswerIndex,
+                })),
+              },
+            })),
           },
         },
-      },
-    });
+        include: {
+          questions: {
+            include: {
+              options: true,
+              reference: true,
+            },
+          },
+        },
+      });
 
-    return c.json({ message: "Quiz created successfully", quiz: createdQuiz });
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "An error occurred while creating the quiz" }, 500);
+      return c.json({
+        message: "Quiz created successfully",
+        quiz: createdQuiz,
+      });
+    } catch (error) {
+      console.error(error);
+      return c.json(
+        { error: "An error occurred while creating the quiz" },
+        500,
+      );
+    }
+  },
+);
+
+app.get("/app/get-quiz-raw/:book", async (c) => {
+  const book = c.req.param("book");
+
+  const quiz = await prisma.quiz.findFirst({
+    where: {
+      name: book.toLowerCase(),
+    },
+    include: {
+      questions: {
+        include: {
+          options: {
+            orderBy: { id: "asc" }, // keep option order stable
+          },
+          reference: true,
+        },
+      },
+    },
+  });
+
+  if (!quiz) {
+    return c.json({ error: "Quiz not found" }, 404);
   }
+
+  const response = {
+    quizName: quiz.name,
+    questions: quiz.questions.map((q) => ({
+      question: q.text,
+      reference: q.reference
+        ? {
+            book: q.reference.book,
+            chapter: q.reference.chapter,
+            verse: q.reference.verse,
+          }
+        : null,
+      options: q.options.map((o) => o.text),
+      correctAnswerIndex: q.options.findIndex((o) => o.isCorrect),
+    })),
+  };
+
+  return c.json(response);
 });
 
 app.get("/app/get-quiz/:book", async (c) => {
@@ -451,7 +504,7 @@ app.get("/app/get-quiz/:book", async (c) => {
   }
 
   const response = {
-    book: quiz.name,
+    name: quiz.name,
     questions: quiz.questions.map((q) => {
       const correctIndex = q.options.findIndex((o) => o.isCorrect);
 

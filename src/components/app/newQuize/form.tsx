@@ -9,10 +9,11 @@ import Congratulations from "./congratulations";
 import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
-import { usePostOnusQuize, useGetOnusQuizzes } from "@/hooks/useQuery";
+import { usePostOnusQuize, useGetRawOnusQuizzes } from "@/hooks/useQuery";
 
 export default function QuizeFlashcardCarousel({ book }: any) {
-  const { data, isLoading } = useGetOnusQuizzes(book);
+  console.log(book);
+  const { data, isLoading } = useGetRawOnusQuizzes(book);
 
   const {
     trigger: createOnusQuize,
@@ -25,28 +26,23 @@ export default function QuizeFlashcardCarousel({ book }: any) {
   // ✅ Normalize data
   const quizzes = Array.isArray(data) ? data : data ? [data] : [];
 
-  const selectedBook = quizzes.find(
-    (q) => q?.book?.toLowerCase() === book?.toLowerCase(),
-  );
+  const selectedBook = quizzes.find((q) => q?.quizName === book?.toLowerCase());
 
   const bookQuestions = selectedBook?.questions ?? [];
 
-  const [quizStates, setQuizStates] = useState<any[]>([]);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
-  if (bookQuestions.length > 0 && quizStates.length === 0) {
-    setQuizStates(
-      bookQuestions.map(() => ({
-        selected: "",
-        hasFlipped: false,
-        wasCorrect: undefined,
-      })),
-    );
-  }
+  const [quizStates, setQuizStates] = useState(() =>
+    bookQuestions.map(() => ({
+      selected: "",
+      hasFlipped: false,
+      wasCorrect: undefined,
+    })),
+  );
 
   const setQuizState = (index: number, partial: any) => {
-    setQuizStates((prev) => {
+    setQuizStates((prev: any) => {
       const copy = [...prev];
       copy[index] = { ...copy[index], ...partial };
       return copy;
@@ -56,7 +52,7 @@ export default function QuizeFlashcardCarousel({ book }: any) {
   const handleFinish = async () => {
     let newScore = 0;
 
-    const updatedStates = quizStates.map((state, index) => {
+    const updatedStates = quizStates.map((state: any, index: any) => {
       const question = bookQuestions[index];
       const correctAnswer = question.options[question.correctAnswerIndex];
 
