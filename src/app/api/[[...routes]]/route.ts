@@ -40,11 +40,9 @@ app.use(
   }),
 );
 
-// Auth for /auth/* endpoints
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
 // -------------------- GLOBAL AUTH --------------------
-// All routes below require auth
 app.use(authMiddleware());
 
 // -------------------- ROUTES --------------------

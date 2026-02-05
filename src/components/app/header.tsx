@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/authClient";
 
 import {
@@ -34,8 +35,12 @@ import { Separator } from "../ui/separator";
 
 export default function Header() {
   const { data: userSession } = authClient.useSession();
-
   const user = userSession?.user;
+  const pathname = usePathname(); // Get current route
+
+  // Helper to highlight active nav button
+  const getNavColor = (path: string) =>
+    pathname === path ? "text-blue-500" : "text-gray-400";
 
   return (
     <>
@@ -70,7 +75,7 @@ export default function Header() {
                 <DropdownMenuContent className="flex flex-col w-72 p-4">
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/app/admin/add-quize">
-                      <div className="flex justify-left items-center gap-2  ">
+                      <div className="flex justify-left items-center gap-2">
                         <BsPlus className="w-12 h-12" />
                         Add New Quize
                       </div>
@@ -78,7 +83,7 @@ export default function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/app/admin/added-quizzes">
-                      <div className="flex justify-left items-center gap-2  ">
+                      <div className="flex justify-left items-center gap-2">
                         <BsLightbulb className="w-12 h-12" />
                         View Quizzes
                       </div>
@@ -97,7 +102,7 @@ export default function Header() {
             )}
           />
 
-          <div className="flex ">
+          <div className="flex">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 cursor-pointer">
@@ -142,7 +147,7 @@ export default function Header() {
                 <DropdownMenuItem asChild>
                   <Logout
                     TriggerComp={() => (
-                      <div className="flex justify-left items-center gap-2  text-red-600">
+                      <div className="flex justify-left items-center gap-2 text-red-600">
                         <LuLogOut className="w-5 h-5" />
                         Logout
                       </div>
@@ -161,14 +166,22 @@ export default function Header() {
       <nav className="flex items-center md:justify-end justify-between gap-2 p-1 md:left-1/6 fixed md:hidden bottom-0 bg-background text-foreground z-50 md:w-5/6 w-full border-t border-border">
         <div className="flex items-center md:justify-end justify-between gap-2 p-2 w-full">
           <Link href="/app/dashboard">
-            <div className="flex flex-col items-center justify-center cursor-pointer">
+            <div
+              className={`flex flex-col items-center justify-center cursor-pointer ${getNavColor(
+                "/app/dashboard",
+              )}`}
+            >
               <BsHouse className="w-6 h-6" />
               <p className="text-xs">Home</p>
             </div>
           </Link>
 
           <Link href="/app/myonusbible">
-            <div className="flex flex-col items-center justify-center cursor-pointer">
+            <div
+              className={`flex flex-col items-center justify-center cursor-pointer ${getNavColor(
+                "/app/myonusbible",
+              )}`}
+            >
               <BsBook className="w-6 h-6" />
               <p className="text-xs">My Onus</p>
             </div>
@@ -184,14 +197,22 @@ export default function Header() {
           />
 
           <Link href="/app/saved">
-            <div className="flex flex-col items-center justify-center cursor-pointer">
+            <div
+              className={`flex flex-col items-center justify-center cursor-pointer ${getNavColor(
+                "/app/saved",
+              )}`}
+            >
               <BsBookmark className="w-6 h-6" />
               <p className="text-xs">Saved</p>
             </div>
           </Link>
 
           <Link href="/app/quizzes">
-            <div className="flex flex-col items-center justify-center cursor-pointer">
+            <div
+              className={`flex flex-col items-center justify-center cursor-pointer ${getNavColor(
+                "/app/quizzes",
+              )}`}
+            >
               <BsLightbulb className="w-6 h-6" />
               <p className="text-xs">Quizzes</p>
             </div>
