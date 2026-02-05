@@ -157,7 +157,9 @@ export default function QuizFormComponent({ quiz }: any) {
                         name={`questions.${qIndex}.reference.chapter`}
                         render={({ field }) => {
                           const selectedBook = books.find(
-                            (b) => b.value === form.watch("quizName"),
+                            (b) =>
+                              b.value === form.watch("quizName") ||
+                              quiz?.quizName,
                           );
 
                           const chapters = selectedBook
