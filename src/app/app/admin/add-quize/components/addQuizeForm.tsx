@@ -23,11 +23,14 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { quizSchema, QuizForm } from "@/schemas/quizeSchema";
-import { usePostOnusQuiz, useUpdateQuiz } from "@/hooks/useQuery";
+import { useCreateOnusQuiz, useUpdateQuiz } from "@/hooks/useQuery";
 import books from "@/data/bible.json";
 import { useEffect } from "react";
 
 export default function QuizFormComponent({ quiz }: any) {
+  const postQuiz = useCreateOnusQuiz();
+  const updateQuize = useUpdateQuiz(quiz?.id);
+
   const form = useForm<QuizForm>({
     resolver: zodResolver(quizSchema),
     defaultValues: {
@@ -47,14 +50,11 @@ export default function QuizFormComponent({ quiz }: any) {
     name: "questions",
   });
 
-  const postQuiz = usePostOnusQuiz();
-  const updateQuize = useUpdateQuiz(quiz?.id);
-
   const onSubmit = async (data: QuizForm) => {
     // return console.log(data);
 
     if (quiz) {
-      await updateQuize.mutateAsync(data);
+      await updateQuize.trigger(data);
       toast.success("Quiz updated successfully");
     } else {
       await postQuiz.trigger(data);

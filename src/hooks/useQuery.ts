@@ -5,14 +5,13 @@ import useFetchApi from "@/hooks/useFetchApi";
 import { queryClient } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-// ---------------- PUBLIC HOOKS ----------------
-
+// ---------------- VERSES ----------------
 export function useFetchVersesApi() {
   const api = useFetchApi();
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await api.post("/api/app/get-verses", data);
+      const res = await api.post("/api/verses/get-verses", data);
       return res.data;
     },
     onSuccess: () =>
@@ -30,7 +29,7 @@ export function usePostVerse() {
 
   const mutation = useMutation({
     mutationFn: async (newVerse: any) => {
-      const res = await api.post("/api/app/create-onus", newVerse);
+      const res = await api.post("/api/verses/create-onus", newVerse);
       return res.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["getVerses"] }),
@@ -48,7 +47,7 @@ export function useGetVerses() {
   return useQuery({
     queryKey: ["getVerses"],
     queryFn: async () => {
-      const res = await api.get("/api/app/get-onus");
+      const res = await api.get("/api/verses/get-onus");
       return res.data;
     },
   });
@@ -59,8 +58,8 @@ export function useDeleteVerse() {
   const router = useRouter();
 
   const mutation = useMutation({
-    mutationFn: async (ids: string[]) => {
-      const res = await api.delete(`/api/app/delete-onus/?id=${ids}`);
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`/api/verses/delete-onus/?id=${id}`);
       return res.data;
     },
     onSuccess: () => {
@@ -79,17 +78,77 @@ export function useDeleteVerse() {
   };
 }
 
-export function usePostOnusQuize() {
+// ---------------- QUIZZES ----------------
+export function usePostOnusQuiz() {
   const api = useFetchApi();
 
   const mutation = useMutation({
-    mutationFn: async (newQuize: any) => {
-      const res = await api.post("/api/app/create-quiz-batch", newQuize);
+    mutationFn: async (quizAttempt: {
+      quizName: string;
+      score: number;
+      total: number;
+    }) => {
+      const res = await api.post("/api/quizzes/create-onus-quize", quizAttempt);
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getOnusQuizes"] });
+      toast.success("Quiz saved successfully");
+      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] });
     },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to save quiz");
+    },
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
+
+export function usePostOnusQuizBatch() {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: async (newQuizzes: any) => {
+      const res = await api.post("/api/quizzes/create-quiz-batch", newQuizzes);
+      return res.data;
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
+
+export function useCreateOnusQuiz() {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: async (newQuiz: any) => {
+      const res = await api.post("/api/quizzes/create-quiz", newQuiz);
+      return res.data;
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
+  });
+
+  return {
+    ...mutation,
+    trigger: mutation.mutateAsync,
+  };
+}
+
+export function useUpdateQuiz(id: string) {
+  const api = useFetchApi();
+
+  const mutation = useMutation({
+    mutationFn: (data: any) => api.put(`/api/quizzes/update-quiz/${id}`, data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
   });
 
   return {
@@ -102,9 +161,9 @@ export function useGetQuizzes() {
   const api = useFetchApi();
 
   return useQuery({
-    queryKey: ["getQuizzes"],
+    queryKey: ["getOnusQuizzes"],
     queryFn: async () => {
-      const res = await api.get("/api/app/get-onus-quize");
+      const res = await api.get("/api/quizzes/get-onus-quize");
       return res.data;
     },
   });
@@ -114,24 +173,41 @@ export function useGetAddedQuizzes() {
   const api = useFetchApi();
 
   return useQuery({
-    queryKey: ["added-quizzes"],
+    queryKey: ["addedQuizzes"],
     queryFn: async () => {
-      const res = await api.get("/api/app/get-added-quizzes");
+      const res = await api.get("/api/quizzes/get-added-quizzes");
       return res.data;
     },
   });
 }
 
-export function useUpdateQuiz(id: string) {
+export function useGetOnusQuiz(book: string) {
   const api = useFetchApi();
 
-  return useMutation({
-    mutationFn: (data: any) => api.put(`/api/app/update-quiz/${id}`, data),
+  return useQuery({
+    queryKey: ["getOnusQuiz", book],
+    queryFn: async () => {
+      const res = await api.get(`/api/quizzes/get-quiz/${book}`);
+      return res.data;
+    },
+    enabled: !!book,
   });
 }
 
-// ---------------- UPDATE ACCOUNT ----------------
+export function useGetRawOnusQuiz(book: string) {
+  const api = useFetchApi();
 
+  return useQuery({
+    queryKey: ["rawOnusQuiz", book],
+    queryFn: async () => {
+      const res = await api.get(`/api/quizzes/get-quiz-raw/${book}`);
+      return res.data;
+    },
+    enabled: !!book,
+  });
+}
+
+// ---------------- PROFILE ----------------
 export function useUpdateProfile() {
   const api = useFetchApi();
 
@@ -166,67 +242,13 @@ export function useChangePassword() {
       const res = await api.post("/api/user/change-password", data);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success("Password changed successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to change password");
-    },
+    onSuccess: () => toast.success("Password changed successfully"),
+    onError: (error: any) =>
+      toast.error(error?.message || "Failed to change password"),
   });
 
   return {
     ...mutation,
     trigger: mutation.mutateAsync,
   };
-}
-
-export function usePostOnusQuiz() {
-  const api = useFetchApi();
-
-  const mutation = useMutation({
-    mutationFn: async (newQuiz: any) => {
-      const res = await api.post("/api/app/create-quiz", newQuiz);
-      return res.data;
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["getOnusQuizzes"],
-      });
-    },
-  });
-
-  return {
-    ...mutation,
-    trigger: mutation.mutateAsync,
-  };
-}
-
-export function useGetOnusQuizzes(book: string) {
-  const api = useFetchApi();
-
-  const query = useQuery({
-    queryKey: ["getOnusQuizzes"],
-    queryFn: async () => {
-      const res = await api.get(`/api/app/get-quiz/${book}`);
-      return res.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-  });
-
-  return query;
-}
-
-export function useGetRawOnusQuizzes(book: string) {
-  const api = useFetchApi();
-
-  return useQuery({
-    queryKey: ["raw-onus-quizzes", book],
-    queryFn: async () => {
-      const res = await api.get(`/api/app/get-quiz-raw/${book}`);
-      return res.data;
-    },
-    enabled: !!book, // don’t run until book exists
-  });
 }
