@@ -59,7 +59,7 @@ export default function useColumns({ searchQuery }: any) {
                 {memorised !== "saved" ? (
                   <BsCheckCircle className="text-primary" />
                 ) : (
-                  <LuLoader className="text-muted-foreground animate-spin" />
+                  <LuLoader className="text-muted-foreground" />
                 )}
 
                 <p className="md:text-lg font-bold uppercase text-foreground">

@@ -21,11 +21,11 @@ export default function Saved() {
   return (
     <Content tittle="Saved" Icon={BsBookmark}>
       <div className="grid justify-start items-start  grid-cols-1  md:grid-cols-5 gap-4">
-        <div className="md:col-span-3 col-span-5 ">
+        <div className="md:col-span-5 col-span-5 ">
           <VersesTable
             data={
               data?.verses?.filter(
-                ({ memorised }: any) => memorised == "saved"
+                ({ memorised }: any) => memorised == "saved",
               ) || []
             }
           />
