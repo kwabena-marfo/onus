@@ -442,6 +442,124 @@ app.post(
   },
 );
 
+app.put(
+  "/app/update-quiz/:quizId",
+  authMiddleware(),
+  authAdminMiddleware(),
+  async (c) => {
+    try {
+      const quizId = c.req.param("quizId");
+      const body: QuizInput = await c.req.json();
+
+      const { quizName, questions } = body;
+
+      if (!quizName || !questions?.length) {
+        return c.json({ error: "Quiz name and questions are required" }, 400);
+      }
+
+      // Ensure quiz exists
+      const existingQuiz = await prisma.quiz.findFirst({
+        where: { id: quizId },
+      });
+
+      if (!existingQuiz) {
+        return c.json({ error: "Quiz not found" }, 404);
+      }
+
+      // Prevent duplicate quiz names (except self)
+      const duplicateQuiz = await prisma.quiz.findFirst({
+        where: {
+          name: quizName,
+          NOT: { id: quizId },
+        },
+      });
+
+      if (duplicateQuiz) {
+        return c.json(
+          { error: `A quiz with the name "${quizName}" already exists` },
+          400,
+        );
+      }
+
+      // Validate questions
+      for (const q of questions) {
+        const optionsSet = new Set(q.options);
+        if (optionsSet.size !== q.options.length) {
+          return c.json(
+            { error: `Question "${q.question}" has duplicate options` },
+            400,
+          );
+        }
+
+        if (
+          q.correctAnswerIndex < 0 ||
+          q.correctAnswerIndex >= q.options.length
+        ) {
+          return c.json(
+            {
+              error: `Question "${q.question}" has invalid correctAnswerIndex`,
+            },
+            400,
+          );
+        }
+      }
+
+      // 🔥 Transaction keeps data consistent
+      const updatedQuiz = await prisma.$transaction(async (tx) => {
+        // Delete old questions (cascade deletes options & reference)
+        await tx.question.deleteMany({
+          where: { quizId },
+        });
+
+        // Recreate quiz content
+        return tx.quiz.update({
+          where: { id: quizId },
+          data: {
+            name: quizName,
+            questions: {
+              create: questions.map((q) => ({
+                text: q.question,
+                reference: {
+                  create: {
+                    book: q.reference.book,
+                    chapter: q.reference.chapter,
+                    verse: q.reference.verse,
+                  },
+                },
+                options: {
+                  create: q.options.map((opt, idx) => ({
+                    text: opt,
+                    isCorrect: idx === q.correctAnswerIndex,
+                  })),
+                },
+              })),
+            },
+          },
+          include: {
+            questions: {
+              include: {
+                options: true,
+                reference: true,
+              },
+            },
+          },
+        });
+      });
+
+      return c.json({
+        message: "Quiz updated successfully",
+        quiz: updatedQuiz,
+      });
+    } catch (error) {
+      console.error(error);
+      return c.json(
+        { error: "An error occurred while updating the quiz" },
+        500,
+      );
+    }
+  },
+);
+
 app.get("/app/get-quiz-raw/:book", async (c) => {
   const book = c.req.param("book");
 
@@ -524,4 +642,5 @@ app.get("/app/get-quiz/:book", async (c) => {
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
 export const POST = handle(app);
+export const PUT = handle(app);
 export const DELETE = handle(app);

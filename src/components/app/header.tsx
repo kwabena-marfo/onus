@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
@@ -11,6 +12,7 @@ import {
   BsHouse,
   BsLightbulb,
   BsPerson,
+  BsPlus,
   BsPlusCircleFill,
   BsSearch,
 } from "react-icons/bs";
@@ -21,7 +23,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import AddVerseModal from "./addVerse";
@@ -54,35 +55,39 @@ export default function Header() {
             />
           </div>
 
-          <div className="flex">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="cursor-pointer" asChild>
-                <div className="flex justify-left items-center gap-1">
-                  <BsGearWideConnected className="h-6 w-6" />
-                  <p className="md:flex hidden">Admin</p>
-                </div>
-              </DropdownMenuTrigger>
+          {["marfobrempong@gmail.com", "frankappiah499@gmail.com"].includes(
+            user?.email as any,
+          ) ? (
+            <div className="flex">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="cursor-pointer" asChild>
+                  <div className="flex justify-left items-center gap-1">
+                    <BsGearWideConnected className="h-6 w-6" />
+                    <p className="md:flex hidden">Admin</p>
+                  </div>
+                </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="flex flex-col w-72 p-4">
-                <DropdownMenuItem asChild>
-                  <Link href="/app/admin/add-quize">
-                    <div className="flex justify-left items-center gap-2  ">
-                      <BsLightbulb className="w-12 h-12" />
-                      Add New Quize
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/app/admin/added-quizzes">
-                    <div className="flex justify-left items-center gap-2  ">
-                      <BsLightbulb className="w-12 h-12" />
-                      Added Quizzes
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                <DropdownMenuContent className="flex flex-col w-72 p-4">
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/app/admin/add-quize">
+                      <div className="flex justify-left items-center gap-2  ">
+                        <BsPlus className="w-12 h-12" />
+                        Add New Quize
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/app/admin/added-quizzes">
+                      <div className="flex justify-left items-center gap-2  ">
+                        <BsLightbulb className="w-12 h-12" />
+                        View Quizzes
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : null}
 
           <SearchModal
             TriggerComp={() => (
@@ -92,7 +97,7 @@ export default function Header() {
             )}
           />
 
-          <div className="flex md:hidden">
+          <div className="flex ">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 cursor-pointer">
@@ -125,11 +130,12 @@ export default function Header() {
 
                 {/* Actions */}
                 <DropdownMenuItem asChild>
-                  <Link href="/app/myaccount">
-                    <div className="flex justify-left items-center gap-2  ">
-                      <BsPerson className="w-12 h-12" />
-                      My Account
-                    </div>
+                  <Link
+                    className="flex justify-left items-center gap-2"
+                    href="/app/myaccount"
+                  >
+                    <BsPerson className="w-12 h-12" />
+                    My Account
                   </Link>
                 </DropdownMenuItem>
 

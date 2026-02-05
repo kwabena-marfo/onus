@@ -27,10 +27,4 @@ export default [
     icon: <BsLightbulb />,
     key: "/app/quizzes",
   },
-
-  {
-    label: "My Account",
-    icon: <BsGear />,
-    key: "/app/myaccount",
-  },
 ];

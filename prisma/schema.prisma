@@ -135,23 +135,23 @@ model Quiz {
   updatedAt DateTime   @updatedAt
 }
 
-model Question {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  text        String
-  reference   Reference  @relation(fields: [referenceId], references: [id])
-  referenceId String     @db.ObjectId @unique
-  options     Option[]
-  quiz        Quiz       @relation(fields: [quizId], references: [id])
-  quizId      String     @db.ObjectId
-}
+    model Question {
+      id          String     @id @default(auto()) @map("_id") @db.ObjectId
+      text        String
+      reference   Reference  @relation(fields: [referenceId], references: [id])
+      referenceId String     @db.ObjectId @unique
+      options     Option[]
+       quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+      quizId      String     @db.ObjectId
+    }
 
-model Option {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  text       String
-  isCorrect  Boolean  @default(false)
-  question   Question @relation(fields: [questionId], references: [id])
-  questionId String   @db.ObjectId
-}
+    model Option {
+      id         String   @id @default(auto()) @map("_id") @db.ObjectId
+      text       String
+      isCorrect  Boolean  @default(false)
+      question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+      questionId String   @db.ObjectId
+    }
 
 
 model Reference {

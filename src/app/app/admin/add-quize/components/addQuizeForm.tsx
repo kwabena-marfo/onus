@@ -20,38 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { quizSchema, QuizForm } from "@/schemas/quizeSchema";
-import {
-  useGetRawOnusQuizzes,
-  usePostOnusQuiz,
-  useUpdateQuiz,
-} from "@/hooks/useQuery";
+import { usePostOnusQuiz, useUpdateQuiz } from "@/hooks/useQuery";
 import books from "@/data/bible.json";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import IsLoadingError from "@/components/app/isLoadingError";
-// Bible books with chapters & verses
 
-export default function QuizFormComponent() {
-  const searchParams = useSearchParams();
-  const quizId = searchParams.get("quizId") as any;
-
-  const { data: quiz, isLoading, isError } = useGetRawOnusQuizzes(quizId);
-
-  console.log(quiz);
-
+export default function QuizFormComponent({ quiz }: any) {
   const form = useForm<QuizForm>({
     resolver: zodResolver(quizSchema),
     defaultValues: {
-      quizName: "",
       questions: [
         {
           question: "",
@@ -69,46 +48,31 @@ export default function QuizFormComponent() {
   });
 
   const postQuiz = usePostOnusQuiz();
-  const updateQuize = useUpdateQuiz(quiz);
+  const updateQuize = useUpdateQuiz(quiz.id);
 
   const onSubmit = async (data: QuizForm) => {
-    return console.log(data);
-    const payload = {
-      ...data,
-      questions: data.questions.map((q) => ({
-        ...q,
-        reference: {
-          ...q.reference,
-          book: data.quizName, // 👈 force sync
-        },
-      })),
-    };
+    console.log(data);
 
-    if (quizId) {
-      await updateQuize.mutateAsync(payload);
+    if (quiz) {
+      await updateQuize.mutateAsync(data);
       toast.success("Quiz updated successfully");
     } else {
-      await postQuiz.trigger(payload);
+      await postQuiz.trigger(data);
       toast.success("Quiz submitted successfully!");
       form.reset();
     }
   };
 
-  console.log(quiz);
-
   useEffect(() => {
-    if (!quizId || !quiz) return;
+    if (!quiz) return;
     form.reset(quiz);
-  }, [quiz, form, quizId]);
-
-  if (isLoading || (quiz && isError))
-    return <IsLoadingError isLoading={isLoading} isError={quiz && isError} />;
+  }, [quiz, form]);
 
   return (
     <div className="w-full sm:max-w-4xl p-1">
       <CardHeader>
         <CardTitle className="text-center">
-          Complete Form to Add a Quiz
+          {quiz ? "" : " Complete Form to Add a Quiz"}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -117,35 +81,40 @@ export default function QuizFormComponent() {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           {/* Quiz Name */}
-          <FieldGroup>
+          {!quiz ? (
             <Controller
               control={form.control}
               name="quizName"
-              render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="flex flex-col gap-1"
-                >
-                  <FieldLabel>Quiz Book</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a book" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {books.map((b) => (
-                        <SelectItem key={b.value} value={b.value}>
-                          {b.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
+              render={({ field, fieldState }) => {
+                return (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    className="flex flex-col gap-1"
+                  >
+                    <FieldLabel>Quiz Book</FieldLabel>
+
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a book" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {books.map((b) => (
+                          <SelectItem key={b.value} value={b.value}>
+                            {b.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                );
+              }}
             />
-          </FieldGroup>
+          ) : null}
 
           {/* Questions */}
           {fields.map((question, qIndex) => {
@@ -408,25 +377,32 @@ export default function QuizFormComponent() {
               Add Question
             </Button>
             <Button
-              disabled={postQuiz.isPending}
+              disabled={
+                !form.formState.isDirty ||
+                postQuiz.isPending ||
+                updateQuize.isPending
+              }
               className="flex-1 l bg-[#e77306] hover:bg-[#d66a05] text-white"
               type="submit"
             >
-              {postQuiz.isPending ? "Submitting..." : "Submit Quiz"}
+              {postQuiz.isPending || updateQuize.isPending
+                ? "Submitting..."
+                : "Submit Quiz"}
             </Button>
           </div>
-          {postQuiz.isError && (
-            <div className="mb-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-              {(() => {
-                const err: any = postQuiz.error;
-                return (
-                  err?.response?.data?.error ||
-                  err?.message ||
-                  "Something went wrong while submitting the quiz."
-                );
-              })()}
-            </div>
-          )}
+          {postQuiz.isError ||
+            (updateQuize.error && (
+              <div className="mb-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+                {(() => {
+                  const err: any = postQuiz.error || updateQuize.error;
+                  return (
+                    err?.response?.data?.error ||
+                    err?.message ||
+                    "Something went wrong while submitting the quiz."
+                  );
+                })()}
+              </div>
+            ))}
         </form>
       </CardContent>
     </div>

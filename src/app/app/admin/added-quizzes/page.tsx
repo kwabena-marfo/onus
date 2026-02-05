@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import Content from "@/components/app/content";
-import AddedQuizzesTable from "@/components/app/tables/added-quizzes";
+import AddedQuizzesTable from "./components/table/index";
 import { BsLightbulb } from "react-icons/bs";
 import { useGetAddedQuizzes } from "@/hooks/useQuery";
 import IsLoadingError from "@/components/app/isLoadingError";

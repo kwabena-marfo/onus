@@ -126,7 +126,7 @@ export function useUpdateQuiz(id: string) {
   const api = useFetchApi();
 
   return useMutation({
-    mutationFn: (data: any) => api.put(`/app/update-quiz/${id}`, data),
+    mutationFn: (data: any) => api.put(`/api/app/update-quiz/${id}`, data),
   });
 }
 

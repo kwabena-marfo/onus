@@ -6,24 +6,10 @@ import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useRouter } from "next/navigation";
-import { LuLogOut } from "react-icons/lu";
 import { BsPerson } from "react-icons/bs";
 
 import menuData from "@/data/loggedInMenu";
 import { authClient } from "@/lib/authClient"; // <-- Better Auth client
-import Logout from "./logout";
 
 export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const pathname = usePathname();
@@ -31,7 +17,6 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
   const { data: userSession, isPending: userIsLoading } =
     authClient.useSession();
   const user = userSession?.user;
-  const router = useRouter();
 
   if (userIsLoading) return null; // optionally render a loader
 
@@ -75,15 +60,6 @@ export default function Menu({ setOpenSheet }: { setOpenSheet?: any }) {
             </li>
           );
         })}
-
-        <Logout
-          TriggerComp={() => (
-            <div className="flex text-red-200 items-center gap-3 ml-2 cursor-pointer">
-              <LuLogOut className="w-5 h-5" />
-              <p className="text-lg">Logout</p>
-            </div>
-          )}
-        />
       </ul>
     </div>
   );

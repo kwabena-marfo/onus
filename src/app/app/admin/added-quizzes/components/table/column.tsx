@@ -5,8 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ViewQuizModal } from "./viewQuizeModal";
+import { ViewQuizModal } from "../viewQuizeModal";
 import { LucideEdit } from "lucide-react";
+import { EditQuizModal } from "../editQuizeModal";
 
 export type Quiz = {
   id: string;
@@ -50,18 +51,7 @@ export default function useQuizColumns() {
               {/* View */}
               <ViewQuizModal quiz={quiz} />
 
-              {/* Edit */}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  router.push(
-                    `/app/admin/add-quize?quizId=${quiz.name.toLowerCase()}`,
-                  )
-                }
-              >
-                <LucideEdit className="w-4 h-4" />
-              </Button>
+              <EditQuizModal quiz={quiz} />
             </div>
           </div>
         );

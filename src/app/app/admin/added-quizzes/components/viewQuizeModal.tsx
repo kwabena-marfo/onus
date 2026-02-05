@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,21 +7,29 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Quiz } from "./column";
+import { Quiz } from "./table/column";
 
 export function ViewQuizModal({ quiz }: { quiz: Quiz }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button size="sm" variant="secondary" onClick={() => setOpen(true)}>
+      <Button
+        size="sm"
+        variant="secondary"
+        className="rounded-full"
+        onClick={() => setOpen(true)}
+      >
         View
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto">
+        <DialogContent
+          onInteractOutside={(event: any) => event.preventDefault()}
+          className="max-h-[80vh] overflow-y-auto"
+        >
           <DialogHeader>
-            <DialogTitle>{quiz.name} Quiz</DialogTitle>
+            <DialogTitle className="capitalize">{quiz.name} Quiz</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
