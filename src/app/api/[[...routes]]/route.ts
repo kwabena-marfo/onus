@@ -251,7 +251,6 @@ app.post("/app/create-quiz-batch", authMiddleware(), async (c) => {
 
       // Transform questions
       const quizQuestions = questions.map((q: any) => {
-        // Handle reference string "Matthew 1:20" or "Matthew 5:44–45"
         const [refBook, chapVerse] = q.reference.split(" ");
         const [chapterStr, verseStr] = chapVerse.split(":");
 

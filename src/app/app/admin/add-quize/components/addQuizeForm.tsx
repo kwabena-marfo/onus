@@ -48,7 +48,7 @@ export default function QuizFormComponent({ quiz }: any) {
   });
 
   const postQuiz = usePostOnusQuiz();
-  const updateQuize = useUpdateQuiz(quiz.id);
+  const updateQuize = useUpdateQuiz(quiz?.id);
 
   const onSubmit = async (data: QuizForm) => {
     console.log(data);
@@ -157,7 +157,9 @@ export default function QuizFormComponent({ quiz }: any) {
                         name={`questions.${qIndex}.reference.chapter`}
                         render={({ field }) => {
                           const selectedBook = books.find(
-                            (b) => b.value === form.watch("quizName"),
+                            (b) =>
+                              b.value === form.watch("quizName") ||
+                              quiz.quizName,
                           );
 
                           const chapters = selectedBook
@@ -209,7 +211,9 @@ export default function QuizFormComponent({ quiz }: any) {
                         name={`questions.${qIndex}.reference.verse`}
                         render={({ field }) => {
                           const selectedBook = books.find(
-                            (b) => b.value === form.watch("quizName"),
+                            (b) =>
+                              b.value === form.watch("quizName") ||
+                              quiz.quizName,
                           );
 
                           const selectedChapter = form.getValues(

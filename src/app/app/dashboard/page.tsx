@@ -38,9 +38,9 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-6 md:gap-4 gap-6">
         <div
           id="stat"
-          className="col-span-12 md:col-span-2 flex flex-col gap-4 w-full"
+          className="col-span-12 md:col-span-12 flex flex-col gap-4 w-full"
         >
-          <div className="grid grid-cols-2  gap-4 w-full">
+          <div className="grid md:grid-cols-4 grid-cols-2  gap-4 w-full">
             {[
               {
                 label: "Memorised Verses",
@@ -119,7 +119,7 @@ export default function Dashboard() {
           </div>
           <ProgressComp data={data?.grouped || []} />
         </div>
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-4 w-full rounded-lg">
+        <div className="col-span-12 md:col-span-12 flex flex-col gap-4 w-full rounded-lg">
           <VersesTable data={data?.verses || []} />
         </div>
       </div>
