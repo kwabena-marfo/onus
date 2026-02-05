@@ -18,15 +18,20 @@ export function EditQuizModal({ quiz }: any) {
   function mapQuizToForm(quiz: any) {
     return {
       id: quiz.id,
-      quizName: quiz.name, // already lowercase 👍
+      quizName: quiz.name, // ✅ string → Select works
       questions: quiz.questions.map((q: any) => ({
+        id: q.id,
         question: q.text,
         reference: {
-          book: q.reference.book,
+          id: q.reference?.id,
+          book: q.reference.book, // ✅ string
           chapter: q.reference.chapter,
           verse: q.reference.verse,
         },
+
+        // 🔑 FORM expects strings, not objects
         options: q.options.map((o: any) => o.text),
+
         correctAnswerIndex: q.options.findIndex((o: any) => o.isCorrect),
       })),
     };

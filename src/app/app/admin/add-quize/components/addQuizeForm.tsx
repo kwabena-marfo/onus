@@ -51,7 +51,7 @@ export default function QuizFormComponent({ quiz }: any) {
   const updateQuize = useUpdateQuiz(quiz?.id);
 
   const onSubmit = async (data: QuizForm) => {
-    console.log(data);
+    // return console.log(data);
 
     if (quiz) {
       await updateQuize.mutateAsync(data);
@@ -81,7 +81,7 @@ export default function QuizFormComponent({ quiz }: any) {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           {/* Quiz Name */}
-          {!quiz ? (
+          {!quiz?.id ? (
             <Controller
               control={form.control}
               name="quizName"
@@ -157,9 +157,7 @@ export default function QuizFormComponent({ quiz }: any) {
                         name={`questions.${qIndex}.reference.chapter`}
                         render={({ field }) => {
                           const selectedBook = books.find(
-                            (b) =>
-                              b.value === form.watch("quizName") ||
-                              quiz.quizName,
+                            (b) => b.value === form.watch("quizName"),
                           );
 
                           const chapters = selectedBook
@@ -213,7 +211,7 @@ export default function QuizFormComponent({ quiz }: any) {
                           const selectedBook = books.find(
                             (b) =>
                               b.value === form.watch("quizName") ||
-                              quiz.quizName,
+                              quiz?.quizName,
                           );
 
                           const selectedChapter = form.getValues(

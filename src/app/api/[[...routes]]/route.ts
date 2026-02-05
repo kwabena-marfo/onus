@@ -89,7 +89,7 @@ app.post("/app/send-email", async ({ req, json }: any) => {
 
 app.use(authMiddleware());
 
-app.post("/app/get-verses", authMiddleware(), async ({ req, json }: any) => {
+app.post("/app/get-verses", async ({ req, json }: any) => {
   try {
     const { book, chapter, translation, verse, verseTo } = await req.json();
 
@@ -503,14 +503,17 @@ app.put(
         }
       }
 
-      // 🔥 Transaction keeps data consistent
-      const updatedQuiz = await prisma.$transaction(async (tx) => {
-        // Delete old questions (cascade deletes options & reference)
-        await tx.question.deleteMany({
-          where: { quizId },
-        });
+      await prisma.option.deleteMany({
+        where: { question: { quizId } },
+      });
 
-        // Recreate quiz content
+      // 2️⃣ Delete questions (Reference will be deleted automatically if cascading exists)
+      await prisma.question.deleteMany({
+        where: { quizId },
+      });
+
+      // 2️⃣ Transaction only for create/update
+      const updatedQuiz = await prisma.$transaction(async (tx) => {
         return tx.quiz.update({
           where: { id: quizId },
           data: {
