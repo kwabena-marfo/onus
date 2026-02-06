@@ -74,18 +74,10 @@ export default function Header() {
 
                 <DropdownMenuContent className="flex flex-col w-72 p-4">
                   <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/app/admin/add-quize">
-                      <div className="flex justify-left items-center gap-2">
-                        <BsPlus className="w-12 h-12" />
-                        Add New Quize
-                      </div>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/app/admin/added-quizzes">
                       <div className="flex justify-left items-center gap-2">
                         <BsLightbulb className="w-12 h-12" />
-                        View Quizzes
+                        Quizzes
                       </div>
                     </Link>
                   </DropdownMenuItem>

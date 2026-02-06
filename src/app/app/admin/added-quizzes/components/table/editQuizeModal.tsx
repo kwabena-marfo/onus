@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
 
 import { LucideEdit } from "lucide-react";
-import QuizFormComponent from "../../../add-quize/components/addQuizeForm";
+import QuizFormComponent from "../addQuizeForm";
 
 export function EditQuizModal({ quiz }: any) {
   const [open, setOpen] = useState(false);

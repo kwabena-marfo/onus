@@ -22,8 +22,6 @@ export default function AddedQuizzes() {
     "frankappiah499@gmail.com",
   ].includes(sessionData?.user.email as any);
 
-  // 🚫 block page
-
   if (sessionIslaoding || isPending || isError)
     return (
       <IsLoadingError
