@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 
 import { LucideEdit } from "lucide-react";
-import QuizFormComponent from "../../add-quize/components/addQuizeForm";
+import QuizFormComponent from "../../../add-quize/components/addQuizeForm";
 
 export function EditQuizModal({ quiz }: any) {
   const [open, setOpen] = useState(false);
@@ -51,14 +51,7 @@ export function EditQuizModal({ quiz }: any) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           onInteractOutside={(event: any) => event.preventDefault()}
-          className="max-h-[80vh] overflow-y-auto"
         >
-          <DialogHeader>
-            <DialogTitle className="capitalize">
-              Edit {formData.quizName} Quiz
-            </DialogTitle>
-          </DialogHeader>
-
           <QuizFormComponent quiz={formData} />
         </DialogContent>
       </Dialog>

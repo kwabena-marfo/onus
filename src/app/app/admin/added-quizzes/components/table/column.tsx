@@ -5,9 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ViewQuizModal } from "../viewQuizeModal";
+import { ViewQuizModal } from "./viewQuizeModal";
 import { LucideEdit } from "lucide-react";
-import { EditQuizModal } from "../editQuizeModal";
+import { EditQuizModal } from "./editQuizeModal";
 
 export type Quiz = {
   id: string;

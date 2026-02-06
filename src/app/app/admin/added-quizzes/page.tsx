@@ -8,6 +8,7 @@ import { BsLightbulb } from "react-icons/bs";
 import { useGetAddedQuizzes } from "@/hooks/useQuery";
 import IsLoadingError from "@/components/app/isLoadingError";
 import { authClient } from "@/lib/authClient";
+import { AddQuizModal } from "./components/addQuizeModal";
 
 export default function AddedQuizzes() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function AddedQuizzes() {
 
   return (
     <Content tittle="Added Quizzes" Icon={BsLightbulb}>
+      <AddQuizModal />
       <div className="grid justify-center items-start grid-cols-1 md:grid-cols-5 gap-4">
         <div className="justify-center col-span-5">
           <AddedQuizzesTable data={data || []} />

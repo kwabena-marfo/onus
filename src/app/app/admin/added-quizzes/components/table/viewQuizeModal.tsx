@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Quiz } from "./table/column";
+import { Quiz } from "./column";
 
 export function ViewQuizModal({ quiz }: { quiz: Quiz }) {
   const [open, setOpen] = useState(false);
