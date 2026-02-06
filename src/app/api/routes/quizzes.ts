@@ -67,7 +67,10 @@ quizzesRoutes.post(
         });
 
         const createdQuiz = await prisma.quiz.create({
-          data: { name: book, questions: { create: quizQuestions } },
+          data: {
+            name: book.toLowerCase(),
+            questions: { create: quizQuestions },
+          },
           include: {
             questions: { include: { options: true, reference: true } },
           },
