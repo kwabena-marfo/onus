@@ -64,66 +64,60 @@ export default function QuizFormComponent({ quiz }: any) {
   };
 
   return (
-    <Card className="py-8 w-full md:max-w-xl">
-      <CardHeader>
-        <CardTitle className="text-center">
-          {quiz ? "Edit Quiz" : "Create New Quiz"}
-        </CardTitle>
-      </CardHeader>
+    <div className=" w-full md:max-w-xl">
+      <p className="text-center">{quiz ? "Edit Quiz" : "Create New Quiz"}</p>
 
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          {!quiz?.id && <QuizBookSelect control={control} />}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {!quiz?.id && <QuizBookSelect control={control} />}
 
-          {/* QUESTIONS ONLY SCROLL */}
-          <ScrollArea className="max-h-[60vh] pr-2 flex flex-col gap-4">
-            {fields.map((question, index) => (
-              <QuestionCard
-                key={question.id}
-                index={index}
-                question={question}
-                control={control}
-                activeBook={activeBook}
-                update={update}
-                remove={remove}
-                totalQuestions={fields.length}
-              />
-            ))}
-          </ScrollArea>
+        {/* QUESTIONS ONLY SCROLL */}
+        <ScrollArea className="max-h-[60vh] pr-2 flex flex-col gap-4">
+          {fields.map((question, index) => (
+            <QuestionCard
+              key={question.id}
+              index={index}
+              question={question}
+              control={control}
+              activeBook={activeBook}
+              update={update}
+              remove={remove}
+              totalQuestions={fields.length}
+            />
+          ))}
+        </ScrollArea>
 
-          {/* ACTIONS */}
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              className="flex-1"
-              onClick={() =>
-                append({
-                  question: "",
-                  reference: {
-                    book: activeBook || "",
-                    chapter: 1,
-                    verse: 1,
-                  },
-                  options: ["", ""],
-                  correctAnswerIndex: 0,
-                })
-              }
-            >
-              Add Question
-            </Button>
+        {/* ACTIONS */}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            className="flex-1"
+            onClick={() =>
+              append({
+                question: "",
+                reference: {
+                  book: activeBook || "",
+                  chapter: 1,
+                  verse: 1,
+                },
+                options: ["", ""],
+                correctAnswerIndex: 0,
+              })
+            }
+          >
+            Add Question
+          </Button>
 
-            <Button
-              type="submit"
-              className="flex-1 bg-[#e77306] text-white hover:bg-[#d66a05]"
-              disabled={createQuiz.isPending || updateQuiz.isPending}
-            >
-              {createQuiz.isPending || updateQuiz.isPending
-                ? "Submitting..."
-                : "Submit Quiz"}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          <Button
+            type="submit"
+            className="flex-1 bg-[#e77306] text-white hover:bg-[#d66a05]"
+            disabled={createQuiz.isPending || updateQuiz.isPending}
+          >
+            {createQuiz.isPending || updateQuiz.isPending
+              ? "Submitting..."
+              : "Submit Quiz"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }
