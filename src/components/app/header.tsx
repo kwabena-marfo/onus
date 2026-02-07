@@ -163,7 +163,7 @@ export default function Header() {
                 "/app/dashboard",
               )}`}
             >
-              <BsHouse className="w-6 h-6" />
+              <BsHouse className="w-4 h-4" />
               <p className="text-xs">Home</p>
             </div>
           </Link>
@@ -174,7 +174,7 @@ export default function Header() {
                 "/app/myonusbible",
               )}`}
             >
-              <BsBook className="w-6 h-6" />
+              <BsBook className="w-4 h-4" />
               <p className="text-xs">My Onus</p>
             </div>
           </Link>
@@ -194,7 +194,7 @@ export default function Header() {
                 "/app/saved",
               )}`}
             >
-              <BsBookmark className="w-6 h-6" />
+              <BsBookmark className="w-4 h-4" />
               <p className="text-xs">Saved</p>
             </div>
           </Link>
@@ -205,7 +205,7 @@ export default function Header() {
                 "/app/quizzes",
               )}`}
             >
-              <BsLightbulb className="w-6 h-6" />
+              <BsLightbulb className="w-4 h-4" />
               <p className="text-xs">Quizzes</p>
             </div>
           </Link>
