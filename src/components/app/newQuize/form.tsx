@@ -9,10 +9,10 @@ import Congratulations from "./congratulations";
 import { LuClock, LuLoaderCircle } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LucideRotateCw } from "lucide-react";
-import { usePostOnusQuiz, useGetRawOnusQuiz } from "@/hooks/useQuery";
+import { useAdminCreateQuiz, useAdminGetQuizByBook } from "@/hooks/useQuery";
 
 export default function QuizeFlashcardCarousel({ book }: any) {
-  const { data, isLoading } = useGetRawOnusQuiz(book);
+  const { data, isLoading } = useAdminGetQuizByBook(book);
 
   const {
     trigger: createOnusQuize,
@@ -20,7 +20,7 @@ export default function QuizeFlashcardCarousel({ book }: any) {
     isError,
     reset,
     isSuccess,
-  } = usePostOnusQuiz();
+  } = useAdminCreateQuiz();
 
   // ✅ Normalize data
   const quizzes = Array.isArray(data) ? data : data ? [data] : [];

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Content from "@/components/app/content";
 import AddedQuizzesTable from "./components/table/index";
 import { BsLightbulb } from "react-icons/bs";
-import { useGetAddedQuizzes } from "@/hooks/useQuery";
+import { useAdminGetAddedQuizzes } from "@/hooks/useQuery";
 import IsLoadingError from "@/components/app/isLoadingError";
 import { authClient } from "@/lib/authClient";
 import { AddQuizModal } from "./components/addQuizeModal";
@@ -15,7 +15,7 @@ export default function AddedQuizzes() {
   const { isPending: sessionIslaoding, data: sessionData } =
     authClient.useSession();
 
-  const { isPending, isError, error, data } = useGetAddedQuizzes();
+  const { isPending, isError, error, data } = useAdminGetAddedQuizzes();
 
   const isAdmin = [
     "marfobrempong@gmail.com",
@@ -37,8 +37,10 @@ export default function AddedQuizzes() {
   }
 
   return (
-    <Content tittle="Added Quizzes" Icon={BsLightbulb}>
-      <AddQuizModal />
+    <Content tittle="Quizzes" Icon={BsLightbulb}>
+      <div className="flex justify-end">
+        <AddQuizModal />
+      </div>
       <div className="grid justify-center items-start grid-cols-1 md:grid-cols-5 gap-4">
         <div className="justify-center col-span-5">
           <AddedQuizzesTable data={data || []} />

@@ -16,9 +16,12 @@ export default function QuizBookSelect({ control }: any) {
   return (
     <Controller
       control={control}
-      name="quizName"
+      name="name"
       render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
+        <Field
+          className="flex flex-col gap-0"
+          data-invalid={fieldState.invalid}
+        >
           <FieldLabel>Quiz Book</FieldLabel>
           <Select value={field.value} onValueChange={field.onChange}>
             <SelectTrigger>

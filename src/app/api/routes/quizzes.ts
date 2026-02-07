@@ -13,7 +13,7 @@ export type AuthState = {
 };
 
 // -------------------- CREATE USER QUIZ SCORE --------------------
-quizzesRoutes.post("/create-onus-quize", async (c: any) => {
+quizzesRoutes.post("/create-user-quize", async (c: any) => {
   try {
     const user = c.get("user");
     const { quizName, score, total } = await c.req.json();
@@ -31,7 +31,54 @@ quizzesRoutes.post("/create-onus-quize", async (c: any) => {
   }
 });
 
+// -------------------- CREATE SINGLE QUIZ --------------------
+quizzesRoutes.post("/create-quiz", authAdminMiddleware(), async (c: any) => {
+  try {
+    const body = await c.req.json();
+    const { name, questions } = body;
+    if (!name || !questions?.length)
+      return c.json({ error: "Quiz name and questions are required" }, 400);
+
+    const existingQuiz = await prisma.quiz.findFirst({
+      where: { name },
+    });
+    if (existingQuiz)
+      return c.json({ error: `Quiz "${name}" already exists` }, 400);
+
+    const createdQuiz = await prisma.quiz.create({
+      data: {
+        name,
+        questions: {
+          create: questions.map((q: any) => ({
+            text: q.question,
+            reference: {
+              create: {
+                book: name,
+                chapter: q.reference.chapter,
+                verse: q.reference.verse,
+              },
+            },
+            options: {
+              create: q.options.map((opt: string, idx: number) => ({
+                text: opt,
+                isCorrect: idx === q.correctAnswerIndex,
+              })),
+            },
+          })),
+        },
+      },
+      include: { questions: { include: { options: true, reference: true } } },
+    });
+
+    return c.json({ message: "Quiz created successfully", quiz: createdQuiz });
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: "Failed to create quiz" }, 500);
+  }
+});
+
 // -------------------- CREATE QUIZ BATCH --------------------
+
 quizzesRoutes.post(
   "/create-quiz-batch",
   authAdminMiddleware(),
@@ -91,7 +138,7 @@ quizzesRoutes.post(
 );
 
 // -------------------- GET USER QUIZZES --------------------
-quizzesRoutes.get("/get-onus-quize", async (c: any) => {
+quizzesRoutes.get("/get-user-quizzes", async (c: any) => {
   try {
     const user = c.get("user");
     const quizzes = await prisma.quizScore.findMany({
@@ -118,52 +165,6 @@ quizzesRoutes.get("/get-added-quizzes", async (c: any) => {
   }
 });
 
-// -------------------- CREATE SINGLE QUIZ --------------------
-quizzesRoutes.post("/create-quiz", authAdminMiddleware(), async (c: any) => {
-  try {
-    const body = await c.req.json();
-    const { quizName, questions } = body;
-    if (!quizName || !questions?.length)
-      return c.json({ error: "Quiz name and questions are required" }, 400);
-
-    const existingQuiz = await prisma.quiz.findFirst({
-      where: { name: quizName },
-    });
-    if (existingQuiz)
-      return c.json({ error: `Quiz "${quizName}" already exists` }, 400);
-
-    const createdQuiz = await prisma.quiz.create({
-      data: {
-        name: quizName,
-        questions: {
-          create: questions.map((q: any) => ({
-            text: q.question,
-            reference: {
-              create: {
-                book: q.reference.book,
-                chapter: q.reference.chapter,
-                verse: q.reference.verse,
-              },
-            },
-            options: {
-              create: q.options.map((opt: string, idx: number) => ({
-                text: opt,
-                isCorrect: idx === q.correctAnswerIndex,
-              })),
-            },
-          })),
-        },
-      },
-      include: { questions: { include: { options: true, reference: true } } },
-    });
-
-    return c.json({ message: "Quiz created successfully", quiz: createdQuiz });
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "Failed to create quiz" }, 500);
-  }
-});
-
 // -------------------- UPDATE QUIZ --------------------
 quizzesRoutes.put(
   "/update-quiz/:quizId",
@@ -172,7 +173,7 @@ quizzesRoutes.put(
     try {
       const quizId = c.req.param("quizId");
       const body = await c.req.json();
-      const { quizName, questions } = body;
+      const { name, questions } = body;
 
       const existingQuiz = await prisma.quiz.findUnique({
         where: { id: quizId },
@@ -185,13 +186,13 @@ quizzesRoutes.put(
       const updatedQuiz = await prisma.quiz.update({
         where: { id: quizId },
         data: {
-          name: quizName,
+          name,
           questions: {
             create: questions.map((q: any) => ({
               text: q.question,
               reference: {
                 create: {
-                  book: q.reference.book,
+                  book: name,
                   chapter: q.reference.chapter,
                   verse: q.reference.verse,
                 },
@@ -219,31 +220,8 @@ quizzesRoutes.put(
   },
 );
 
-// -------------------- GET QUIZ --------------------
-quizzesRoutes.get("/get-quiz/:book", async (c: any) => {
-  const book = c.req.param("book");
-  const quiz = await prisma.quiz.findFirst({
-    where: { name: book.toLowerCase() },
-    include: { questions: { include: { options: true, reference: true } } },
-  });
-  if (!quiz) return c.json({ error: "Quiz not found" }, 404);
-
-  const response = {
-    name: quiz.name,
-    questions: quiz.questions.map((q) => ({
-      question: q.text,
-      options: q.options.map((o) => o.text),
-      correctAnswerIndex: q.options.findIndex((o) => o.isCorrect),
-      reference: q.reference
-        ? `${q.reference.book} ${q.reference.chapter}:${q.reference.verse}`
-        : null,
-    })),
-  };
-  return c.json(response);
-});
-
 // -------------------- GET RAW QUIZ --------------------
-quizzesRoutes.get("/get-quiz-raw/:book", async (c: any) => {
+quizzesRoutes.get("/get-book-quiz/:book", async (c: any) => {
   const book = c.req.param("book");
   const quiz = await prisma.quiz.findFirst({
     where: { name: book.toLowerCase() },
@@ -268,3 +246,12 @@ quizzesRoutes.get("/get-quiz-raw/:book", async (c: any) => {
   };
   return c.json(response);
 });
+
+quizzesRoutes.delete(
+  "/delete-quiz/:quizId",
+  authAdminMiddleware(),
+  async (c: any) => (
+    await prisma.quiz.delete({ where: { id: c.req.param("quizId") } }),
+    c.json({ message: "Quiz deleted successfully" })
+  ),
+);

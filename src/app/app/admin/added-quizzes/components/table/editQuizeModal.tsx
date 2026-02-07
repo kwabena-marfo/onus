@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { LucideEdit } from "lucide-react";
 import QuizFormComponent from "../addQuizeForm";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export function EditQuizModal({ quiz }: any) {
   const [open, setOpen] = useState(false);
@@ -12,7 +13,7 @@ export function EditQuizModal({ quiz }: any) {
   function mapQuizToForm(quiz: any) {
     return {
       id: quiz.id,
-      quizName: quiz.name, // ✅ string → Select works
+      name: quiz.name, // ✅ string → Select works
       questions: quiz.questions.map((q: any) => ({
         id: q.id,
         question: q.text,
@@ -34,15 +35,12 @@ export function EditQuizModal({ quiz }: any) {
   const formData = mapQuizToForm(quiz);
   return (
     <>
-      <Button
-        size="sm"
-        variant="secondary"
-        className="rounded-full"
-        onClick={() => setOpen(true)}
-      >
-        <LucideEdit className="w-4 h-4" />
-      </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button size="sm" variant="secondary" className="rounded-full">
+            <LucideEdit className="w-4 h-4" />
+          </Button>
+        </DialogTrigger>
         <DialogContent
           onInteractOutside={(event: any) => event.preventDefault()}
         >

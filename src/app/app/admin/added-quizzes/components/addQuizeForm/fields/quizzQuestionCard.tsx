@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,15 @@ export default function QuestionCard({
   control,
   activeBook,
   update,
+  getValues,
   remove,
   totalQuestions,
 }: any) {
+  const options = useWatch({
+    control,
+    name: `questions.${index}.options`,
+  });
+
   return (
     <Card className="p-4 mb-4">
       <h3 className="text-center font-semibold text-lg mb-0">
@@ -50,13 +56,18 @@ export default function QuestionCard({
 
       {/* OPTIONS */}
       <div className="mt-3 flex flex-col gap-2">
-        {question.options.map((_: any, oIndex: number) => (
+        {options?.map((_: any, oIndex: number) => (
           <div key={oIndex} className="flex items-center gap-2">
             <Controller
               control={control}
               name={`questions.${index}.options.${oIndex}`}
-              render={({ field }) => (
-                <Input {...field} placeholder={`Option ${oIndex + 1}`} />
+              render={({ field, fieldState }) => (
+                <div className="flex flex-col w-full">
+                  <Input {...field} placeholder={`Option ${oIndex + 1}`} />
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </div>
               )}
             />
             <Controller
@@ -76,15 +87,19 @@ export default function QuestionCard({
 
       {/* CONTROLS */}
       <div className="flex gap-2 mt-3">
-        {question.options.length < 6 && (
+        {options.length < 6 && (
           <Button
             type="button"
-            onClick={() =>
+            onClick={() => {
+              // Get the current full question from live form state
+              const currentQuestion = getValues(`questions.${index}`);
+
+              // Update options only, keep everything else intact
               update(index, {
-                ...question,
-                options: [...question.options, ""],
-              })
-            }
+                ...currentQuestion,
+                options: [...currentQuestion.options, ""],
+              });
+            }}
           >
             Add Option
           </Button>

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Quiz } from "./column";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function ViewQuizModal({ quiz }: { quiz: Quiz }) {
   const [open, setOpen] = useState(false);
@@ -26,15 +27,15 @@ export function ViewQuizModal({ quiz }: { quiz: Quiz }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           onInteractOutside={(event: any) => event.preventDefault()}
-          className="max-h-[80vh] overflow-y-auto"
+          className=" overflow-y-auto"
         >
           <DialogHeader>
             <DialogTitle className="capitalize">{quiz.name} Quiz</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-4">
+          <ScrollArea className="flex flex-col gap-4 max-h-[80vh]">
             {quiz.questions.map((q, i) => (
-              <div key={q.id} className="border rounded-md p-3">
+              <div key={q.id} className="border rounded-md p-3 mb-4">
                 <p className="font-semibold">
                   {i + 1}. {q.text}
                 </p>
@@ -57,7 +58,7 @@ export function ViewQuizModal({ quiz }: { quiz: Quiz }) {
                 </ul>
               </div>
             ))}
-          </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </>

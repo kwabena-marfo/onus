@@ -1,7 +1,6 @@
 import * as z from "zod";
 
 const referenceSchema = z.object({
-  book: z.string().min(1, "Book is required"),
   chapter: z.number().min(1, "Chapter is required"),
   verse: z.number().min(1, "Verse is required"),
 });
@@ -20,7 +19,7 @@ const questionSchema = z.object({
 });
 
 export const quizSchema = z.object({
-  quizName: z.string().min(3, "Quiz name is required"),
+  name: z.string().min(3, "Quiz name is required"),
   questions: z.array(questionSchema).min(1, "Add at least one question"),
 });
 

@@ -7,7 +7,7 @@ import { BsDatabaseSlash, BsLightbulb } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import NewQuizeModal from "@/components/app/newQuize";
-import { useGetQuizzes, useGetVerses } from "@/hooks/useQuery";
+import { useGetUserQuizzes, useGetVerses } from "@/hooks/useQuery";
 import IsLoadingError from "@/components/app/isLoadingError";
 
 export default function Quizzes() {
@@ -17,7 +17,7 @@ export default function Quizzes() {
     isPending: getOnusQuizeIsLoading,
     data: onusQuizeData,
     isError: getOnusQuizeIsError,
-  } = useGetQuizzes();
+  } = useGetUserQuizzes();
 
   const filteredBooks = onusData?.grouped.filter((entry: any) => {
     const book = Object.keys(entry)[0];

@@ -12,8 +12,8 @@ import {
   BsGearWideConnected,
   BsHouse,
   BsLightbulb,
+  BsLightbulbFill,
   BsPerson,
-  BsPlus,
   BsPlusCircleFill,
   BsSearch,
 } from "react-icons/bs";

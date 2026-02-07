@@ -79,7 +79,7 @@ export function useDeleteVerse() {
 }
 
 // ---------------- QUIZZES ----------------
-export function usePostOnusQuiz() {
+export function usePostUserQuiz() {
   const api = useFetchApi();
 
   const mutation = useMutation({
@@ -88,16 +88,11 @@ export function usePostOnusQuiz() {
       score: number;
       total: number;
     }) => {
-      const res = await api.post("/api/quizzes/create-onus-quize", quizAttempt);
+      const res = await api.post("/api/quizzes/create-user-quize", quizAttempt);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success("Quiz saved successfully");
-      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] });
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to save quiz");
-    },
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["getUserQuizzes"] }),
   });
 
   return {
@@ -106,7 +101,7 @@ export function usePostOnusQuiz() {
   };
 }
 
-export function usePostOnusQuizBatch() {
+export function useAdminCreateOnusQuizBatch() {
   const api = useFetchApi();
 
   const mutation = useMutation({
@@ -114,8 +109,6 @@ export function usePostOnusQuizBatch() {
       const res = await api.post("/api/quizzes/create-quiz-batch", newQuizzes);
       return res.data;
     },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
   });
 
   return {
@@ -124,7 +117,7 @@ export function usePostOnusQuizBatch() {
   };
 }
 
-export function useCreateOnusQuiz() {
+export function useAdminCreateQuiz() {
   const api = useFetchApi();
 
   const mutation = useMutation({
@@ -132,8 +125,8 @@ export function useCreateOnusQuiz() {
       const res = await api.post("/api/quizzes/create-quiz", newQuiz);
       return res.data;
     },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["addedQuizzes"] }),
   });
 
   return {
@@ -142,13 +135,14 @@ export function useCreateOnusQuiz() {
   };
 }
 
-export function useUpdateQuiz(id: string) {
+export function useAdminUpdateQuiz(id: string) {
   const api = useFetchApi();
 
   const mutation = useMutation({
     mutationFn: (data: any) => api.put(`/api/quizzes/update-quiz/${id}`, data),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getOnusQuizzes"] }),
+
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["addedQuizzes"] }),
   });
 
   return {
@@ -157,19 +151,19 @@ export function useUpdateQuiz(id: string) {
   };
 }
 
-export function useGetQuizzes() {
+export function useGetUserQuizzes() {
   const api = useFetchApi();
 
   return useQuery({
-    queryKey: ["getOnusQuizzes"],
+    queryKey: ["getUserQuizzes"],
     queryFn: async () => {
-      const res = await api.get("/api/quizzes/get-onus-quize");
+      const res = await api.get("/api/quizzes/get-user-quizzes");
       return res.data;
     },
   });
 }
 
-export function useGetAddedQuizzes() {
+export function useAdminGetAddedQuizzes() {
   const api = useFetchApi();
 
   return useQuery({
@@ -181,29 +175,29 @@ export function useGetAddedQuizzes() {
   });
 }
 
-export function useGetOnusQuiz(book: string) {
+export function useAdminGetQuizByBook(book: string) {
   const api = useFetchApi();
 
   return useQuery({
-    queryKey: ["getOnusQuiz", book],
+    queryKey: ["getBookQuiz", book],
     queryFn: async () => {
-      const res = await api.get(`/api/quizzes/get-quiz/${book}`);
+      const res = await api.get(`/api/quizzes/get-book-quiz/${book}`);
       return res.data;
     },
     enabled: !!book,
   });
 }
 
-export function useGetRawOnusQuiz(book: string) {
+export function useAdminDeleteQuiz() {
   const api = useFetchApi();
 
-  return useQuery({
-    queryKey: ["rawOnusQuiz", book],
-    queryFn: async () => {
-      const res = await api.get(`/api/quizzes/get-quiz-raw/${book}`);
+  return useMutation({
+    mutationFn: async (quizId: string) => {
+      const res = await api.delete(`/api/quizzes/delete-quiz/${quizId}`);
       return res.data;
     },
-    enabled: !!book,
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["addedQuizzes"] }),
   });
 }
 
