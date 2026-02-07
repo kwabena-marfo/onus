@@ -144,18 +144,16 @@ export default function AddVerseForm({ className, verse }: any) {
               if (verse) router.refresh();
               resetPostVerse();
             }}
-            className="bg-[#fa9a40] text-black"
+            className="bg-[#fa9a40] text-black w-full rounded-full"
           >
-            Sure! <BsHandThumbsUp className="ml-2" />
+            Sure!
+            <BsHandThumbsUp className="ml-1" />
           </Button>
         </div>
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className={cn(
-            "flex flex-col gap-4 w-full max-w-2xl rounded-lg border bg-card p-4",
-            className,
-          )}
+          className={cn("flex flex-col gap-4 w-full", className)}
         >
           <div className="text-center">
             <p className="text-3xl md:text-4xl font-bold">

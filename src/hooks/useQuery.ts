@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import useFetchApi from "@/hooks/useFetchApi";
 import { queryClient } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 // ---------------- VERSES ----------------
 export function useFetchVersesApi() {
@@ -14,8 +13,6 @@ export function useFetchVersesApi() {
       const res = await api.post("/api/verses/get-verses", data);
       return res.data;
     },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["fetchVerses"] }),
   });
 
   return {
@@ -32,7 +29,8 @@ export function usePostVerse() {
       const res = await api.post("/api/verses/create-onus", newVerse);
       return res.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["getVerses"] }),
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["getVerses"] }),
   });
 
   return {
@@ -55,21 +53,14 @@ export function useGetVerses() {
 
 export function useDeleteVerse() {
   const api = useFetchApi();
-  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await api.delete(`/api/verses/delete-onus/?id=${id}`);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success("Verse removed successfully.");
-      queryClient.invalidateQueries({ queryKey: ["getVerses"] });
-      router.back();
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to delete verse.");
-    },
+    onSettled: (data, error, variables, onMutateResult, context) =>
+      context.client.invalidateQueries({ queryKey: ["getVerses"] }),
   });
 
   return {

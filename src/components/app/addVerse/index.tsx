@@ -27,12 +27,10 @@ export default function AddVerseModal({ TriggerComp, verse }: any) {
           </DialogTrigger>
           <DialogContent
             onInteractOutside={(event: any) => event.preventDefault()}
-            className="min-w-2xl"
+            className="min-w-lg"
           >
             <ScrollArea className="max-h-[80vh] p-3">
-              <div className="flex justify-center items-center gap-2">
-                <AddVerseForm verse={verse} />
-              </div>
+              <AddVerseForm verse={verse} />
             </ScrollArea>
           </DialogContent>
         </Dialog>
