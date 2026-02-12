@@ -1,8 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import useFetchApi from "@/hooks/useFetchApi";
 import { queryClient } from "@/lib/utils";
+import axios, { AxiosInstance } from "axios";
+import { useMemo } from "react";
+
+function useFetchApi(): AxiosInstance {
+  // useMemo ensures the Axios instance is not recreated every render
+  const api = useMemo(() => {
+    const instance = axios.create({
+      baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
+      withCredentials: true,
+    });
+
+    return instance;
+  }, []);
+
+  return api;
+}
 
 // ---------------- VERSES ----------------
 export function useFetchVersesApi() {
