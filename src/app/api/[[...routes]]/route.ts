@@ -42,13 +42,14 @@ app.use(
 
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
+app.route("/email", emailsRoutes);
+
 // -------------------- GLOBAL AUTH --------------------
 app.use(authMiddleware());
 
 // -------------------- ROUTES --------------------
 app.route("/verses", versesRoutes);
 app.route("/quizzes", quizzesRoutes);
-app.route("/email", emailsRoutes);
 
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);

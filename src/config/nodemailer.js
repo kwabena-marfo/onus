@@ -12,7 +12,7 @@ transporter.verify(function (error) {
   if (error) {
     console.error("❌ SMTP connection failed:", error);
   } else {
-    console.log("✅ Server is ready to take our messages");
+    // console.log("✅ Server is ready to take our messages");
   }
 });
 
