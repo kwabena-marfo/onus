@@ -18,7 +18,7 @@ emailsRoutes.post("/send-email", async (c) => {
 
     return c.json({ message: "Email sent" });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return c.json({ error: "Failed to send email" }, 500);
   }
 });

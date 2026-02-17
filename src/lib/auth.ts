@@ -31,7 +31,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      await axios.post(`${process.env.BETTER_AUTH_URL}/api/app/send-email`, {
+      await axios.post(`${process.env.BETTER_AUTH_URL}/api/email/send-email`, {
         to: user.email,
         subject: "Reset your password",
         text: `Click the link to reset your password: ${url}`,

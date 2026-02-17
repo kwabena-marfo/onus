@@ -48,7 +48,7 @@ app.use(authMiddleware());
 // -------------------- ROUTES --------------------
 app.route("/verses", versesRoutes);
 app.route("/quizzes", quizzesRoutes);
-app.route("/emails", emailsRoutes);
+app.route("/email", emailsRoutes);
 
 // -------------------- EXPORT HANDLERS --------------------
 export const GET = handle(app);
