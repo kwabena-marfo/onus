@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.comegetjesus.onus",
+      "sha256_cert_fingerprints": [
+        "10:C7:DF:60:3D:26:B6:4E:86:A5:70:22:7A:CD:05:38:63:20:67:39:CD:1C:64:FF:C0:63:E4:C8:A5:A6:02:B1"
+      ]
+    }
+  }
+]
