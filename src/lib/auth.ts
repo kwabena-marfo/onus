@@ -11,7 +11,6 @@ export const auth = betterAuth({
     provider: "mongodb",
   }),
   plugins: [expo()],
-
   trustedOrigins: [
     "onusbible://",
     "https://onusbible.com",
@@ -20,11 +19,11 @@ export const auth = betterAuth({
       ? [
           "http://localhost:3000",
           "null",
-          "exp://*/*", // Trust all Expo development URLs
-          "exp://10.0.0.*:*/*", // Trust 10.0.0.x IP range
-          "exp://192.168.*.*:*/*", // Trust 192.168.x.x IP range
-          "exp://172.*.*.*:*/*", // Trust 172.x.x.x IP range
-          "exp://localhost:*/*", // Trust localhost
+          "exp://*/*",
+          "exp://10.0.0.*:*/*",
+          "exp://192.168.*.*:*/*",
+          "exp://172.*.*.*:*/*",
+          "exp://localhost:*/*",
         ]
       : []),
   ],
