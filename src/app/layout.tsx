@@ -12,9 +12,28 @@ const montserrat = Poppins({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Onus",
   description: "Observe, Navigate, Understand, Store",
+  openGraph: {
+    type: "website",
+    siteName: "Onus",
+    title: "Onus",
+    description: "Observe, Navigate, Understand, Store",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Onus",
+    description: "Observe, Navigate, Understand, Store",
+  },
 };
 
 export default function RootLayout({
