@@ -14,7 +14,6 @@ export default function LoggedInLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-  newQuize: React.ReactNode;
 }>) {
   return (
     <>
