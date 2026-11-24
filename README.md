@@ -2,7 +2,7 @@
 
 A Bible study and scripture memorisation app. Users build their own list of verses to learn, test themselves with quizzes by book of the Bible, and track their scores over time.
 
-**Live:** [onusbible.vercel.app](https://onusbible.vercel.app)
+**Live:** [onusbible.com](https://onusbible.com)
 
 ## What it does
 
